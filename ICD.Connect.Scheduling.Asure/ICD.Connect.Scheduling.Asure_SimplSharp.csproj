@@ -68,6 +68,7 @@
     <Compile Include="AsureDeviceSettings.cs" />
     <Compile Include="AsureUtils.cs" />
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="KrangPlugin.cs" />
     <Compile Include="ResourceScheduler\Model\AbstractData.cs" />
     <Compile Include="ResourceScheduler\Model\BrokenRuleData.cs" />
     <Compile Include="ResourceScheduler\Model\LocationSummaryData.cs" />
