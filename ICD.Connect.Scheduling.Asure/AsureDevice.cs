@@ -15,6 +15,7 @@ using ICD.Connect.Scheduling.Asure.ResourceScheduler;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 using ICD.Connect.Settings.Core;
+using System.Threading.Tasks;
 
 namespace ICD.Connect.Scheduling.Asure
 {
@@ -333,7 +334,11 @@ namespace ICD.Connect.Scheduling.Asure
 		[PublicAPI]
 		public void RefreshCacheAsync()
 		{
+#if SIMPLSHARP
 			CrestronUtils.SafeInvoke(RefreshCache);
+#else
+			Task.Run(() => RefreshCache());
+#endif
 		}
 
 		#endregion
