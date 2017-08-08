@@ -15,7 +15,10 @@ using ICD.Connect.Scheduling.Asure.ResourceScheduler;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 using ICD.Connect.Settings.Core;
+#if SIMPLSHARP
+#else
 using System.Threading.Tasks;
+#endif
 
 namespace ICD.Connect.Scheduling.Asure
 {
