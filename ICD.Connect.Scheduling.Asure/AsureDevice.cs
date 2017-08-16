@@ -337,11 +337,7 @@ namespace ICD.Connect.Scheduling.Asure
 		[PublicAPI]
 		public void RefreshCacheAsync()
 		{
-#if SIMPLSHARP
-			CrestronUtils.SafeInvoke(RefreshCache);
-#else
-			Task.Run(() => RefreshCache());
-#endif
+			ThreadingUtils.SafeInvoke(RefreshCache);
 		}
 
 		#endregion
