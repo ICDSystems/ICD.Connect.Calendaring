@@ -23,6 +23,7 @@
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="ICD.Connect.Scheduling.Asure_SimplSharp.suo" />
+    <None Remove="ICD.Connect.Scheduling.projectinfo" />
     <None Remove="ICD.SimplSharp.projectinfo" />
   </ItemGroup>
 
