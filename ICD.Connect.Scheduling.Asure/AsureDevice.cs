@@ -75,7 +75,7 @@ namespace ICD.Connect.Scheduling.Asure
 			m_Cache = new Dictionary<int, ReservationData>();
 			m_CacheSection = new SafeCriticalSection();
 
-			m_UpdateTimer = new SafeTimer(RefreshCacheInternal, DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
+			m_UpdateTimer = new SafeTimer(RefreshCacheHeartbeat, DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
 		}
 
@@ -124,7 +124,7 @@ namespace ICD.Connect.Scheduling.Asure
 		public IEnumerable<ReservationData> GetReservations()
 		{
 			if (!m_Cached)
-				RefreshCacheInternal();
+				RefreshCacheHeartbeat();
 
 			m_CacheSection.Enter();
 
@@ -298,11 +298,38 @@ namespace ICD.Connect.Scheduling.Asure
 		[PublicAPI]
 		public void RefreshCache()
 		{
+			if (m_Port == null)
+				throw new InvalidOperationException(string.Format("{0} has no port", this));
+
+			RefreshCache(m_Port);
+		}
+
+		/// <summary>
+		/// Refreshes the cache asynchronously and raises OnCacheUpdated.
+		/// </summary>
+		[PublicAPI]
+		public void RefreshCacheAsync()
+		{
+			if (m_Port == null)
+				throw new InvalidOperationException(string.Format("{0} has no port", this));
+
+			ThreadingUtils.SafeInvoke(RefreshCache);
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		private void RefreshCache(IWebPort port)
+		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			DateTime start = DateTime.Today;
 			DateTime end = DateTime.Today.AddDays(1);
 
 			GetReservationsByResourceResult result =
-				ResourceSchedulerService.GetReservationsByResource(m_Port, Username, Password, start, end, ResourceId);
+				ResourceSchedulerService.GetReservationsByResource(port, Username, Password, start, end, ResourceId);
 
 			if (!result.IsValid)
 				throw new InvalidOperationException(result.AllChildBrokenBusinessRules.First().Description);
@@ -328,30 +355,19 @@ namespace ICD.Connect.Scheduling.Asure
 		}
 
 		/// <summary>
-		/// Refreshes the cache asynchronously and raises OnCacheUpdated.
-		/// </summary>
-		[PublicAPI]
-		public void RefreshCacheAsync()
-		{
-			ThreadingUtils.SafeInvoke(RefreshCache);
-		}
-
-		#endregion
-
-		#region Private Methods
-
-		/// <summary>
 		/// Refreshes the cache. Catches any exceptions and logs them.
 		/// </summary>
-		private void RefreshCacheInternal()
+		private void RefreshCacheHeartbeat()
 		{
 			try
 			{
-				RefreshCache();
+				IWebPort port = m_Port;
+				if (port != null)
+					RefreshCache(port);
 			}
 			catch (Exception e)
 			{
-				Logger.AddEntry(eSeverity.Error, "Failed to refresh Asure cache - {0}", e.Message);
+				Logger.AddEntry(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
 			}
 		}
 
