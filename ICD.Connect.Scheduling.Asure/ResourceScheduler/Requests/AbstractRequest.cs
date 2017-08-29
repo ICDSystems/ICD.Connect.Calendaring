@@ -50,6 +50,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
 		/// <returns></returns>
 		public T Dispatch(IWebPort port, string username, string password)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			string action = string.Format("{0}/{1}", XLMNS_NS, SoapAction);
 			string bodyXml = GetBody();
 			string headerXml = GetHeader(username, password);

@@ -22,12 +22,18 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static CheckInResult CheckIn(IWebPort port, string username, string password, int reservationId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new CheckInRequest(reservationId).Dispatch(port, username, password);
 		}
 
 		[PublicAPI]
 		public static CheckInNowResult CheckInNow(IWebPort port, string username, string password, int reservationId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new CheckInNowRequest(reservationId).Dispatch(port, username, password);
 		}
 
@@ -42,6 +48,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static CheckOutResult CheckOut(IWebPort port, string username, string password, int reservationId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new CheckOutRequest(reservationId).Dispatch(port, username, password);
 		}
 
@@ -57,6 +66,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		public static DeleteReservationResult DeleteReservation(IWebPort port, string username, string password,
 		                                                        int reservationId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new DeleteReservationRequest(reservationId).Dispatch(port, username, password);
 		}
 
@@ -70,6 +82,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static GetRegionsResult GetRegions(IWebPort port, string username, string password)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetRegionsRequest().Dispatch(port, username, password);
 		}
 
@@ -83,6 +98,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static GetLocationsResult GetLocations(IWebPort port, string username, string password)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetLocationsRequest().Dispatch(port, username, password);
 		}
 
@@ -97,6 +115,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static GetLocationsResult GetLocations(IWebPort port, string username, string password, int regionId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetLocationsRequest(regionId).Dispatch(port, username, password);
 		}
 
@@ -111,6 +132,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		public static GetAllRegionsAndLocationsResult GetAllRegionsAndLocations(IWebPort port, string username,
 		                                                                        string password)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetAllRegionsAndLocationsRequest().Dispatch(port, username, password);
 		}
 
@@ -125,6 +149,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		[PublicAPI]
 		public static GetReservationResult GetReservation(IWebPort port, string username, string password, int id)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetReservationRequest(id).Dispatch(port, username, password);
 		}
 
@@ -141,6 +168,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		public static GetReservationsResult GetReservations(IWebPort port, string username, string password, DateTime start,
 		                                                    DateTime end)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetReservationsRequest(start, end).Dispatch(port, username, password);
 		}
 
@@ -159,6 +189,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		                                                                        string password, DateTime start,
 		                                                                        DateTime end, int attendeeId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetReservationsByAttendeeRequest(start, end, attendeeId).Dispatch(port, username, password);
 		}
 
@@ -177,6 +210,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		                                                                        string password, DateTime start,
 		                                                                        DateTime end, int locationId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetReservationsByLocationRequest(start, end, locationId).Dispatch(port, username, password);
 		}
 
@@ -195,6 +231,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		                                                                        string password, DateTime start,
 		                                                                        DateTime end, int resourceId)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			return new GetReservationsByResourceRequest(start, end, resourceId).Dispatch(port, username, password);
 		}
 
@@ -216,6 +255,9 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
 		                                                        IEnumerable<int> resourceIds,
 		                                                        DateTime start, DateTime end)
 		{
+			if (port == null)
+				throw new ArgumentNullException("port");
+
 			SubmitReservationRequest request = new SubmitReservationRequest(description, notes, resourceIds, start, end);
 			return request.Dispatch(port, username, password);
 		}
