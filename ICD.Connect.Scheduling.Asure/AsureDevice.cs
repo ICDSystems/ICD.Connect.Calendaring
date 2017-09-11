@@ -328,8 +328,18 @@ namespace ICD.Connect.Scheduling.Asure
 			DateTime start = DateTime.Today;
 			DateTime end = DateTime.Today.AddDays(1);
 
-			GetReservationsByResourceResult result =
-				ResourceSchedulerService.GetReservationsByResource(port, Username, Password, start, end, ResourceId);
+			GetReservationsByResourceResult result;
+
+			try
+			{
+				result = ResourceSchedulerService.GetReservationsByResource(port, Username, Password, start, end, ResourceId);
+			}
+			// Request failed to dispatch
+			catch (InvalidOperationException e)
+			{
+				Logger.AddEntry(eSeverity.Error, "{0} failed to refresh cache - {1}", this, e.Message);
+				return;
+			}
 
 			if (!result.IsValid)
 				throw new InvalidOperationException(result.AllChildBrokenBusinessRules.First().Description);

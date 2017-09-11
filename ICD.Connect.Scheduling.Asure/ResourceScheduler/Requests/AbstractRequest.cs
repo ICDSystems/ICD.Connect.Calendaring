@@ -48,6 +48,7 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
 		/// <param name="username"></param>
 		/// <param name="password"></param>
 		/// <returns></returns>
+		/// <exception cref="InvalidOperationException">Web port failed to dispatch</exception>
 		public T Dispatch(IWebPort port, string username, string password)
 		{
 			if (port == null)
@@ -58,8 +59,18 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
 			string headerXml = GetHeader(username, password);
 
 			string content = string.Format(TEMPLATE, XLMNS_NS, headerXml, bodyXml);
+			string response;
 
-			string response = port.DispatchSoap(action, content);
+			try
+			{
+				response = port.DispatchSoap(action, content);
+			}
+			// Catch HTTP or HTTPS exception, without dependency on Crestron
+			catch (Exception e)
+			{
+				string message = string.Format("{0} failed to dispatch - {1}", GetType().Name, e.Message);
+				throw new InvalidOperationException(message, e);
+			}
 
 			return ParseResponse(response);
 		}
