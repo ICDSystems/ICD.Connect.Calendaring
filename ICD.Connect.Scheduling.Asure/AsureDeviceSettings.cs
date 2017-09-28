@@ -3,7 +3,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Settings.Attributes;
-using ICD.Connect.Settings.Attributes.Factories;
+using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Scheduling.Asure
 {
@@ -65,7 +65,7 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		/// <param name="xml"></param>
 		/// <returns></returns>
-		[PublicAPI, XmlDeviceSettingsFactoryMethod(FACTORY_NAME)]
+		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
 		public static AsureDeviceSettings FromXml(string xml)
 		{
 			int? port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
