@@ -72,6 +72,12 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
 				throw new InvalidOperationException(message, e);
 			}
 
+			if (string.IsNullOrEmpty(response))
+			{
+				string message = string.Format("{0} failed to dispatch - received empty response", GetType().Name);
+				throw new InvalidOperationException(message);
+			}
+
 			return ParseResponse(response);
 		}
 
