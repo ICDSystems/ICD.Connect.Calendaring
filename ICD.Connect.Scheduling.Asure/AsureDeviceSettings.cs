@@ -2,6 +2,7 @@ using System;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
+using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Attributes;
 
 namespace ICD.Connect.Scheduling.Asure
@@ -26,7 +27,7 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		public override Type OriginatorType { get { return typeof(AsureDevice); } }
 
-		[SettingsProperty(SettingsProperty.ePropertyType.PortId)]
+		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(IWebPort))]
 		public int? Port { get; set; }
 
 		public string Username { get; set; }
