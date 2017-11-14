@@ -59,17 +59,25 @@ namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
 			string headerXml = GetHeader(username, password);
 
 			string content = string.Format(TEMPLATE, XLMNS_NS, headerXml, bodyXml);
+
+			bool success;
 			string response;
 
 			try
 			{
-				response = port.DispatchSoap(action, content);
+				success = port.DispatchSoap(action, content, out response);
 			}
 			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
 			{
 				string message = string.Format("{0} failed to dispatch - {1}", GetType().Name, e.Message);
 				throw new InvalidOperationException(message, e);
+			}
+
+			if (!success)
+			{
+				string message = string.Format("{0} failed to dispatch", GetType().Name);
+				throw new InvalidOperationException(message);
 			}
 
 			if (string.IsNullOrEmpty(response))
