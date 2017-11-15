@@ -4,6 +4,7 @@ using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Attributes;
+using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Scheduling.Asure
 {
@@ -27,7 +28,7 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		public override Type OriginatorType { get { return typeof(AsureDevice); } }
 
-		[SettingsProperty(SettingsProperty.ePropertyType.Id, typeof(IWebPort))]
+		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
 
 		public string Username { get; set; }
@@ -44,20 +45,11 @@ namespace ICD.Connect.Scheduling.Asure
 		{
 			base.WriteElements(writer);
 
-			if (ResourceId != 0)
-				writer.WriteElementString(RESOURCE_ID_ELEMENT, IcdXmlConvert.ToString(ResourceId));
-
-			if (UpdateInterval != null)
-				writer.WriteElementString(UPDATE_INTERVAL_ELEMENT, IcdXmlConvert.ToString((long)UpdateInterval));
-
-			if (Port != null)
-				writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString((int)Port));
-
-			if (!string.IsNullOrEmpty(Username))
-				writer.WriteElementString(USERNAME_ELEMENT, Username);
-
-			if (!string.IsNullOrEmpty(Password))
-				writer.WriteElementString(PASSWORD_ELEMENT, Password);
+			writer.WriteElementString(RESOURCE_ID_ELEMENT, IcdXmlConvert.ToString(ResourceId));
+			writer.WriteElementString(UPDATE_INTERVAL_ELEMENT, IcdXmlConvert.ToString(UpdateInterval));
+			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
+			writer.WriteElementString(USERNAME_ELEMENT, Username);
+			writer.WriteElementString(PASSWORD_ELEMENT, Password);
 		}
 
 		/// <summary>
@@ -69,7 +61,7 @@ namespace ICD.Connect.Scheduling.Asure
 		public static AsureDeviceSettings FromXml(string xml)
 		{
 			int? port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
-			int? resourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT);
+			int resourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
 			long? updateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
 			string username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
 			string password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
@@ -77,13 +69,11 @@ namespace ICD.Connect.Scheduling.Asure
 			AsureDeviceSettings output = new AsureDeviceSettings
 			{
 				Port = port,
+				ResourceId = resourceId,
 				UpdateInterval = updateInterval,
 				Username = username,
 				Password = password
 			};
-
-			if (resourceId != null)
-				output.ResourceId = (int)resourceId;
 
 			ParseXml(output, xml);
 			return output;
