@@ -75,7 +75,7 @@ namespace ICD.Connect.Scheduling.Asure
 				Password = password
 			};
 
-			ParseXml(output, xml);
+			output.ParseXml(xml);
 			return output;
 		}
 	}
