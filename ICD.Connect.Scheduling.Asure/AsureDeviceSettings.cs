@@ -1,5 +1,4 @@
 using System;
-using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.WebPorts;
@@ -8,6 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Scheduling.Asure
 {
+	[KrangSettings(FACTORY_NAME)]
 	public sealed class AsureDeviceSettings : AbstractDeviceSettings
 	{
 		private const string FACTORY_NAME = "AsureService";
@@ -53,30 +53,24 @@ namespace ICD.Connect.Scheduling.Asure
 		}
 
 		/// <summary>
-		/// Loads the settings from XML.
+		/// Updates the settings from xml.
 		/// </summary>
 		/// <param name="xml"></param>
-		/// <returns></returns>
-		[PublicAPI, XmlFactoryMethod(FACTORY_NAME)]
-		public static AsureDeviceSettings FromXml(string xml)
+		public override void ParseXml(string xml)
 		{
+			base.ParseXml(xml);
+
 			int? port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			int resourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
 			long? updateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
 			string username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
 			string password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
 
-			AsureDeviceSettings output = new AsureDeviceSettings
-			{
-				Port = port,
-				ResourceId = resourceId,
-				UpdateInterval = updateInterval,
-				Username = username,
-				Password = password
-			};
-
-			output.ParseXml(xml);
-			return output;
+			Port = port;
+			ResourceId = resourceId;
+			UpdateInterval = updateInterval;
+			Username = username;
+			Password = password;
 		}
 	}
 }
