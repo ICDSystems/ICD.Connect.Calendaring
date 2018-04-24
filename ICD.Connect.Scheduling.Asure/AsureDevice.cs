@@ -9,6 +9,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler;
@@ -442,8 +443,8 @@ namespace ICD.Connect.Scheduling.Asure
 		/// Called when the port online state changes.
 		/// </summary>
 		/// <param name="sender"></param>
-		/// <param name="boolEventArgs"></param>
-		private void PortOnIsOnlineStateChanged(object sender, BoolEventArgs boolEventArgs)
+		/// <param name="eventArgs"></param>
+		private void PortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs eventArgs)
 		{
 			UpdateCachedOnlineStatus();
 		}
