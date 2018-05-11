@@ -14,7 +14,7 @@ using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Settings;
 
 namespace ICD.Connect.Scheduling.Asure
 {
