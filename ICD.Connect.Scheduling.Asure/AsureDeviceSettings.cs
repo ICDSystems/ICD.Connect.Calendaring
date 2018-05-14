@@ -1,41 +1,75 @@
-using System;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
+using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Scheduling.Asure
 {
-	[KrangSettings(FACTORY_NAME)]
-	public sealed class AsureDeviceSettings : AbstractDeviceSettings
+	[KrangSettings("AsureService", typeof(AsureDevice))]
+	public sealed class AsureDeviceSettings : AbstractDeviceSettings, IUriProperties
 	{
-		private const string FACTORY_NAME = "AsureService";
-
 		private const string RESOURCE_ID_ELEMENT = "ResourceId";
 		private const string UPDATE_INTERVAL_ELEMENT = "UpdateInterval";
 		private const string PORT_ELEMENT = "Port";
-		private const string USERNAME_ELEMENT = "Username";
-		private const string PASSWORD_ELEMENT = "Password";
 
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
+		private readonly UriProperties m_UriProperties;
 
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(AsureDevice); } }
+		#region Properties
 
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
 
-		public string Username { get; set; }
-		public string Password { get; set; }
-
 		public int ResourceId { get; set; }
+
 		public long? UpdateInterval { get; set; }
+
+		#endregion
+
+		#region URI
+
+		/// <summary>
+		/// Gets/sets the configurable username.
+		/// </summary>
+		public string Username { get { return m_UriProperties.Username; } set { m_UriProperties.Username = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable password.
+		/// </summary>
+		public string Password { get { return m_UriProperties.Password; } set { m_UriProperties.Password = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable network address.
+		/// </summary>
+		public string NetworkAddress { get { return m_UriProperties.NetworkAddress; } set { m_UriProperties.NetworkAddress = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable network port.
+		/// </summary>
+		public ushort NetworkPort { get { return m_UriProperties.NetworkPort; } set { m_UriProperties.NetworkPort = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable URI scheme.
+		/// </summary>
+		public string UriScheme { get { return m_UriProperties.UriScheme; } set { m_UriProperties.UriScheme = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable URI path.
+		/// </summary>
+		public string UriPath { get { return m_UriProperties.UriPath; } set { m_UriProperties.UriPath = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable URI query.
+		/// </summary>
+		public string UriQuery { get { return m_UriProperties.UriQuery; } set { m_UriProperties.UriQuery = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable URI fragment.
+		/// </summary>
+		public string UriFragment { get { return m_UriProperties.UriFragment; } set { m_UriProperties.UriFragment = value; } }
+
+		#endregion
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -48,8 +82,22 @@ namespace ICD.Connect.Scheduling.Asure
 			writer.WriteElementString(RESOURCE_ID_ELEMENT, IcdXmlConvert.ToString(ResourceId));
 			writer.WriteElementString(UPDATE_INTERVAL_ELEMENT, IcdXmlConvert.ToString(UpdateInterval));
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
-			writer.WriteElementString(USERNAME_ELEMENT, Username);
-			writer.WriteElementString(PASSWORD_ELEMENT, Password);
+
+			m_UriProperties.WriteElements(writer);
+		}
+
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public AsureDeviceSettings()
+		{
+			//https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
+
+			m_UriProperties = new UriProperties
+			{
+				UriScheme = "https",
+				UriPath = "/ResourceScheduler.WebService/ResourceSchedulerService.asmx",
+			};
 		}
 
 		/// <summary>
@@ -60,17 +108,11 @@ namespace ICD.Connect.Scheduling.Asure
 		{
 			base.ParseXml(xml);
 
-			int? port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
-			int resourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
-			long? updateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
-			string username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
-			string password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
+			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
+			ResourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
+			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
 
-			Port = port;
-			ResourceId = resourceId;
-			UpdateInterval = updateInterval;
-			Username = username;
-			Password = password;
+			m_UriProperties.ParseXml(xml);
 		}
 	}
 }
