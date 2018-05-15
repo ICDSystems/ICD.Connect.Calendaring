@@ -337,7 +337,7 @@ namespace ICD.Connect.Scheduling.Asure
 			// Request failed to dispatch
 			catch (InvalidOperationException e)
 			{
-				Logger.AddEntry(eSeverity.Error, "{0} failed to refresh cache - {1}", this, e.Message);
+				Log(eSeverity.Error, "Failed to refresh cache - {0}", e.Message);
 				return;
 			}
 
@@ -499,7 +499,7 @@ namespace ICD.Connect.Scheduling.Asure
 			{
 				port = factory.GetPortById((int)settings.Port) as IWebPort;
 				if (port == null)
-					Logger.AddEntry(eSeverity.Error, "No web port with id {0}", settings.Port);
+					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 			}
 
 			SetPort(port);
