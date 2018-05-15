@@ -8,7 +8,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 namespace ICD.Connect.Scheduling.Asure
 {
 	[KrangSettings("AsureService", typeof(AsureDevice))]
-	public sealed class AsureDeviceSettings : AbstractDeviceSettings, IUriProperties
+	public sealed class AsureDeviceSettings : AbstractDeviceSettings, IUriSettings
 	{
 		private const string RESOURCE_ID_ELEMENT = "ResourceId";
 		private const string UPDATE_INTERVAL_ELEMENT = "UpdateInterval";
@@ -25,29 +25,44 @@ namespace ICD.Connect.Scheduling.Asure
 
 		public long? UpdateInterval { get; set; }
 
+		/// <summary>
+		/// Gets the configurable URI properties.
+		/// </summary>
+		public IUriProperties UriProperties { get { return m_UriProperties; } }
+
+		/// <summary>
+		/// Gets/sets the configurable service username.
+		/// </summary>
+		public string ServiceUsername { get; set; }
+
+		/// <summary>
+		/// Gets/sets the configurable service password.
+		/// </summary>
+		public string ServicePassword { get; set; }
+
 		#endregion
 
 		#region URI
 
 		/// <summary>
-		/// Gets/sets the configurable username.
+		/// Gets/sets the configurable URI username.
 		/// </summary>
-		public string Username { get { return m_UriProperties.Username; } set { m_UriProperties.Username = value; } }
+		public string UriUsername { get { return m_UriProperties.UriUsername; } set { m_UriProperties.UriUsername = value; } }
 
 		/// <summary>
-		/// Gets/sets the configurable password.
+		/// Gets/sets the configurable URI password.
 		/// </summary>
-		public string Password { get { return m_UriProperties.Password; } set { m_UriProperties.Password = value; } }
+		public string UriPassword { get { return m_UriProperties.UriPassword; } set { m_UriProperties.UriPassword = value; } }
 
 		/// <summary>
-		/// Gets/sets the configurable network address.
+		/// Gets/sets the configurable URI host.
 		/// </summary>
-		public string NetworkAddress { get { return m_UriProperties.NetworkAddress; } set { m_UriProperties.NetworkAddress = value; } }
+		public string UriHost { get { return m_UriProperties.UriHost; } set { m_UriProperties.UriHost = value; } }
 
 		/// <summary>
-		/// Gets/sets the configurable network port.
+		/// Gets/sets the configurable URI port.
 		/// </summary>
-		public ushort NetworkPort { get { return m_UriProperties.NetworkPort; } set { m_UriProperties.NetworkPort = value; } }
+		public ushort UriPort { get { return m_UriProperties.UriPort; } set { m_UriProperties.UriPort = value; } }
 
 		/// <summary>
 		/// Gets/sets the configurable URI scheme.
@@ -91,8 +106,7 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		public AsureDeviceSettings()
 		{
-			//https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
-
+			// https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
 			m_UriProperties = new UriProperties
 			{
 				UriScheme = "https",

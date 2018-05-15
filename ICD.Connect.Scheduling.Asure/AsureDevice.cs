@@ -10,6 +10,7 @@ using ICD.Connect.API.Commands;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
+using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
@@ -31,13 +32,13 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		public event EventHandler OnCacheUpdated;
 
-		private IWebPort m_Port;
-
+		private readonly UriProperties m_UriProperties;
 		private readonly SafeTimer m_UpdateTimer;
-
-		private bool m_Cached;
 		private readonly Dictionary<int, ReservationData> m_Cache;
 		private readonly SafeCriticalSection m_CacheSection;
+
+		private IWebPort m_Port;
+		private bool m_Cached;
 
 		#region Properties
 
@@ -57,13 +58,13 @@ namespace ICD.Connect.Scheduling.Asure
 		/// Gets/sets the username for communication with the service.
 		/// </summary>
 		[PublicAPI]
-		public string Username { get; set; }
+		public string ServiceUsername { get; set; }
 
 		/// <summary>
 		/// Gets/sets the password for communication with the service.
 		/// </summary>
 		[PublicAPI]
-		public string Password { get; set; }
+		public string ServicePassword { get; set; }
 
 		#endregion
 
@@ -72,6 +73,8 @@ namespace ICD.Connect.Scheduling.Asure
 		/// </summary>
 		public AsureDevice()
 		{
+			m_UriProperties = new UriProperties();
+
 			m_Cache = new Dictionary<int, ReservationData>();
 			m_CacheSection = new SafeCriticalSection();
 
@@ -248,7 +251,7 @@ namespace ICD.Connect.Scheduling.Asure
 		[PublicAPI]
 		public void CheckIn(int reservationId)
 		{
-			CheckInResult result = ResourceSchedulerService.CheckIn(m_Port, Username, Password, reservationId);
+			CheckInResult result = ResourceSchedulerService.CheckIn(m_Port, ServiceUsername, ServicePassword, reservationId);
 			if (result.IsValid)
 				InsertReservation(result.ReservationData);
 			else
@@ -263,7 +266,7 @@ namespace ICD.Connect.Scheduling.Asure
 		[PublicAPI]
 		public void CheckOut(int reservationId)
 		{
-			CheckOutResult result = ResourceSchedulerService.CheckOut(m_Port, Username, Password, reservationId);
+			CheckOutResult result = ResourceSchedulerService.CheckOut(m_Port, ServiceUsername, ServicePassword, reservationId);
 			if (result.IsValid)
 				InsertReservation(result.ReservationData);
 			else
@@ -282,7 +285,7 @@ namespace ICD.Connect.Scheduling.Asure
 		public void SubmitReservation(string description, string notes, DateTime start, DateTime end)
 		{
 			SubmitReservationResult result =
-				ResourceSchedulerService.SubmitReservation(m_Port, Username, Password, description, notes,
+				ResourceSchedulerService.SubmitReservation(m_Port, ServiceUsername, ServicePassword, description, notes,
 				                                           new[] {ResourceId}, start, end);
 
 			if (result.IsValid)
@@ -332,7 +335,7 @@ namespace ICD.Connect.Scheduling.Asure
 
 			try
 			{
-				result = ResourceSchedulerService.GetReservationsByResource(port, Username, Password, start, end, ResourceId);
+				result = ResourceSchedulerService.GetReservationsByResource(port, ServiceUsername, ServicePassword, start, end, ResourceId);
 			}
 			// Request failed to dispatch
 			catch (InvalidOperationException e)
@@ -459,8 +462,8 @@ namespace ICD.Connect.Scheduling.Asure
 		{
 			base.ClearSettingsFinal();
 
-			Username = null;
-			Password = null;
+			ServiceUsername = null;
+			ServicePassword = null;
 			SetPort(null);
 			ResourceId = 0;
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
@@ -474,11 +477,13 @@ namespace ICD.Connect.Scheduling.Asure
 		{
 			base.CopySettingsFinal(settings);
 
-			settings.Username = Username;
-			settings.Password = Password;
+			settings.ServiceUsername = ServiceUsername;
+			settings.ServicePassword = ServicePassword;
 			settings.ResourceId = ResourceId;
 			settings.UpdateInterval = UpdateInterval;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
+
+			settings.UriProperties.Copy(m_UriProperties);
 		}
 
 		/// <summary>
@@ -490,8 +495,10 @@ namespace ICD.Connect.Scheduling.Asure
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-			Username = settings.Username;
-			Password = settings.Password;
+			ServiceUsername = settings.ServiceUsername;
+			ServicePassword = settings.ServicePassword;
+
+			m_UriProperties.Copy(settings.UriProperties);
 
 			IWebPort port = null;
 
