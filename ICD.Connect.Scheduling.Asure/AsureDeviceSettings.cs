@@ -82,6 +82,19 @@ namespace ICD.Connect.Scheduling.Asure
 		#endregion
 
 		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public AsureDeviceSettings()
+		{
+			// https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
+			m_UriProperties = new UriProperties
+			{
+				UriScheme = "https",
+				UriPath = "/ResourceScheduler.WebService/ResourceSchedulerService.asmx",
+			};
+		}
+
+		/// <summary>
 		/// Writes property elements to xml.
 		/// </summary>
 		/// <param name="writer"></param>
@@ -94,19 +107,6 @@ namespace ICD.Connect.Scheduling.Asure
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 
 			m_UriProperties.WriteElements(writer);
-		}
-
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		public AsureDeviceSettings()
-		{
-			// https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
-			m_UriProperties = new UriProperties
-			{
-				UriScheme = "https",
-				UriPath = "/ResourceScheduler.WebService/ResourceSchedulerService.asmx",
-			};
 		}
 
 		/// <summary>
