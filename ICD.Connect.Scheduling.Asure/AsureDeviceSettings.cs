@@ -26,11 +26,6 @@ namespace ICD.Connect.Scheduling.Asure
 		public long? UpdateInterval { get; set; }
 
 		/// <summary>
-		/// Gets the configurable URI properties.
-		/// </summary>
-		public IUriProperties UriProperties { get { return m_UriProperties; } }
-
-		/// <summary>
 		/// Gets/sets the configurable service username.
 		/// </summary>
 		public string ServiceUsername { get; set; }

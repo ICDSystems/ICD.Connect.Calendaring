@@ -483,7 +483,7 @@ namespace ICD.Connect.Scheduling.Asure
 			settings.UpdateInterval = UpdateInterval;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
-			settings.UriProperties.Copy(m_UriProperties);
+			settings.Copy(m_UriProperties);
 		}
 
 		/// <summary>
@@ -498,7 +498,7 @@ namespace ICD.Connect.Scheduling.Asure
 			ServiceUsername = settings.ServiceUsername;
 			ServicePassword = settings.ServicePassword;
 
-			m_UriProperties.Copy(settings.UriProperties);
+			m_UriProperties.Copy(settings);
 
 			IWebPort port = null;
 
