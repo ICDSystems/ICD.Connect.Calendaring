@@ -380,7 +380,7 @@ namespace ICD.Connect.Scheduling.Asure
 			}
 			catch (Exception e)
 			{
-				Logger.AddEntry(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
+				Log(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
 			}
 		}
 
