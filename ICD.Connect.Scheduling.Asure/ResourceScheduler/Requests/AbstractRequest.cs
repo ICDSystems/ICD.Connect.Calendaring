@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Protocol.Network.WebPorts;
+using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 
 namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests

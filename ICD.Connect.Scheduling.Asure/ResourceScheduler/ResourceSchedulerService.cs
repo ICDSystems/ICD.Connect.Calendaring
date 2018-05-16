@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
-using ICD.Connect.Protocol.Network.WebPorts;
+using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests;
 using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 
