@@ -57,7 +57,7 @@ namespace ICD.Connect.Scheduling.Asure
 		/// <summary>
 		/// Gets/sets the configurable URI port.
 		/// </summary>
-		public ushort UriPort { get { return m_UriProperties.UriPort; } set { m_UriProperties.UriPort = value; } }
+		public ushort? UriPort { get { return m_UriProperties.UriPort; } set { m_UriProperties.UriPort = value; } }
 
 		/// <summary>
 		/// Gets/sets the configurable URI scheme.
