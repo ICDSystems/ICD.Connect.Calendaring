@@ -108,6 +108,8 @@ namespace ICD.Connect.Scheduling.Asure
 			if (port == m_Port)
 				return;
 
+			ConfigurePort(port);
+
 			Unsubscribe(m_Port);
 
 			if (port != null)
@@ -117,6 +119,17 @@ namespace ICD.Connect.Scheduling.Asure
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Configures the given port for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		private void ConfigurePort(IWebPort port)
+		{
+			// URI
+			if (port != null)
+				port.ApplyDeviceConfiguration(m_UriProperties);
 		}
 
 		/// <summary>
