@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using ICD.Common.Utils;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Calendaring_NetStandard;
+using ICD.Connect.Calendering.Booking;
 
-namespace ICD.Connect.Conferencing.Zoom.Controls.Calendar
+namespace ICD.Connect.Calendering.CalendarControl
 {
 	public static class CalendarControlConsole
 	{

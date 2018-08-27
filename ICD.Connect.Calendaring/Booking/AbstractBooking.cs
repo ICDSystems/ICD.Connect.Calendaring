@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
 
-namespace ICD.Connect.Calendaring_NetStandard.Booking
+namespace ICD.Connect.Calendering.Booking
 {
 	public abstract class AbstractBooking : IConferenceBooking
 	{

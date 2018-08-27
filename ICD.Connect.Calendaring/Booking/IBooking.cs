@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ICD.Connect.Calendaring_NetStandard
+namespace ICD.Connect.Calendering.Booking
 {
 	public interface IBooking
 	{

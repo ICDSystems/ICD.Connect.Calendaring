@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Connect.Calendering.Booking;
 
-namespace ICD.Connect.Calendaring_NetStandard
+namespace ICD.Connect.Calendering.CalendarControl
 {
 	public interface ICalendarControl
 	{
