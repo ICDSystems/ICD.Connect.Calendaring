@@ -1,21 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using ICD.Common.Properties;
 
-namespace ICD.Connect.Calendaring_NetStandard
+namespace ICD.Connect.Calendaring_NetStandard.Booking
 {
 	public abstract class AbstractBooking : IConferenceBooking
 	{
-		private readonly string m_MeetingName;
-		private readonly string m_OrganizerName;
-		private readonly string m_OrganizerEmail;
-		private readonly DateTime m_StartTime;
-		private readonly DateTime m_EndTime;
-		private readonly eMeetingType m_Type;
-
-		public string MeetingName { get { return m_MeetingName; } }
-		public string OrganizerName { get { return m_OrganizerName; } }
-		public string OrganizerEmail { get { return m_OrganizerEmail; } }
-		public DateTime StartTime { get { return m_StartTime; } }
-		public DateTime EndTime { get { return m_EndTime; } }
-		public eMeetingType Type { get { return m_Type; } }
+		public abstract string MeetingName { get; }
+		public abstract string OrganizerName { get; }
+		public abstract string OrganizerEmail { get; }
+		public abstract DateTime StartTime { get; }
+		public abstract DateTime EndTime { get; }
+		public virtual eMeetingType Type { get; }
 	}
 }

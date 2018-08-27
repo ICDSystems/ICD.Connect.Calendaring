@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring_NetStandard
 {
 	public interface ICalendarControl
 	{
+		/// <summary>
+		/// Raised when bookings are added/removed.
+		/// </summary>
+		event EventHandler OnBookingsChanged;
+
 		/// <summary>
 		/// Updates the view.
 		/// </summary>
