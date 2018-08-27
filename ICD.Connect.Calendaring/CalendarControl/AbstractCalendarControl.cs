@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Calendering.Booking;
+using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 
-namespace ICD.Connect.Calendering.CalendarControl
+namespace ICD.Connect.Calendaring.CalendarControl
 {
     public abstract class AbstractCalendarControl<T> : AbstractDeviceControl<T>, ICalendarControl
 	    where T : IDeviceBase

@@ -5,8 +5,8 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ICD.Connect.Calendering</RootNamespace>
-    <AssemblyName>ICD.Connect.Calendering</AssemblyName>
+    <RootNamespace>ICD.Connect.Calendaring</RootNamespace>
+    <AssemblyName>ICD.Connect.Calendaring</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>true</Deterministic>
     <EazfuscatorIntegration>MSBuild</EazfuscatorIntegration>
@@ -29,7 +29,7 @@
     <Compile Remove="ObfuscationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="ICD.Connect.Calendering.projectinfo" />
+    <None Remove="ICD.Connect.Calendaring.projectinfo" />
     <None Remove="Properties\ControlSystem.cfg" />
   </ItemGroup>
 
