@@ -2,7 +2,7 @@
 
 namespace ICD.Connect.Calendaring.Booking
 {
-	public abstract class AbstractBooking : IConferenceBooking
+	public abstract class AbstractBooking : IBooking
 	{
 		public abstract string MeetingName { get; }
 		public abstract string OrganizerName { get; }
