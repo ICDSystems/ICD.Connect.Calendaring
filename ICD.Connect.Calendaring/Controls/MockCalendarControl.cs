@@ -15,9 +15,7 @@ namespace ICD.Connect.Calendaring.Controls
 
 		public MockCalendarControl(MockCalendarDevice parent, int id) : base(parent, id)
 		{
-			DateTime timeNow = IcdEnvironment.GetLocalTime();
 			m_BookingList = new List<MockBooking>();
-			m_DefaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
 		}
 
 		public override event EventHandler OnBookingsChanged;
@@ -26,11 +24,14 @@ namespace ICD.Connect.Calendaring.Controls
 		{
 			m_BookingList.Clear();
 
-			m_BookingList.Add(new MockBooking("Meeting1", "Organizer1@email.biz", "The Organizer1", m_DefaultMeetingTime.AddHours(-3), m_DefaultMeetingTime.AddHours(-3).AddMinutes(30)));
-			m_BookingList.Add(new MockBooking("Meeting2", "Organizer2@email.biz", "The Organizer2", m_DefaultMeetingTime.AddHours(-2).AddMinutes(30), m_DefaultMeetingTime.AddHours(-1)));
-			m_BookingList.Add(new MockBooking("Meeting3", "Organizer3@email.biz", "The Organizer3", m_DefaultMeetingTime.AddHours(-1), m_DefaultMeetingTime.AddHours(-1).AddMinutes(30)));
-			m_BookingList.Add(new MockBooking("Meeting4", "Organizer4@email.biz", "The Organizer4", m_DefaultMeetingTime, m_DefaultMeetingTime.AddMinutes(30)));
-			m_BookingList.Add(new MockBooking("Meeting5", "Organizer5@email.biz", "The Organizer5", m_DefaultMeetingTime.AddHours(1), m_DefaultMeetingTime.AddMinutes(30)));
+			DateTime timeNow = IcdEnvironment.GetLocalTime();
+			DateTime defaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
+
+			m_BookingList.Add(new MockBooking("Meeting1", "Organizer1@email.biz", "The Organizer1", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30)));
+			m_BookingList.Add(new MockBooking("Meeting2", "Organizer2@email.biz", "The Organizer2", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1)));
+			m_BookingList.Add(new MockBooking("Meeting3", "Organizer3@email.biz", "The Organizer3", defaultMeetingTime.AddHours(-1), defaultMeetingTime.AddHours(-1).AddMinutes(30)));
+			m_BookingList.Add(new MockBooking("Meeting4", "Organizer4@email.biz", "The Organizer4", defaultMeetingTime, defaultMeetingTime.AddMinutes(30)));
+			m_BookingList.Add(new MockBooking("Meeting5", "Organizer5@email.biz", "The Organizer5", defaultMeetingTime.AddHours(1), defaultMeetingTime.AddMinutes(30)));
 		}
 
 		public override IEnumerable<IBooking> GetBookings()

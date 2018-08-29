@@ -7,7 +7,7 @@ namespace ICD.Connect.Calendaring.Devices
 	{
 		public MockCalendarDevice()
 		{
-			MockCalendarControl control = new MockCalendarControl(this, 0);
+			MockCalendarControl control = new MockCalendarControl(this, 1);
 			Controls.Add(control);
 		}
 
