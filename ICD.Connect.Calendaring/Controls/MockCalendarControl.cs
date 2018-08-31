@@ -10,11 +10,11 @@ namespace ICD.Connect.Calendaring.Controls
 	public class MockCalendarControl : AbstractCalendarControl<MockCalendarDevice>
 	{
 
-		private readonly List<MockBooking> m_BookingList;
+		private readonly List<IBooking> m_BookingList;
 
 		public MockCalendarControl(MockCalendarDevice parent, int id) : base(parent, id)
 		{
-			m_BookingList = new List<MockBooking>();
+			m_BookingList = new List<IBooking>();
 		}
 
 		public override event EventHandler OnBookingsChanged;
