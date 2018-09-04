@@ -50,12 +50,12 @@ namespace ICD.Connect.Calendaring.CalendarControl
 
 		private static string PrintBookings(ICalendarControl instance)
 		{
-			TableBuilder builder = new TableBuilder("Meeting Name", "Organizer Name", "Organizer Email", "Start Time", "End Time", "Type");
+			TableBuilder builder = new TableBuilder("Meeting Name", "Organizer Name", "Organizer Email", "Start Time", "End Time", "Type", "IsPrivate");
 
 
 			foreach (IBooking booking in instance.GetBookings())
 			{
-				builder.AddRow(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail, booking.StartTime, booking.EndTime, booking.Type);
+				builder.AddRow(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail, booking.StartTime, booking.EndTime, booking.Type, booking.IsPrivate);
 			}
 
 			return builder.ToString();

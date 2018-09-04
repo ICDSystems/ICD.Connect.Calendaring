@@ -10,6 +10,7 @@ namespace ICD.Connect.Calendaring.Devices
 		private readonly string m_OrganizerEmail;
 		private readonly DateTime m_StartTime;
 		private readonly DateTime m_EndTime;
+		private readonly bool m_IsPrivate;
 
 		public override string MeetingName
 		{
@@ -31,18 +32,23 @@ namespace ICD.Connect.Calendaring.Devices
 		{
 			get { return m_EndTime; }
 		}
+		public override bool IsPrivate
+		{
+			get { return m_IsPrivate; }
+		}
 		public override eMeetingType Type
 		{
 			get { return eMeetingType.AudioConference; }
 		}
 
-		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime)
+		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
 		{
 			m_MeetingName = meetingName;
 			m_OrganizerName = organizerName;
 			m_OrganizerEmail = organizerEmail;
 			m_StartTime = startTime;
 			m_EndTime = endTime;
+			m_IsPrivate = isPrivate;
 		}
 	}
 }

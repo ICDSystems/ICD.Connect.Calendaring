@@ -33,5 +33,10 @@ namespace ICD.Connect.Calendaring.Booking
 		/// Returns the meeting type.
 		/// </summary>
 		eMeetingType Type { get; }
+
+		/// <summary>
+		/// Returns true if meeting is private.
+		/// </summary>
+		bool IsPrivate { get; }
 	}
 }
