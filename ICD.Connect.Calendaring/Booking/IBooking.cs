@@ -9,10 +9,15 @@ namespace ICD.Connect.Calendaring.Booking
 		/// </summary>
 		string MeetingName { get; }
 
-		/// <summary>
-		/// Returns the organizer's name.
-		/// </summary>
-		string OrganizerName { get; }
+	    /// <summary>
+	    /// Returns the number of the meeting.
+	    /// </summary>
+	    string MeetingNumber { get; }
+
+        /// <summary>
+        /// Returns the organizer's name.
+        /// </summary>
+        string OrganizerName { get; }
 
 		/// <summary>
 		/// Returns the organizer's email.

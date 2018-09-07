@@ -6,7 +6,8 @@ namespace ICD.Connect.Calendaring.Devices
 	public class MockBooking : AbstractBooking
 	{
 		private readonly string m_MeetingName;
-		private readonly string m_OrganizerName;
+	    private readonly string m_MeetingNumber;
+        private readonly string m_OrganizerName;
 		private readonly string m_OrganizerEmail;
 		private readonly DateTime m_StartTime;
 		private readonly DateTime m_EndTime;
@@ -16,7 +17,12 @@ namespace ICD.Connect.Calendaring.Devices
 		{
 			get { return m_MeetingName; }
 		}
-		public override string OrganizerName
+
+	    public override string MeetingNumber
+	    {
+	        get { return m_MeetingNumber; }
+	    }
+        public override string OrganizerName
 		{
 			get { return m_OrganizerName; }
 		}
@@ -41,10 +47,11 @@ namespace ICD.Connect.Calendaring.Devices
 			get { return eMeetingType.AudioConference; }
 		}
 
-		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
+		public MockBooking(string meetingName, string meetingNumber, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
 		{
 			m_MeetingName = meetingName;
-			m_OrganizerName = organizerName;
+		    m_MeetingNumber = meetingNumber;
+            m_OrganizerName = organizerName;
 			m_OrganizerEmail = organizerEmail;
 			m_StartTime = startTime;
 			m_EndTime = endTime;

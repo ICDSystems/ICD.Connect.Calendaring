@@ -77,6 +77,7 @@
     <Compile Include="CalendarControl\AbstractCalendarControl.cs" />
     <Compile Include="CalendarControl\CalendarControlConsole.cs" />
     <Compile Include="CalendarControl\ICalendarControl.cs" />
+    <Compile Include="Comparers\BookingComparer.cs" />
     <Compile Include="Controls\MockCalendarControl.cs" />
     <Compile Include="Devices\MockBooking.cs" />
     <Compile Include="Devices\MockCalendarDevice.cs" />
