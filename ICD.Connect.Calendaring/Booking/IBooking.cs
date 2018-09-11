@@ -9,10 +9,10 @@ namespace ICD.Connect.Calendaring.Booking
 		/// </summary>
 		string MeetingName { get; }
 
-		/// <summary>
-		/// Returns the organizer's name.
-		/// </summary>
-		string OrganizerName { get; }
+        /// <summary>
+        /// Returns the organizer's name.
+        /// </summary>
+        string OrganizerName { get; }
 
 		/// <summary>
 		/// Returns the organizer's email.
@@ -33,5 +33,10 @@ namespace ICD.Connect.Calendaring.Booking
 		/// Returns the meeting type.
 		/// </summary>
 		eMeetingType Type { get; }
+
+		/// <summary>
+		/// Returns true if meeting is private.
+		/// </summary>
+		bool IsPrivate { get; }
 	}
 }

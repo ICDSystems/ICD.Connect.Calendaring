@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Devices.Controls;
 
 namespace ICD.Connect.Calendaring.CalendarControl
 {
-	public interface ICalendarControl
+	public interface ICalendarControl : IDeviceControl
 	{
 		/// <summary>
 		/// Raised when bookings are added/removed.
