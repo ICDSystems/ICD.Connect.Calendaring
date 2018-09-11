@@ -6,7 +6,7 @@ using Crestron.SimplSharp;
 
 namespace ICD.Connect.Calendaring.Booking
 {
-	public interface IPstnBooking
+	public interface IPstnBooking : IBooking
 	{
 		string PhoneNumber { get; }
 	}

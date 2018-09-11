@@ -2,7 +2,7 @@
 
 namespace ICD.Connect.Calendaring.Booking
 {
-	public interface ISipBooking
+	public interface ISipBooking : IBooking
 	{
 		string SipUri { get; }
 	}
