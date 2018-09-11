@@ -8,8 +8,7 @@ namespace ICD.Connect.Calendaring.Comparers
     {
 		public bool Equals(T x, T y)
 		{
-			return x.MeetingNumber == y.MeetingNumber
-			       && x.MeetingName == y.MeetingName
+			return x.MeetingName == y.MeetingName
 				   && x.OrganizerName == y.OrganizerName
 				   && x.OrganizerEmail == y.OrganizerEmail
 				   && x.StartTime == y.StartTime
@@ -24,7 +23,6 @@ namespace ICD.Connect.Calendaring.Comparers
 				hash = hash * 23 + (zoomBooking.MeetingName == null ? 0 : zoomBooking.MeetingName.GetHashCode());
 				hash = hash * 23 + (zoomBooking.OrganizerEmail == null ? 0 : zoomBooking.OrganizerEmail.GetHashCode());
 				hash = hash * 23 + (zoomBooking.OrganizerName == null ? 0 : zoomBooking.OrganizerName.GetHashCode());
-				hash = hash * 23 + (zoomBooking.MeetingNumber == null ? 0 : zoomBooking.MeetingNumber.GetHashCode());
 				hash = hash * 23 + (int)zoomBooking.StartTime.Ticks;
 				hash = hash * 23 + (int)zoomBooking.EndTime.Ticks;
 				return hash;

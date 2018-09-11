@@ -18,10 +18,6 @@ namespace ICD.Connect.Calendaring.Devices
 			get { return m_MeetingName; }
 		}
 
-	    public override string MeetingNumber
-	    {
-	        get { return m_MeetingNumber; }
-	    }
         public override string OrganizerName
 		{
 			get { return m_OrganizerName; }
