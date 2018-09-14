@@ -36,7 +36,7 @@ namespace ICD.Connect.Calendaring.Robin.Service
 		    
 		    try
 		    {
-		        success = port.Get(uri, out response, headers);
+		        success = port.Get(uri, headers, out response);
             }
 		    // Catch HTTP or HTTPS exception, without dependency on Crestron
 		    catch (Exception e)
@@ -87,7 +87,7 @@ namespace ICD.Connect.Calendaring.Robin.Service
 
             try
             {
-                success = port.Get(uri, out response, headers);
+                success = port.Get(uri, headers, out response);
             }
             // Catch HTTP or HTTPS exception, without dependency on Crestron
             catch (Exception e)
