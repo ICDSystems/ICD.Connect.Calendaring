@@ -1,40 +1,41 @@
 ﻿using System;
 using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Robin.Components.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
     public sealed class RobinBooking : AbstractBooking
     {
-	    private readonly Components.Bookings.Booking m_Booking;
+	    private readonly Event m_Event;
 
 	    public override string MeetingName
 	    {
-		    get { return m_Booking.MeetingName; }
+		    get { return m_Event.MeetingName; }
 		}
 
 		public override string OrganizerName
 	    {
-		    get { return m_Booking.OrganizerName;  }
+		    get { return m_Event.OrganizerName;  }
 	    }
 
 	    public override string OrganizerEmail
 	    {
-			get { return m_Booking.OrganizerEmail; }
+			get { return m_Event.OrganizerEmail; }
 		}
 
 	    public override DateTime StartTime
 	    {
-			get { return m_Booking.MeetingStart.DateTimeInfo; }
+			get { return m_Event.MeetingStart.DateTimeInfo; }
 		}
 
 	    public override DateTime EndTime
 	    {
-			get { return m_Booking.MeetingEnd.DateTimeInfo; }
+			get { return m_Event.MeetingEnd.DateTimeInfo; }
 		}
 
 	    public override bool IsPrivate
 	    {
-		    get { return m_Booking.IsPrivate.ToLower() == "private"; }
+		    get { return m_Event.IsPrivate.ToLower() == "private"; }
 	    }
 
 		public override eMeetingType Type
@@ -42,9 +43,9 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    get { return eMeetingType.VideoConference; }
 	    }
 
-	    public RobinBooking(Components.Bookings.Booking booking)
+	    public RobinBooking(Event @event)
 	    {
-		    m_Booking = booking;
+		    m_Event = @event;
 	    }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICD.Common.Utils;
 using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.Comparers;
 using ICD.Common.Utils.Extensions;
@@ -15,20 +14,20 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
     public sealed class RobinServiceDeviceCalendarControl : AbstractCalendarControl<RobinServiceDevice>
     {
-        private const int TIMERREFRESHINTERVAL = 10 * 60 * 1000;
+        private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
-        private readonly BookingsComponent m_BookingsComponent;
+        private readonly EventsComponent m_EventsComponent;
 	    private readonly SafeTimer m_RefreshTimer;
 	    private readonly List<RobinBooking> m_SortedBookings;
 	    private readonly IcdHashSet<RobinBooking> m_HashBooking;
 
 	    /// <summary>
-	    /// Raised when bookings are added/removed.
+	    /// Raised when events are added/removed.
 	    /// </summary>
 	    public override event EventHandler OnBookingsChanged;
 
 		/// <summary>
-		/// Sort bookings by start time.
+		/// Sort events by start time.
 		/// </summary>
 		private static readonly PredicateComparer<RobinBooking, DateTime> s_BookingComparer;
 
@@ -48,13 +47,13 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public RobinServiceDeviceCalendarControl(RobinServiceDevice parent, int id)
 		    : base(parent, id)
 	    {
-		    m_RefreshTimer = new SafeTimer(Refresh, TIMERREFRESHINTERVAL, TIMERREFRESHINTERVAL);
+		    m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
 		    m_SortedBookings = new List<RobinBooking>();
 		    m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
 
-		    m_BookingsComponent = Parent.Components.GetComponent<BookingsComponent>();
-		    Subscribe(m_BookingsComponent);
+		    m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
+		    Subscribe(m_EventsComponent);
 		}
 
 		/// <summary>
@@ -69,48 +68,48 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			base.DisposeFinal(disposing);
 
-			Unsubscribe(m_BookingsComponent);
+			Unsubscribe(m_EventsComponent);
 	    }
 
 		/// <summary>
-		/// Subscribe to the bookings events.
+		/// Subscribe to the events events.
 		/// </summary>
-		/// <param name="bookings"></param>
-	    private void Subscribe(BookingsComponent bookings)
+		/// <param name="events"></param>
+	    private void Subscribe(EventsComponent events)
 	    {
-		    bookings.OnBookingsUpdated += BookingsOnOnBookingsUpdated;
+		    events.OnEventsUpdated += EventsOnOnEventsUpdated;
 	    }
 
 		/// <summary>
-		/// Unsubscribe from the bookings events.
+		/// Unsubscribe from the events events.
 		/// </summary>
-		/// <param name="bookings"></param>
-	    private void Unsubscribe(BookingsComponent bookings)
+		/// <param name="events"></param>
+	    private void Unsubscribe(EventsComponent events)
 	    {
-		    bookings.OnBookingsUpdated -= BookingsOnOnBookingsUpdated;
+		    events.OnEventsUpdated -= EventsOnOnEventsUpdated;
 	    }
 
 	    /// <summary>
-	    /// Called when bookings are added/removed.
+	    /// Called when events are added/removed.
 	    /// </summary>
 	    /// <param name="sender"></param>
 	    /// <param name="e"></param>
-	    private void BookingsOnOnBookingsUpdated(object sender, EventArgs e)
+	    private void EventsOnOnEventsUpdated(object sender, EventArgs e)
 	    {
 		    bool change = false;
 
-		    Components.Bookings.Booking[] bookings = m_BookingsComponent.GetBookings()
+		    Event[] events = m_EventsComponent.GetEvents()
 			    //.Where(b => b.EndTime > IcdEnvironment.GetLocalTime())
 			    .Distinct()
 			    .ToArray();
 		    IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
-		    IcdHashSet<RobinBooking> current = bookings.Select(b => new RobinBooking(b)).ToIcdHashSet(new BookingsComparer<RobinBooking>());
+		    IcdHashSet<RobinBooking> current = events.Select(b => new RobinBooking(b)).ToIcdHashSet(new BookingsComparer<RobinBooking>());
 
 		    IcdHashSet<RobinBooking> removeBookingList = existing.Subtract(current);
 		    foreach (RobinBooking booking in removeBookingList)
 			    change |= RemoveBooking(booking);
 
-		    foreach (var booking in bookings)
+		    foreach (var booking in events)
 			    change |= AddBooking(booking);
 
 		    if (change)
@@ -120,7 +119,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 	    public override void Refresh()
 	    {
-			m_BookingsComponent.UpdateBookings();
+			m_EventsComponent.UpdateBookings();
 	    }
 
 		public override IEnumerable<IBooking> GetBookings()
@@ -128,30 +127,30 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    return m_SortedBookings.ToArray(m_SortedBookings.Count);
 	    }
 
-	    private bool AddBooking(Components.Bookings.Booking booking)
+	    private bool AddBooking(Event @event)
 	    {
-		    if (booking == null)
-			    throw new ArgumentNullException("booking");
+		    if (@event == null)
+			    throw new ArgumentNullException("Event");
 
-		    RobinBooking zoomBooking = new RobinBooking(booking);
+		    RobinBooking robinBooking = new RobinBooking(@event);
 
-		    if (m_HashBooking.Contains(zoomBooking))
+		    if (m_HashBooking.Contains(robinBooking))
 			    return false;
 
-		    m_HashBooking.Add(zoomBooking);
+		    m_HashBooking.Add(robinBooking);
 
-		    m_SortedBookings.AddSorted(zoomBooking, s_BookingComparer);
+		    m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
 
 		    return true;
 	    }
 
-	    private bool RemoveBooking(RobinBooking zoomBooking)
+	    private bool RemoveBooking(RobinBooking robinBooking)
 	    {
-		    if (!m_HashBooking.Contains(zoomBooking))
+		    if (!m_HashBooking.Contains(robinBooking))
 			    return false;
 
-		    m_HashBooking.Remove(zoomBooking);
-		    m_SortedBookings.Remove(zoomBooking);
+		    m_HashBooking.Remove(robinBooking);
+		    m_SortedBookings.Remove(robinBooking);
 
 		    return true;
 	    }

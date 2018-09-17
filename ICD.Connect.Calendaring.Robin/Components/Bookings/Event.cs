@@ -1,9 +1,11 @@
 ﻿using System;
+using ICD.Common.Properties;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 {
-    public sealed class Booking
+	[UsedImplicitly]
+	public sealed class Event
 	{
 		/// <summary>
 		/// Name of the meeting
@@ -61,7 +63,8 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
         [JsonProperty("visibility")]
 	    public string IsPrivate { get; private set; }
 
-        public class DateInfo
+		[UsedImplicitly]
+		public sealed class DateInfo
 	    {
 	        [JsonProperty("date_time")]
             public DateTime DateTimeInfo { get; private set; }

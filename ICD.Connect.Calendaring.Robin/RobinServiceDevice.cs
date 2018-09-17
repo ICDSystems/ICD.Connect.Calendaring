@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
@@ -8,17 +9,28 @@ using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Core;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Robin
 {
 	public sealed class RobinServiceDevice : AbstractDevice<RobinServiceDeviceSettings>
 	{
-	    private IWebPort m_Port;
-	    private bool m_Initialized;
+		private static readonly IDictionary<string, List<string>> s_Headers =
+	new Dictionary<string, List<string>>
+			{
+				{
+				    "Authorization",
+				    new List<string>
+				    {
+					    "Access-Token q5NHYiVud5r7CHCu1SV0Nrr6mTNIMvdCLPccnmreQPXZjMQ4Q6o5EkHtpNPYObfBlv20v7AOuuRHgdLfvsmvSAyuFLAWPitzRXxjdAWY3i5fi3QyA2TSZfQFHPOhBHuw"
+				    }
+			    },
+			    {"Connection", new List<string> {"keep-alive"}}
+			};
 
-        public event EventHandler<BoolEventArgs> OnInitializedChanged;
+		private IWebPort m_Port;
 
-        #region Properties
+		#region Properties
 
         public RobinServiceDeviceComponentFactory Components { get; private set; }
 	    public string Token { get; set; }
@@ -34,23 +46,6 @@ namespace ICD.Connect.Calendaring.Robin
 		}
 
         #region Methods
-
-	    /// <summary>
-	    /// Device Initialized Status.
-	    /// </summary>
-	    public bool Initialized
-	    {
-	        get { return m_Initialized; }
-	        private set
-	        {
-	            if (value == m_Initialized)
-	                return;
-
-	            m_Initialized = value;
-
-	            OnInitializedChanged.Raise(this, new BoolEventArgs(m_Initialized));
-	        }
-	    }
 
         /// <summary>
         /// Sets the port for communication with the service.
@@ -70,20 +65,41 @@ namespace ICD.Connect.Calendaring.Robin
 	        m_Port = port;
 	        Subscribe(m_Port);
 
-	        Initialized = true;
 	        UpdateCachedOnlineStatus();
 	    }
 
-	    /// <summary>
-	    /// gets the port.
-	    /// </summary>
-	    /// <param name="port"></param>
-	    internal IWebPort GetPort()
-	    {
-            return m_Port;
-	    }
+		public string Request(string uri)
+		{
+			bool success;
+			string response;
 
-        #endregion
+			try
+			{
+				success = m_Port.Get(uri, s_Headers, out response);
+			}
+				// Catch HTTP or HTTPS exception, without dependency on Crestron
+			catch (Exception e)
+			{
+				string message = string.Format("{0} failed to dispatch - {1}", "GetReservations", e.Message);
+				throw new InvalidOperationException(message, e);
+			}
+
+			if (!success)
+			{
+				string message = string.Format("{0} failed to dispatch", "GetReservations");
+				throw new InvalidOperationException(message);
+			}
+
+			if (string.IsNullOrEmpty(response))
+			{
+				string message = string.Format("{0} failed to dispatch - received empty response", "GetReservations");
+				throw new InvalidOperationException(message);
+			}
+
+			return JsonConvert.DeserializeObject<Dictionary<string, object>>(response)["data"].ToString();
+		}
+
+		#endregion
 
         #region Private Methods
 
@@ -96,7 +112,7 @@ namespace ICD.Connect.Calendaring.Robin
 	        return m_Port != null && m_Port.IsOnline;
 	    }
 
-        /// <summary>
+		/// <summary>
         /// Subscribe to the port events.
         /// </summary>
         /// <param name="port"></param>

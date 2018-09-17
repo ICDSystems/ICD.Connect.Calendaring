@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 
@@ -36,7 +35,6 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		protected AbstractRobinServiceDeviceComponent(RobinServiceDevice parent)
 		{
 			Parent = parent;
-		    Subscribe(Parent);
         }
 
 		/// <summary>
@@ -61,8 +59,6 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <param name="disposing"></param>
 		private void Dispose(bool disposing)
 		{
-		    Unsubscribe(Parent);
-
             DisposeFinal();
 		}
 
@@ -101,52 +97,5 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		}
 
 		#endregion
-
-		#region Protected Methods
-
-		/// <summary>
-		/// Called to initialize the component.
-		/// </summary>
-		protected virtual void Initialize()
-		{
-		}
-
-	    /// <summary>
-	    /// Subscribes to the Robin events.
-	    /// </summary>
-	    /// <param name="robinServiceDevice"></param>
-	    private void Subscribe(RobinServiceDevice robinServiceDevice)
-	    {
-	        if (robinServiceDevice == null)
-	            return;
-
-	        robinServiceDevice.OnInitializedChanged += RobinOnInitializedChanged;
-	    }
-
-	    /// <summary>
-	    /// Unsubscribes from the Robin events.
-	    /// </summary>
-	    /// <param name="robinServiceDevice"></param>
-	    private void Unsubscribe(RobinServiceDevice robinServiceDevice)
-	    {
-	        if (robinServiceDevice == null)
-	            return;
-
-	        robinServiceDevice.OnInitializedChanged -= RobinOnInitializedChanged;
-	    }
-
-        /// <summary>
-        /// Called when the ZoomRoom initializes.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
-        private void RobinOnInitializedChanged(object sender, BoolEventArgs args)
-	    {
-	        if (args.Data)
-	            Initialize();
-	    }
-
-        #endregion
-
     }
 }

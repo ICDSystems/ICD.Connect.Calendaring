@@ -12,6 +12,7 @@ namespace ICD.Connect.Calendaring.Robin
 		private const string PORT_ELEMENT = "Port";
         private const string TOKEN_ELEMENT = "Token";
         private const string RESOURCEID_ELEMENT = "ResourceId";
+
         /// <summary>
         /// The port id.
         /// </summary>
@@ -30,7 +31,7 @@ namespace ICD.Connect.Calendaring.Robin
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(PORT_ELEMENT, Port == null ? null : IcdXmlConvert.ToString((int) Port));
+			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 		    writer.WriteElementString(TOKEN_ELEMENT, Token);
 		    writer.WriteElementString(RESOURCEID_ELEMENT, ResourceId);
         }

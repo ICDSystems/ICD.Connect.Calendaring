@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils;
-using ICD.Common.Utils.Collections;
 using ICD.Connect.Calendaring.Robin.Components.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Components
 {
 	public sealed class RobinServiceDeviceComponentFactory : IDisposable
 	{
-		private readonly IcdHashSet<AbstractRobinServiceDeviceComponent> m_Components;
+		private readonly Dictionary<Type, AbstractRobinServiceDeviceComponent> m_Components;
 		private readonly SafeCriticalSection m_ComponentsSection;
 
 		private static readonly Dictionary<Type, Func<RobinServiceDevice, AbstractRobinServiceDeviceComponent>> s_Factories =
 			new Dictionary<Type, Func<RobinServiceDevice, AbstractRobinServiceDeviceComponent>>
 			{
-				{typeof(BookingsComponent), robinRoom => new BookingsComponent(robinRoom)}
+				{typeof(EventsComponent), robinRoom => new EventsComponent(robinRoom)}
 			};
 
 		private readonly RobinServiceDevice m_RobinServiceDevice;
@@ -26,7 +25,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <param name="robinRoom"></param>
 		public RobinServiceDeviceComponentFactory(RobinServiceDevice robinRoom)
 		{
-			m_Components = new IcdHashSet<AbstractRobinServiceDeviceComponent>();
+			m_Components = new Dictionary<Type, AbstractRobinServiceDeviceComponent>();
 			m_ComponentsSection = new SafeCriticalSection();
 
 			m_RobinServiceDevice = robinRoom;
@@ -58,14 +57,21 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		public T GetComponent<T>()
 			where T : AbstractRobinServiceDeviceComponent
 		{
+
+			Type key = typeof(T);
+
 			m_ComponentsSection.Enter();
 
 			try
 			{
-				T output = m_Components.OfType<T>().FirstOrDefault() ?? s_Factories[typeof(T)](m_RobinServiceDevice) as T;
-				m_Components.Add(output);
+				AbstractRobinServiceDeviceComponent component;
+				if (!m_Components.TryGetValue(key, out component))
+				{
+					component = s_Factories[key](m_RobinServiceDevice);
+					m_Components.Add(key, component);
+				}
 
-				return output;
+				return component as T;
 			}
 			finally
 			{
@@ -79,7 +85,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <returns></returns>
 		public IEnumerable<AbstractRobinServiceDeviceComponent> GetComponents()
 		{
-			return m_ComponentsSection.Execute(() => m_Components.ToArray());
+			return m_ComponentsSection.Execute(() => m_Components.Values.ToArray());
 		}
 
 		#endregion
@@ -94,7 +100,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 
 			try
 			{
-				foreach (AbstractRobinServiceDeviceComponent component in m_Components)
+				foreach (AbstractRobinServiceDeviceComponent component in m_Components.Values)
 					component.Dispose();
 				m_Components.Clear();
 			}
