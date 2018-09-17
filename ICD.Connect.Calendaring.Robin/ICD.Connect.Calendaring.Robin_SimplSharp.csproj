@@ -74,7 +74,8 @@
     <Compile Include="Components\AbstractRobinServiceDeviceComponent.cs" />
     <Compile Include="Components\Bookings\Event.cs" />
     <Compile Include="Components\Bookings\EventsComponent.cs" />
-    <Compile Include="Components\Bookings\UserInfo.cs" />
+    <Compile Include="Components\Bookings\User.cs" />
+    <Compile Include="Components\Bookings\UsersComponent.cs" />
     <Compile Include="Components\RobinServiceDeviceComponentFactory.cs" />
     <Compile Include="Controls\Calendar\RobinBooking.cs" />
     <Compile Include="Controls\Calendar\RobinCalendarControl.cs" />

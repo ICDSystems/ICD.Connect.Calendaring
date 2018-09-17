@@ -12,12 +12,14 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 
 		private readonly List<Event> m_Events;
         private readonly RobinServiceDevice m_RobinServiceDevice;
+	    private readonly UsersComponent m_UsersComponent;
 
 		public EventsComponent(RobinServiceDevice robinServiceDevice)
 			: base(robinServiceDevice)
 		{
 			m_Events = new List<Event>();
 		    m_RobinServiceDevice = robinServiceDevice;
+			m_UsersComponent = robinServiceDevice.Components.GetComponent<UsersComponent>();
 		}
 
 		protected override void DisposeFinal()
@@ -50,7 +52,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
             {
                 if (@event.OrganizerId != null)
                 {
-                    @event.OrganizerName = GetUserInfo(@event.OrganizerId).UserName;
+                    @event.OrganizerName = m_UsersComponent.GetUser(@event.OrganizerId).UserName;
                 }
             }
 
@@ -85,13 +87,13 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 		/// </summary>
 		/// <param name="userId"></param>
 		/// <returns></returns>
-		private UserInfo GetUserInfo(string userId)
+		private User GetUserInfo(string userId)
 		{
 			string uri = string.Format("users/{0}", userId);
 
 			string data = Parent.Request(uri);
 
-			return JsonConvert.DeserializeObject<UserInfo>(data);
+			return JsonConvert.DeserializeObject<User>(data);
 		}
 
 		#endregion

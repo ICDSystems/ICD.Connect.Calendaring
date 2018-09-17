@@ -14,7 +14,8 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		private static readonly Dictionary<Type, Func<RobinServiceDevice, AbstractRobinServiceDeviceComponent>> s_Factories =
 			new Dictionary<Type, Func<RobinServiceDevice, AbstractRobinServiceDeviceComponent>>
 			{
-				{typeof(EventsComponent), robinRoom => new EventsComponent(robinRoom)}
+				{typeof(EventsComponent), robinRoom => new EventsComponent(robinRoom)},
+				{typeof(UsersComponent), robinRoom => new UsersComponent(robinRoom)}
 			};
 
 		private readonly RobinServiceDevice m_RobinServiceDevice;

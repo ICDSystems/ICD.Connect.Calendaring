@@ -15,17 +15,12 @@ namespace ICD.Connect.Calendaring.Robin
 {
 	public sealed class RobinServiceDevice : AbstractDevice<RobinServiceDeviceSettings>
 	{
+		public event EventHandler OnSetPort;
+
 		private static readonly IDictionary<string, List<string>> s_Headers =
 	new Dictionary<string, List<string>>
 			{
-				{
-				    "Authorization",
-				    new List<string>
-				    {
-					    "Access-Token q5NHYiVud5r7CHCu1SV0Nrr6mTNIMvdCLPccnmreQPXZjMQ4Q6o5EkHtpNPYObfBlv20v7AOuuRHgdLfvsmvSAyuFLAWPitzRXxjdAWY3i5fi3QyA2TSZfQFHPOhBHuw"
-				    }
-			    },
-			    {"Connection", new List<string> {"keep-alive"}}
+				{"Connection", new List<string> {"keep-alive"}}
 			};
 
 		private IWebPort m_Port;
@@ -65,7 +60,8 @@ namespace ICD.Connect.Calendaring.Robin
 	        m_Port = port;
 	        Subscribe(m_Port);
 
-	        UpdateCachedOnlineStatus();
+		    OnSetPort.Raise(this);
+			UpdateCachedOnlineStatus();
 	    }
 
 		public string Request(string uri)
@@ -157,7 +153,9 @@ namespace ICD.Connect.Calendaring.Robin
 		    Token = settings.Token;
 		    ResourceId = settings.ResourceId;
 
-            if (settings.Port != null)
+			s_Headers.Add("Authorization", new List<string> { Token });
+
+			if (settings.Port != null)
 			{
 				var port = factory.GetOriginatorById<IWebPort>(settings.Port.Value);
 				SetPort(port);
@@ -168,7 +166,9 @@ namespace ICD.Connect.Calendaring.Robin
 	    {
             base.ClearSettingsFinal();
 
-	        Token = null;
+		    s_Headers.Remove("Authorization");
+
+			Token = null;
 	        ResourceId = null;
             SetPort(null);
 	    }

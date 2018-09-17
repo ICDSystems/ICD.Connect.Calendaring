@@ -2,7 +2,7 @@
 
 namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 {
-    public sealed class UserInfo
+    public sealed class User
     {
 		/// <summary>
 		/// Name of the meeting

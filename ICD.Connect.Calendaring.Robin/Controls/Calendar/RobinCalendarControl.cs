@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.Comparers;
 using ICD.Common.Utils.Extensions;
@@ -20,11 +21,12 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	    private readonly SafeTimer m_RefreshTimer;
 	    private readonly List<RobinBooking> m_SortedBookings;
 	    private readonly IcdHashSet<RobinBooking> m_HashBooking;
+	    private readonly RobinServiceDevice m_Parent;
 
-	    /// <summary>
-	    /// Raised when events are added/removed.
-	    /// </summary>
-	    public override event EventHandler OnBookingsChanged;
+		/// <summary>
+		/// Raised when events are added/removed.
+		/// </summary>
+		public override event EventHandler OnBookingsChanged;
 
 		/// <summary>
 		/// Sort events by start time.
@@ -51,10 +53,12 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		    m_SortedBookings = new List<RobinBooking>();
 		    m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
+		    m_Parent = parent;
 
-		    m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
+			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
 		    Subscribe(m_EventsComponent);
-		}
+		    Subscribe(m_Parent);
+	    }
 
 		/// <summary>
 		/// Release resources.
@@ -69,7 +73,9 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			base.DisposeFinal(disposing);
 
 			Unsubscribe(m_EventsComponent);
-	    }
+			Unsubscribe(m_Parent);
+
+		}
 
 		/// <summary>
 		/// Subscribe to the events events.
@@ -89,17 +95,35 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    events.OnEventsUpdated -= EventsOnOnEventsUpdated;
 	    }
 
-	    /// <summary>
-	    /// Called when events are added/removed.
-	    /// </summary>
-	    /// <param name="sender"></param>
-	    /// <param name="e"></param>
-	    private void EventsOnOnEventsUpdated(object sender, EventArgs e)
+		/// <summary>
+		/// Subscribe to the events events.
+		/// </summary>
+		/// <param name="parent"></param>
+		private void Subscribe(RobinServiceDevice parent)
+	    {
+		    parent.OnSetPort += ParentOnOnSetPort;
+	    }
+
+		/// <summary>
+		/// Unsubscribe from the parent port change.
+		/// </summary>
+		/// <param name="parent"></param>
+		private void Unsubscribe(RobinServiceDevice parent)
+	    {
+		    parent.OnSetPort -= ParentOnOnSetPort;
+	    }
+
+		/// <summary>
+		/// Called when events are added/removed.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void EventsOnOnEventsUpdated(object sender, EventArgs e)
 	    {
 		    bool change = false;
 
 		    Event[] events = m_EventsComponent.GetEvents()
-			    //.Where(b => b.EndTime > IcdEnvironment.GetLocalTime())
+			    .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
 			    .Distinct()
 			    .ToArray();
 		    IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
@@ -117,7 +141,12 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 	    }
 
-	    public override void Refresh()
+	    private void ParentOnOnSetPort(object sender, EventArgs e)
+	    {
+		    Refresh();
+	    }
+
+		public override void Refresh()
 	    {
 			m_EventsComponent.UpdateBookings();
 	    }
