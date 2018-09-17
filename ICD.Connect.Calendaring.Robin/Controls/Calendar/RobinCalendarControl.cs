@@ -57,7 +57,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
 		    Subscribe(m_EventsComponent);
-		    Subscribe(m_Parent);
 	    }
 
 		/// <summary>
@@ -73,7 +72,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			base.DisposeFinal(disposing);
 
 			Unsubscribe(m_EventsComponent);
-			Unsubscribe(m_Parent);
 
 		}
 
@@ -93,24 +91,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	    private void Unsubscribe(EventsComponent events)
 	    {
 		    events.OnEventsUpdated -= EventsOnOnEventsUpdated;
-	    }
-
-		/// <summary>
-		/// Subscribe to the events events.
-		/// </summary>
-		/// <param name="parent"></param>
-		private void Subscribe(RobinServiceDevice parent)
-	    {
-		    parent.OnSetPort += ParentOnOnSetPort;
-	    }
-
-		/// <summary>
-		/// Unsubscribe from the parent port change.
-		/// </summary>
-		/// <param name="parent"></param>
-		private void Unsubscribe(RobinServiceDevice parent)
-	    {
-		    parent.OnSetPort -= ParentOnOnSetPort;
 	    }
 
 		/// <summary>
@@ -141,11 +121,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 	    }
 
-	    private void ParentOnOnSetPort(object sender, EventArgs e)
-	    {
-		    Refresh();
-	    }
-
 		public override void Refresh()
 	    {
 			m_EventsComponent.UpdateBookings();
@@ -159,7 +134,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	    private bool AddBooking(Event @event)
 	    {
 		    if (@event == null)
-			    throw new ArgumentNullException("Event");
+			    throw new ArgumentNullException("event");
 
 		    RobinBooking robinBooking = new RobinBooking(@event);
 

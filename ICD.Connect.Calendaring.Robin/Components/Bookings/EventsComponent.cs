@@ -96,6 +96,11 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 			return JsonConvert.DeserializeObject<User>(data);
 		}
 
+		public override void ParentOnOnSetPort(object sender, EventArgs e)
+		{
+			UpdateBookings();
+		}
+
 		#endregion
 	}
 }

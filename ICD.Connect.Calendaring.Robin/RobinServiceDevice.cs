@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
@@ -17,8 +18,8 @@ namespace ICD.Connect.Calendaring.Robin
 	{
 		public event EventHandler OnSetPort;
 
-		private static readonly IDictionary<string, List<string>> s_Headers =
-	new Dictionary<string, List<string>>
+		private readonly IDictionary<string, List<string>> m_Headers =
+			new Dictionary<string, List<string>>
 			{
 				{"Connection", new List<string> {"keep-alive"}}
 			};
@@ -28,8 +29,29 @@ namespace ICD.Connect.Calendaring.Robin
 		#region Properties
 
         public RobinServiceDeviceComponentFactory Components { get; private set; }
-	    public string Token { get; set; }
-	    public string ResourceId { get; set; }
+
+		public string Token
+		{
+			get
+			{
+				List<string> values;
+				return m_Headers.TryGetValue("Authorization", out values) ? values.FirstOrDefault() : null;
+			}
+			set
+			{
+				List<string> values;
+				if (!m_Headers.TryGetValue("Authorization", out values))
+				{
+					values = new List<string>();
+					m_Headers.Add("Authorization", values);
+				}
+
+				values.Clear();
+				values.Add(value);
+			}
+		}
+
+		public string ResourceId { get; set; }
 
         #endregion
 
@@ -71,7 +93,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			try
 			{
-				success = m_Port.Get(uri, s_Headers, out response);
+				success = m_Port.Get(uri, m_Headers, out response);
 			}
 				// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
@@ -153,8 +175,6 @@ namespace ICD.Connect.Calendaring.Robin
 		    Token = settings.Token;
 		    ResourceId = settings.ResourceId;
 
-			s_Headers.Add("Authorization", new List<string> { Token });
-
 			if (settings.Port != null)
 			{
 				var port = factory.GetOriginatorById<IWebPort>(settings.Port.Value);
@@ -165,8 +185,6 @@ namespace ICD.Connect.Calendaring.Robin
 	    protected override void ClearSettingsFinal()
 	    {
             base.ClearSettingsFinal();
-
-		    s_Headers.Remove("Authorization");
 
 			Token = null;
 	        ResourceId = null;

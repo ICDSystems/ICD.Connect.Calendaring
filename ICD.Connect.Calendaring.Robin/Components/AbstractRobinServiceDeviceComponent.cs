@@ -14,6 +14,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// </summary>
 		public RobinServiceDevice Parent { get; private set; }
 
+
 		/// <summary>
 		/// Gets the name of the node in the console.
 		/// </summary>
@@ -35,7 +36,8 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		protected AbstractRobinServiceDeviceComponent(RobinServiceDevice parent)
 		{
 			Parent = parent;
-        }
+			Subscribe(Parent);
+		}
 
 		/// <summary>
 		/// Deconstructor.
@@ -59,7 +61,9 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <param name="disposing"></param>
 		private void Dispose(bool disposing)
 		{
-            DisposeFinal();
+			Unsubscribe(Parent);
+
+			DisposeFinal();
 		}
 
 		protected virtual void DisposeFinal()
@@ -97,5 +101,30 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		}
 
 		#endregion
-    }
+
+		#region Private
+
+		/// <summary>
+		/// Subscribe to the events events.
+		/// </summary>
+		/// <param name="parent"></param>
+		private void Subscribe(RobinServiceDevice parent)
+		{
+			parent.OnSetPort += ParentOnOnSetPort;
+		}
+
+		/// <summary>
+		/// Unsubscribe from the parent port change.
+		/// </summary>
+		/// <param name="parent"></param>
+		private void Unsubscribe(RobinServiceDevice parent)
+		{
+			parent.OnSetPort -= ParentOnOnSetPort;
+		}
+
+		public virtual void ParentOnOnSetPort(object sender, EventArgs e)
+		{
+		}
+		#endregion
+	}
 }
