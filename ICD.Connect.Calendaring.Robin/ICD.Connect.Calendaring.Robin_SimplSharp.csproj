@@ -8,8 +8,8 @@
     <ProjectGuid>{F903F100-E629-46BE-9EA3-B668C5C70241}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ICD.Connect.Calendaring.Robin_SimplSharp</RootNamespace>
-    <AssemblyName>ICD.Connect.Calendaring.Robin_SimplSharp</AssemblyName>
+    <RootNamespace>ICD.Connect.Calendaring.Robin</RootNamespace>
+    <AssemblyName>ICD.Connect.Calendaring.Robin</AssemblyName>
     <ProjectTypeGuids>{0B4745B0-194B-4BB6-8E21-E9057CA92500};{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
@@ -19,7 +19,7 @@
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
-	<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowedReferenceRelatedFileExtensions>.allowedReferenceRelatedFileExtensions</AllowedReferenceRelatedFileExtensions>
@@ -46,7 +46,7 @@
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
-	<DefineConstants>SIMPLSHARP</DefineConstants>
+    <DefineConstants>SIMPLSHARP</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -79,6 +79,7 @@
     <Compile Include="Controls\Calendar\RobinBooking.cs" />
     <Compile Include="Controls\Calendar\RobinCalendarControl.cs" />
     <Compile Include="KrangPlugin.cs" />
+    <None Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceSchedulerService.cs" />
     <Compile Include="RobinServiceDevice.cs" />
