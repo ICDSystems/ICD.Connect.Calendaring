@@ -19,8 +19,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
         private readonly EventsComponent m_EventsComponent;
 	    private readonly SafeTimer m_RefreshTimer;
-	    private readonly List<RobinBooking> m_SortedBookings;
-	    private readonly IcdHashSet<RobinBooking> m_HashBooking;
+	    private readonly List<IRobinBooking> m_SortedBookings;
+	    private readonly IcdHashSet<IRobinBooking> m_HashBooking;
 	    private readonly RobinServiceDevice m_Parent;
 
 		/// <summary>
@@ -31,14 +31,14 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		/// <summary>
 		/// Sort events by start time.
 		/// </summary>
-		private static readonly PredicateComparer<RobinBooking, DateTime> s_BookingComparer;
+		private static readonly PredicateComparer<IRobinBooking, DateTime> s_BookingComparer;
 
 		/// <summary>
 		/// Static constructor.
 		/// </summary>
 		static RobinServiceDeviceCalendarControl()
 	    {
-			s_BookingComparer = new PredicateComparer<RobinBooking, DateTime>(b => b.StartTime);
+			s_BookingComparer = new PredicateComparer<IRobinBooking, DateTime>(b => b.StartTime);
 		}
 
 		/// <summary>
@@ -51,8 +51,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	    {
 		    m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-		    m_SortedBookings = new List<RobinBooking>();
-		    m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
+		    m_SortedBookings = new List<IRobinBooking>();
+		    m_HashBooking = new IcdHashSet<IRobinBooking>(new BookingsComparer<IRobinBooking>());
 		    m_Parent = parent;
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
@@ -103,14 +103,14 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    bool change = false;
 
 		    Event[] events = m_EventsComponent.GetEvents()
-			    .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
+			    //.Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
 			    .Distinct()
 			    .ToArray();
-		    IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
-		    IcdHashSet<RobinBooking> current = events.Select(b => new RobinBooking(b)).ToIcdHashSet(new BookingsComparer<RobinBooking>());
+		    IcdHashSet<IRobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<IRobinBooking>());
+		    IcdHashSet<IRobinBooking> current = events.Select(b => GetBookingProtocol(b)).ToIcdHashSet(new BookingsComparer<IRobinBooking>());
 
-		    IcdHashSet<RobinBooking> removeBookingList = existing.Subtract(current);
-		    foreach (RobinBooking booking in removeBookingList)
+		    IcdHashSet<IRobinBooking> removeBookingList = existing.Subtract(current);
+		    foreach (IRobinBooking booking in removeBookingList)
 			    change |= RemoveBooking(booking);
 
 		    foreach (var booking in events)
@@ -133,12 +133,9 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 	    private bool AddBooking(Event @event)
 	    {
-		    if (@event == null)
-			    throw new ArgumentNullException("event");
+			IRobinBooking robinBooking = GetBookingProtocol(@event);
 
-		    RobinBooking robinBooking = new RobinBooking(@event);
-
-		    if (m_HashBooking.Contains(robinBooking))
+			if (m_HashBooking.Contains(robinBooking))
 			    return false;
 
 		    m_HashBooking.Add(robinBooking);
@@ -148,7 +145,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    return true;
 	    }
 
-	    private bool RemoveBooking(RobinBooking robinBooking)
+	    private bool RemoveBooking(IRobinBooking robinBooking)
 	    {
 		    if (!m_HashBooking.Contains(robinBooking))
 			    return false;
@@ -157,6 +154,34 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    m_SortedBookings.Remove(robinBooking);
 
 		    return true;
+	    }
+
+	    private IRobinBooking GetBookingProtocol(Event @event)
+	    {
+		    if (@event == null)
+			    throw new ArgumentNullException("event");
+
+		    BookingProtocolInfo info = BookingParsingUtils.GetProtocolInfo(@event.Description);
+
+		    IRobinBooking robinBooking;
+
+		    switch (info.BookingProtocol)
+		    {
+			    case eBookingProtocol.None:
+				    robinBooking = new RobinBooking(@event);
+				    break;
+			    case eBookingProtocol.Sip:
+					throw new NotSupportedException();
+			    case eBookingProtocol.Pstn:
+					throw new NotSupportedException();
+				case eBookingProtocol.Zoom:
+					robinBooking = new ZoomBooking(@event) {MeetingNumber = info.Number};
+					break;
+			    default:
+				    throw new ArgumentOutOfRangeException();
+		    }
+
+		    return robinBooking;
 	    }
     }
 }

@@ -4,8 +4,8 @@ using ICD.Connect.Calendaring.Robin.Components.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
-    public sealed class RobinBooking : AbstractBooking
-    {
+    public sealed class RobinBooking : AbstractBooking, IRobinBooking
+	{
 	    private readonly Event m_Event;
 
 	    public override string MeetingName
@@ -43,7 +43,12 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    get { return eMeetingType.VideoConference; }
 	    }
 
-	    public RobinBooking(Event @event)
+	    public string Description
+	    {
+		    get { return m_Event.Description; }
+	    }
+
+		public RobinBooking(Event @event)
 	    {
 		    m_Event = @event;
 	    }
