@@ -5,7 +5,7 @@ namespace ICD.Connect.Calendaring.Comparers
 {
 	public sealed class BookingsComparer<T> : IEqualityComparer<T>
     where T : IBooking
-    {
+	{
 		public bool Equals(T x, T y)
 		{
 			return x.MeetingName == y.MeetingName
