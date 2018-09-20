@@ -10,6 +10,7 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
 using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Calendaring.Robin.Components.Bookings;
+using ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
@@ -103,7 +104,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		    bool change = false;
 
 		    Event[] events = m_EventsComponent.GetEvents()
-			    //.Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
+			    .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
 			    .Distinct()
 			    .ToArray();
 		    IcdHashSet<IRobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<IRobinBooking>());

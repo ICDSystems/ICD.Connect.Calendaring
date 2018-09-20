@@ -2,18 +2,11 @@
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Robin.Components.Bookings;
 
-namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
+namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 {
-	public sealed class ZoomBooking : AbstractBooking, IZoomBooking, ISipBooking, IRobinBooking
+	public sealed class RobinBooking : AbstractBooking, IRobinBooking
 	{
 		private readonly Event m_Event;
-
-		public string MeetingNumber { get; set; }
-
-		public string SipUri
-		{
-			get { return MeetingNumber + "@zmus.us"; }
-		}
 
 		public override string MeetingName
 		{
@@ -50,7 +43,12 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			get { return eMeetingType.VideoConference; }
 		}
 
-		public ZoomBooking(Event @event)
+		public string Description
+		{
+			get { return m_Event.Description; }
+		}
+
+		public RobinBooking(Event @event)
 		{
 			m_Event = @event;
 		}
