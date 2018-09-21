@@ -11,7 +11,7 @@ namespace ICD.Connect.Calendaring
 	/// </summary>
 	public static class BookingParsingUtils
 	{
-		private const string ZOOM_REGEX = @"(?'zoomUrl'https:\/\/zoom.us\/j\/[0-9]+)";
+		private const string ZOOM_REGEX = @"(?'zoomUrl'https:\/\/zoom.us\/j\/(?'meetingNumber'[0-9]+))";
 
 		/// <summary>
 		/// Parses meeting data from booking description.
@@ -28,12 +28,12 @@ namespace ICD.Connect.Calendaring
 
 				if (RegexUtils.Matches(line, ZOOM_REGEX, out match))
 				{
-					string zoomUrl = match.Groups["zoomUrl"].Value;
+					string meetingNumber = match.Groups["meetingNumber"].Value;
 
 					return new BookingProtocolInfo
 					{
 						BookingProtocol = eBookingProtocol.Zoom,
-						Number = zoomUrl
+						Number = meetingNumber
 					};
 				}
 			}
