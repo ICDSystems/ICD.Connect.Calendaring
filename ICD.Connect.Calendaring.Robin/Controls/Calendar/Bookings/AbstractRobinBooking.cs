@@ -2,55 +2,53 @@
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Robin.Components.Bookings;
 
-namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
+namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
-	public sealed class ZoomBooking : AbstractBooking, IZoomBooking, ISipBooking, IRobinBooking
+	public abstract class AbstractRobinBooking : IRobinBooking
 	{
 		private readonly Event m_Event;
 
-		public string MeetingNumber { get; set; }
-
-		public string SipUri
-		{
-			get { return MeetingNumber + "@zmus.us"; }
-		}
-
-		public override string MeetingName
+		public virtual string MeetingName
 		{
 			get { return m_Event.MeetingName; }
 		}
 
-		public override string OrganizerName
+		public virtual string OrganizerName
 		{
 			get { return m_Event.OrganizerName; }
 		}
 
-		public override string OrganizerEmail
+		public virtual string OrganizerEmail
 		{
 			get { return m_Event.OrganizerEmail; }
 		}
 
-		public override DateTime StartTime
+		public virtual DateTime StartTime
 		{
 			get { return m_Event.MeetingStart.DateTimeInfo; }
 		}
 
-		public override DateTime EndTime
+		public virtual DateTime EndTime
 		{
 			get { return m_Event.MeetingEnd.DateTimeInfo; }
 		}
 
-		public override bool IsPrivate
+		public virtual bool IsPrivate
 		{
 			get { return m_Event.IsPrivate.ToLower() == "private"; }
 		}
 
-		public override eMeetingType Type
+		public virtual eMeetingType Type
 		{
 			get { return eMeetingType.VideoConference; }
 		}
 
-		public ZoomBooking(Event @event)
+		public virtual string Description
+		{
+			get { return m_Event.Description; }
+		}
+
+		public AbstractRobinBooking(Event @event)
 		{
 			m_Event = @event;
 		}

@@ -77,9 +77,11 @@
     <Compile Include="Components\Bookings\User.cs" />
     <Compile Include="Components\Bookings\UsersComponent.cs" />
     <Compile Include="Components\RobinServiceDeviceComponentFactory.cs" />
-    <Compile Include="Controls\Calendar\RobinBooking.cs" />
+    <Compile Include="Controls\Calendar\Bookings\AbstractRobinBooking.cs" />
+    <Compile Include="Controls\Calendar\Bookings\IRobinBooking.cs" />
+    <Compile Include="Controls\Calendar\Bookings\RobinBooking.cs" />
+    <Compile Include="Controls\Calendar\Bookings\ZoomRobinBooking.cs" />
     <Compile Include="Controls\Calendar\RobinCalendarControl.cs" />
-    <Compile Include="Controls\Calendar\ZoomBooking.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

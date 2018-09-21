@@ -77,7 +77,6 @@
     <Compile Include="Booking\eMeetingType.cs" />
     <Compile Include="Booking\IBooking.cs" />
     <Compile Include="Booking\IPstnBooking.cs" />
-    <Compile Include="Booking\IRobinBooking.cs" />
     <Compile Include="Booking\ISipBooking.cs" />
     <Compile Include="Booking\IZoomBooking.cs" />
     <Compile Include="CalendarControl\AbstractCalendarControl.cs" />

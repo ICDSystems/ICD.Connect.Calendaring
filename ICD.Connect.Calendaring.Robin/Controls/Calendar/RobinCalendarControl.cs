@@ -176,7 +176,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			    case eBookingProtocol.Pstn:
 					throw new NotSupportedException();
 				case eBookingProtocol.Zoom:
-					robinBooking = new ZoomBooking(@event) {MeetingNumber = info.Number};
+					robinBooking = new ZoomRobinBooking(@event) {MeetingNumber = info.Number};
 					break;
 			    default:
 				    throw new ArgumentOutOfRangeException();
