@@ -10,6 +10,9 @@ namespace ICD.Connect.Calendaring.Controls
 {
 	public sealed class MockCalendarControl : AbstractCalendarControl<MockCalendarDevice>
 	{
+		/// <summary>
+		/// Raised when bookings are added/removed.
+		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 
 		private readonly List<IBooking> m_BookingList;
