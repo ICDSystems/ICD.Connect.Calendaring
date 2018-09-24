@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace ICD.Connect.Scheduling.Asure
+namespace ICD.Connect.Calendaring.Asure
 {
 	/// <summary>
 	/// Util methods for working with the Asure services.

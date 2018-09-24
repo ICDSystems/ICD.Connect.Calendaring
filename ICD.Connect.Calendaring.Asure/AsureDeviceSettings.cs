@@ -5,7 +5,7 @@ using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Scheduling.Asure
+namespace ICD.Connect.Calendaring.Asure
 {
 	[KrangSettings(FACTORY_NAME)]
 	public sealed class AsureDeviceSettings : AbstractDeviceSettings

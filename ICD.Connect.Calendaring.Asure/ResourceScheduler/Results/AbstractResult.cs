@@ -2,9 +2,9 @@
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 
-namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Results
+namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Results
 {
 	public abstract class AbstractResult
 	{

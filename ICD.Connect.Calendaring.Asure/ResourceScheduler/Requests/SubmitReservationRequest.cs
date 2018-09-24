@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 
-namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
+namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 {
 	public sealed class SubmitReservationRequest : AbstractRequest<SubmitReservationResult>
 	{

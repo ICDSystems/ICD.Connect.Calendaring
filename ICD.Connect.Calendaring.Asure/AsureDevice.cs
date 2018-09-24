@@ -7,16 +7,16 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.WebPorts;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Model;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 using ICD.Connect.Settings.Core;
 
-namespace ICD.Connect.Scheduling.Asure
+namespace ICD.Connect.Calendaring.Asure
 {
 	/// <summary>
 	/// Provides a means of communicate with the Asure SOAP service for reservation management.

@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Model
+﻿namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Model
 {
 	public abstract class AbstractData
 	{

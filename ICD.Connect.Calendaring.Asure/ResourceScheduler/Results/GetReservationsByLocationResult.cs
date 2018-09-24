@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Results
+﻿namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Results
 {
 	public sealed class GetReservationsByLocationResult : AbstractReservationsResult
 	{

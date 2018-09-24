@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 using ICD.Connect.Protocol.Network.WebPorts;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 
-namespace ICD.Connect.Scheduling.Asure.ResourceScheduler
+namespace ICD.Connect.Calendaring.Asure.ResourceScheduler
 {
 	public static class ResourceSchedulerService
 	{

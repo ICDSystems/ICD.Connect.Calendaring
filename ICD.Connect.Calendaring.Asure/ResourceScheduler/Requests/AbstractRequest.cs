@@ -1,9 +1,9 @@
 ﻿using System;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 using ICD.Connect.Protocol.Network.WebPorts;
-using ICD.Connect.Scheduling.Asure.ResourceScheduler.Results;
 
-namespace ICD.Connect.Scheduling.Asure.ResourceScheduler.Requests
+namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 {
 	/// <summary>
 	/// Base class for ResourceSchedulerService requests.
