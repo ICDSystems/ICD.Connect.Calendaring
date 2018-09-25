@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Calendaring.Robin.Components.Users;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Calendaring.Robin.Components.Bookings
+namespace ICD.Connect.Calendaring.Robin.Components.Events
 {
-	public class EventsComponent : AbstractRobinServiceDeviceComponent
+	public sealed class EventsComponent : AbstractRobinServiceDeviceComponent
     {
 		public event EventHandler OnEventsUpdated;
 
 		private readonly List<Event> m_Events;
-        private readonly RobinServiceDevice m_RobinServiceDevice;
 	    private readonly UsersComponent m_UsersComponent;
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="robinServiceDevice"></param>
 		public EventsComponent(RobinServiceDevice robinServiceDevice)
 			: base(robinServiceDevice)
 		{
 			m_Events = new List<Event>();
-		    m_RobinServiceDevice = robinServiceDevice;
 			m_UsersComponent = robinServiceDevice.Components.GetComponent<UsersComponent>();
 		}
 
@@ -45,18 +49,23 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
         /// </summary>
         public void UpdateBookings()
         {
-            m_Events.Clear();
+			m_Events.Clear();
 
-            Event[] events = GetReservations(m_RobinServiceDevice.ResourceId, DateTime.Today, DateTime.Today.AddDays(1));
-            foreach (var @event in events)
-            {
-                if (@event.OrganizerId != null)
-                {
-                    @event.OrganizerName = m_UsersComponent.GetUser(@event.OrganizerId).UserName;
-                }
-            }
+	        try
+	        {
+				Event[] events = GetReservations(Parent.ResourceId, DateTime.Today, DateTime.Today.AddDays(1));
+				foreach (var @event in events)
+				{
+					if (@event.OrganizerId != null)
+						@event.OrganizerName = m_UsersComponent.GetUser(@event.OrganizerId).UserName;
+				}
 
-            m_Events.AddRange(events);
+				m_Events.AddRange(events);
+	        }
+	        catch (Exception e)
+	        {
+		        Parent.Log(eSeverity.Error, "Failed to get reservations - {0}", e.Message);
+	        }
 
             OnEventsUpdated.Raise(this);
         }
@@ -80,20 +89,6 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 			string data = Parent.Request(uri);
 
 			return JsonConvert.DeserializeObject<Event[]>(data);
-		}
-
-		/// <summary>
-		/// Gets all of the reservations between the start and end date with the given resource.
-		/// </summary>
-		/// <param name="userId"></param>
-		/// <returns></returns>
-		private User GetUserInfo(string userId)
-		{
-			string uri = string.Format("users/{0}", userId);
-
-			string data = Parent.Request(uri);
-
-			return JsonConvert.DeserializeObject<User>(data);
 		}
 
 		public override void ParentOnOnSetPort(object sender, EventArgs e)

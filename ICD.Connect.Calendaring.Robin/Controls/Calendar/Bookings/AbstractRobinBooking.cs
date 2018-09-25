@@ -1,6 +1,6 @@
 ﻿using System;
 using ICD.Connect.Calendaring.Booking;
-using ICD.Connect.Calendaring.Robin.Components.Bookings;
+using ICD.Connect.Calendaring.Robin.Components.Events;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 {

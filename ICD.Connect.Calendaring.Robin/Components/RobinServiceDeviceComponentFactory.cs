@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils;
-using ICD.Connect.Calendaring.Robin.Components.Bookings;
+using ICD.Connect.Calendaring.Robin.Components.Events;
+using ICD.Connect.Calendaring.Robin.Components.Users;
 
 namespace ICD.Connect.Calendaring.Robin.Components
 {
