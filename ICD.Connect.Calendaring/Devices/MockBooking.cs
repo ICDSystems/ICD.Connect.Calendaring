@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ICD.Connect.Calendaring.Booking;
 
 namespace ICD.Connect.Calendaring.Devices
@@ -6,7 +7,6 @@ namespace ICD.Connect.Calendaring.Devices
 	public class MockBooking : AbstractBooking
 	{
 		private readonly string m_MeetingName;
-	    private readonly string m_MeetingNumber;
         private readonly string m_OrganizerName;
 		private readonly string m_OrganizerEmail;
 		private readonly DateTime m_StartTime;
@@ -38,15 +38,20 @@ namespace ICD.Connect.Calendaring.Devices
 		{
 			get { return m_IsPrivate; }
 		}
+
+		public override IEnumerable<IBookingNumber> GetBookingNumbers()
+		{
+			throw new NotImplementedException();
+		}
+
 		public override eMeetingType Type
 		{
 			get { return eMeetingType.AudioConference; }
 		}
 
-		public MockBooking(string meetingName, string meetingNumber, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
+		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
 		{
 			m_MeetingName = meetingName;
-		    m_MeetingNumber = meetingNumber;
             m_OrganizerName = organizerName;
 			m_OrganizerEmail = organizerEmail;
 			m_StartTime = startTime;

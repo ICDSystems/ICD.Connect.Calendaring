@@ -2,14 +2,14 @@
 
 namespace ICD.Connect.Calendaring.Booking
 {
-	public interface ISipBooking : IBooking
+	public interface ISipBookingNumber : IBookingNumber
 	{
 		string SipUri { get; }
 	}
 
-	public static class SipBookingExtensions
+	public static class SipBookingNumberExtensions
 	{
-		public static bool IsValidSipUri(this ISipBooking booking)
+		public static bool IsValidSipUri(this ISipBookingNumber booking)
 		{
 			Uri uri;
 			if (!Uri.TryCreate(booking.SipUri, UriKind.RelativeOrAbsolute, out uri))

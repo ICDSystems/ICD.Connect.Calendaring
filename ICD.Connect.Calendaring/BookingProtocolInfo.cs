@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ICD.Connect.Calendaring
+﻿namespace ICD.Connect.Calendaring
 {
 	public class BookingProtocolInfo
     {

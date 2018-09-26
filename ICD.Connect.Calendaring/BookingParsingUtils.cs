@@ -19,7 +19,7 @@ namespace ICD.Connect.Calendaring
 		/// <param name="description"></param>
 		/// <returns></returns>
 		[NotNull]
-		public static BookingProtocolInfo GetProtocolInfo(string description)
+		public static IEnumerable<BookingProtocolInfo> GetProtocolInfos(string description)
 		{
 			IEnumerable<string> lines = description.Split("\n");
 			foreach (string line in lines)
@@ -30,15 +30,13 @@ namespace ICD.Connect.Calendaring
 				{
 					string meetingNumber = match.Groups["meetingNumber"].Value;
 
-					return new BookingProtocolInfo
+					yield return new BookingProtocolInfo
 					{
 						BookingProtocol = eBookingProtocol.Zoom,
 						Number = meetingNumber
 					};
 				}
 			}
-
-			return new BookingProtocolInfo();
 		}
 	}
 }
