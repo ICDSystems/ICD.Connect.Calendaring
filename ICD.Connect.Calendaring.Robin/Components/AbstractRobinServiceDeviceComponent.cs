@@ -14,7 +14,6 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// </summary>
 		public RobinServiceDevice Parent { get; private set; }
 
-
 		/// <summary>
 		/// Gets the name of the node in the console.
 		/// </summary>
@@ -66,6 +65,9 @@ namespace ICD.Connect.Calendaring.Robin.Components
 			DisposeFinal();
 		}
 
+		/// <summary>
+		/// Release resources.
+		/// </summary>
 		protected virtual void DisposeFinal()
 		{
 		}
@@ -125,6 +127,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		public virtual void ParentOnOnSetPort(object sender, EventArgs e)
 		{
 		}
+
 		#endregion
 	}
 }

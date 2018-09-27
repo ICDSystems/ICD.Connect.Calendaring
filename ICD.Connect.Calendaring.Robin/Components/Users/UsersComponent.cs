@@ -1,23 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Services.Logging;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Calendaring.Robin.Components.Bookings
+namespace ICD.Connect.Calendaring.Robin.Components.Users
 {
-	public class UsersComponent : AbstractRobinServiceDeviceComponent
+	public sealed class UsersComponent : AbstractRobinServiceDeviceComponent
     {
 		public event EventHandler OnUsersUpdated;
 
 		private readonly Dictionary<string, User> m_Users;
-        private readonly RobinServiceDevice m_RobinServiceDevice;
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		/// <param name="robinServiceDevice"></param>
 		public UsersComponent(RobinServiceDevice robinServiceDevice)
 			: base(robinServiceDevice)
 		{
 			m_Users = new Dictionary<string, User>();
-		    m_RobinServiceDevice = robinServiceDevice;
 		}
 
+		/// <summary>
+		/// Release resources.
+		/// </summary>
 		protected override void DisposeFinal()
 		{
 			OnUsersUpdated = null;
@@ -33,15 +40,21 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 		public User GetUser(string userId)
 		{
 			User user;
-			bool hasUser = m_Users.TryGetValue(userId, out user);
-
-			if(hasUser)
+			if (m_Users.TryGetValue(userId, out user))
 				return user;
 
-			user = GetUserInfo(userId);
+			try
+			{
+				user = GetUserInfo(userId);
+			}
+			catch (Exception e)
+			{
+				Parent.Log(eSeverity.Error, "Failed to get user - {0}", e.Message);
+			}
 
-			if (user != null)
-				m_Users.Add(userId, user);
+			m_Users.Add(userId, user);
+
+			OnUsersUpdated.Raise(this);
 
 			return user;
 		}

@@ -9,7 +9,7 @@ using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
 using ICD.Connect.Calendaring.Comparers;
-using ICD.Connect.Calendaring.Robin.Components.Bookings;
+using ICD.Connect.Calendaring.Robin.Components.Events;
 using ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar

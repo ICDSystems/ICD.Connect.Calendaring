@@ -2,7 +2,7 @@
 using ICD.Common.Properties;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Calendaring.Robin.Components.Bookings
+namespace ICD.Connect.Calendaring.Robin.Components.Events
 {
 	[UsedImplicitly]
 	public sealed class Event

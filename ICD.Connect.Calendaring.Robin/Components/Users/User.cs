@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using ICD.Common.Properties;
+using Newtonsoft.Json;
 
-namespace ICD.Connect.Calendaring.Robin.Components.Bookings
+namespace ICD.Connect.Calendaring.Robin.Components.Users
 {
+	[UsedImplicitly]
     public sealed class User
     {
 		/// <summary>
@@ -31,7 +33,8 @@ namespace ICD.Connect.Calendaring.Robin.Components.Bookings
 		[JsonProperty("primary_email")]
 		public EmailInfo Email { get; private set; }
 
-	    public class EmailInfo
+		[UsedImplicitly]
+	    public sealed class EmailInfo
 	    {
 	        [JsonProperty("email")]
             public string Email { get; private set; }
