@@ -52,11 +52,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 			get { return eMeetingType.VideoConference; }
 		}
 
-		public string Description
-		{
-			get { return m_Event.Description; }
-		}
-
 		public RobinBooking(Event @event)
 		{
 			if (@event == null)
