@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
+using System.Text.RegularExpressions;
 
 namespace ICD.Connect.Calendaring
 {
@@ -11,7 +13,27 @@ namespace ICD.Connect.Calendaring
 	/// </summary>
 	public static class BookingParsingUtils
 	{
-		private const string ZOOM_REGEX = @"(?'zoomUrl'https:\/\/zoom.us\/j\/(?'meetingNumber'[0-9]+))";
+		private static string m_Pattern;
+		private static string m_GroupName;
+		private static string m_SubstitutionPattern;
+		private static string m_SubstitutionReplacement;
+
+		public static string Pattern
+		{
+			set { m_Pattern = value; }
+		}
+		public static string GroupName
+		{
+			set { m_GroupName = value; }
+		}
+		public static string SubstitutionPattern
+		{
+			set { m_SubstitutionPattern = value; }
+		}
+		public static string SubstitutionReplacement
+		{
+			set { m_SubstitutionReplacement = value; }
+		}
 
 		/// <summary>
 		/// Parses meeting data from booking description.
@@ -25,10 +47,10 @@ namespace ICD.Connect.Calendaring
 			foreach (string line in lines)
 			{
 				Match match;
-
-				if (RegexUtils.Matches(line, ZOOM_REGEX, out match))
+				var newLine = String.IsNullOrWhiteSpace(m_SubstitutionPattern) || String.IsNullOrWhiteSpace(m_SubstitutionReplacement) ? line : Regex.Replace(line, m_SubstitutionPattern, m_SubstitutionReplacement);
+				if (RegexUtils.Matches(newLine, m_Pattern, out match))
 				{
-					string meetingNumber = match.Groups["meetingNumber"].Value;
+					string meetingNumber = match.Groups[m_GroupName].Value;
 
 					yield return new BookingProtocolInfo
 					{
