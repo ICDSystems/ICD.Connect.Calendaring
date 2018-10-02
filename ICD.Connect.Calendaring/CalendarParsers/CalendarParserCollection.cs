@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ICD.Common.Properties;
+using System.Text;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.IO;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Calendaring.CalendarParsers.Parsers;
 
@@ -14,7 +15,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 	/// </summary>
 	public sealed class CalendarParserCollection
 	{
-		private readonly Dictionary<ICalendarParser, int> m_Parsers;
+		private readonly List<ICalendarParser> m_Parsers;
 		private readonly SafeCriticalSection m_ParsersSection;
 
 		#region Constructors
@@ -24,13 +25,13 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 		/// </summary>
 		public CalendarParserCollection()
 		{
-			m_Parsers = new Dictionary<ICalendarParser, int>();
+			m_Parsers = new List<ICalendarParser>();
 			m_ParsersSection = new SafeCriticalSection();
 		}
 
-		public IEnumerable<ICalendarParser> Parsers
+		public IEnumerable<ICalendarParser> GetParsers()
 		{
-			get { return m_Parsers.Keys.ToArray(m_Parsers.Count); }
+			return m_Parsers.ToArray(m_Parsers.Count);
 		}
 
 		#endregion
@@ -48,22 +49,22 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 		/// <summary>
 		/// Parses the xml to build the collection of parsers.
 		/// </summary>
-		/// <param name="xml"></param>
-		public void LoadParsers(string xml)
+		/// <param name="path"></param>
+		public void LoadParsers(string path)
 		{
 			m_ParsersSection.Enter();
+
+			string calendarParserPath =  PathUtils.GetDefaultConfigPath("CalendarParsing", path);
+
+			string xml = IcdFile.ReadToEnd(calendarParserPath, new UTF8Encoding(false));
+			xml = EncodingUtils.StripUtf8Bom(xml);
 
 			try
 			{
 				ClearMatchers();
 
-				string parsersXml = XmlUtils.GetChildElementAsString(xml, "CalendarParsers");
-
-				foreach (IcdXmlReader child in XmlUtils.GetChildElements(parsersXml))
-				{
-					ParseParsers(child);
-					child.Dispose();
-				}
+				foreach (string child in XmlUtils.GetChildElementsAsString(xml))
+					DeserializeParser(child);
 			}
 			finally
 			{
@@ -75,44 +76,39 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 
 		#region Methods
 
+		public IEnumerable<BookingProtocolInfo> ParseText(string text)
+		{
+			return GetParsers().SelectMany(p => p.ParseText(text));
+		}
+
 		#endregion
 
 		#region Private Methods
 
-
 		/// <summary>
 		/// Parses the xml for a single parsers.
 		/// </summary>
-		/// <param name="reader"></param>
-		private void ParseParsers(IcdXmlReader reader)
+		/// <param name="xml"></param>
+		private void DeserializeParser(string xml)
 		{
-			if (reader == null)
-				throw new ArgumentNullException("reader");
+			if (string.IsNullOrEmpty(xml))
+				throw new ArgumentNullException("xml");
 
-			foreach (IcdXmlReader child in reader.GetChildElements())
+			ICalendarParser parser;
+
+			switch (XmlUtils.ReadElementName(xml))
 			{
-				ICalendarParser parser;
-				int order;
+				case "RegexParser":
+					parser = RegexCalendarParser.FromXml(xml);
+					break;
 
-				switch (child.Name)
-				{
-					case "RegexParser":
-						parser = new RegexCalendarParser(child.GetAttributeAsString("Pattern"),
-							child.GetAttributeAsString("Group"),
-							child.GetAttributeAsString("ReplacePattern"),
-							child.GetAttributeAsString("ReplaceReplacement"));
-						order = 0;
-						break;
-
-					default:
-						throw new ArgumentOutOfRangeException("Unknown element: " + child.Name);
-				}
-
-				m_Parsers[parser] = order;
-
-				child.Dispose();
+				default:
+					return;
 			}
+
+			m_Parsers.Add(parser);
 		}
+
 		#endregion
 	}
 }

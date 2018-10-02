@@ -1,4 +1,5 @@
 ﻿using ICD.Common.Utils.Xml;
+using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.WebPorts;
 using ICD.Connect.Settings.Attributes;
@@ -12,6 +13,7 @@ namespace ICD.Connect.Calendaring.Robin
 		private const string PORT_ELEMENT = "Port";
         private const string TOKEN_ELEMENT = "Token";
         private const string RESOURCEID_ELEMENT = "ResourceId";
+        private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
         /// <summary>
         /// The port id.
@@ -22,6 +24,8 @@ namespace ICD.Connect.Calendaring.Robin
         public string Token { get; set; }
 
         public string ResourceId { get; set; }
+
+        public string CalendarParsingPath { get; set; }
 
         /// <summary>
         /// Writes property elements to xml.
@@ -34,6 +38,7 @@ namespace ICD.Connect.Calendaring.Robin
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 		    writer.WriteElementString(TOKEN_ELEMENT, Token);
 		    writer.WriteElementString(RESOURCEID_ELEMENT, ResourceId);
+            writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
         }
 
 		/// <summary>
@@ -47,6 +52,7 @@ namespace ICD.Connect.Calendaring.Robin
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 		    Token = XmlUtils.TryReadChildElementContentAsString(xml, TOKEN_ELEMENT);
 		    ResourceId = XmlUtils.TryReadChildElementContentAsString(xml, RESOURCEID_ELEMENT);
+		    CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
         }
 	}
 }

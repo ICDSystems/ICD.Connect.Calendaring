@@ -22,7 +22,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	    private readonly SafeTimer m_RefreshTimer;
 	    private readonly List<RobinBooking> m_SortedBookings;
 	    private readonly IcdHashSet<RobinBooking> m_HashBooking;
-	    private readonly RobinServiceDevice m_Parent;
+        private readonly SafeCriticalSection m_BookingSection;
 
 		/// <summary>
 		/// Raised when events are added/removed.
@@ -54,7 +54,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		    m_SortedBookings = new List<RobinBooking>();
 		    m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
-		    m_Parent = parent;
+
+            m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
 		    Subscribe(m_EventsComponent);
@@ -73,7 +74,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			base.DisposeFinal(disposing);
 
 			Unsubscribe(m_EventsComponent);
-
 		}
 
 		/// <summary>
@@ -107,19 +107,29 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			    .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
 			    .Distinct()
 			    .ToArray();
-		    IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
-		    IcdHashSet<RobinBooking> current = events.Select(b => GetBookingProtocol(b)).ToIcdHashSet(new BookingsComparer<RobinBooking>());
 
-		    IcdHashSet<RobinBooking> removeBookingList = existing.Subtract(current);
-		    foreach (RobinBooking booking in removeBookingList)
-			    change |= RemoveBooking(booking);
+            m_BookingSection.Enter();
 
-		    foreach (var booking in events)
-			    change |= AddBooking(booking);
+	        try
+	        {
+	            IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
+	            IcdHashSet<RobinBooking> current = events.Select(b => new RobinBooking(b, Parent.CalendarParserCollection.ParseText(b.Description)))
+	                                                     .ToIcdHashSet(new BookingsComparer<RobinBooking>());
+
+	            IcdHashSet<RobinBooking> removeBookingList = existing.Subtract(current);
+	            foreach (RobinBooking booking in removeBookingList)
+	                change |= RemoveBooking(booking);
+
+	            foreach (Event @event in events)
+	                change |= AddBooking(@event);
+            }
+	        finally
+	        {
+	            m_BookingSection.Leave();
+	        }
 
 		    if (change)
 			    OnBookingsChanged.Raise(this);
-
 	    }
 
 		public override void Refresh()
@@ -129,40 +139,52 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		public override IEnumerable<IBooking> GetBookings()
 	    {
-		    return m_SortedBookings.ToArray(m_SortedBookings.Count);
+		    return m_BookingSection.Execute(() => m_SortedBookings.ToArray(m_SortedBookings.Count));
 	    }
 
 	    private bool AddBooking(Event @event)
 	    {
-			RobinBooking robinBooking = GetBookingProtocol(@event);
+            m_BookingSection.Enter();
 
-			if (m_HashBooking.Contains(robinBooking))
-			    return false;
+	        try
+	        {
+	            IEnumerable<BookingProtocolInfo> bookingNumbers = Parent.CalendarParserCollection.ParseText(@event.Description);
+	            RobinBooking robinBooking = new RobinBooking(@event, bookingNumbers);
 
-		    m_HashBooking.Add(robinBooking);
+	            if (m_HashBooking.Contains(robinBooking))
+	                return false;
 
-		    m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
+	            m_HashBooking.Add(robinBooking);
+
+	            m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
+
+	        }
+	        finally
+	        {
+	            m_BookingSection.Leave();
+            }
 
 		    return true;
 	    }
 
 	    private bool RemoveBooking(RobinBooking robinBooking)
 	    {
-		    if (!m_HashBooking.Contains(robinBooking))
-			    return false;
+            m_BookingSection.Enter();
 
-		    m_HashBooking.Remove(robinBooking);
-		    m_SortedBookings.Remove(robinBooking);
+	        try
+	        {
+	            if (!m_HashBooking.Contains(robinBooking))
+	                return false;
+
+	            m_HashBooking.Remove(robinBooking);
+	            m_SortedBookings.Remove(robinBooking);
+            }
+	        finally
+	        {
+	            m_BookingSection.Leave();
+	        }
 
 		    return true;
-	    }
-
-	    private RobinBooking GetBookingProtocol(Event @event)
-	    {
-		    if (@event == null)
-			    throw new ArgumentNullException("event");
-
-		    return new RobinBooking(@event);
 	    }
     }
 }

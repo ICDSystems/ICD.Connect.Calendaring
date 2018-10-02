@@ -52,42 +52,42 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 			get { return eMeetingType.VideoConference; }
 		}
 
-		public RobinBooking(Event @event)
-		{
-			if (@event == null)
-				throw new ArgumentNullException("event");
+	    public RobinBooking(Event @event, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+	    {
+	        if (@event == null)
+	            throw new ArgumentNullException("event");
 
-			m_Event = @event;
-			m_BookingNumbers = ParseBookingNumbers(m_Event.Description).ToList();
-		}
+	        m_Event = @event;
 
-		private static IEnumerable<IBookingNumber> ParseBookingNumbers(string eventDescription)
-		{
-			IEnumerable<BookingProtocolInfo> infos = BookingParsingUtils.GetProtocolInfos(eventDescription);
+	        if (bookingProtocolInfo != null)
+                m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
+	    }
 
-			foreach (BookingProtocolInfo info in infos)
-			{
-				switch (info.BookingProtocol)
-				{
-					case eBookingProtocol.None:
-						continue;
+	    private static IEnumerable<IBookingNumber> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+	    {
+	        foreach (BookingProtocolInfo info in bookingProtocolInfo)
+	        {
+	            switch (info.BookingProtocol)
+	            {
+	                case eBookingProtocol.None:
+	                    continue;
 
-					case eBookingProtocol.Sip:
-						yield return new SipBookingNumber(info);
-						continue;
+	                case eBookingProtocol.Sip:
+	                    yield return new SipBookingNumber(info);
+	                    continue;
 
-					case eBookingProtocol.Pstn:
-						yield return new PstnBookingNumber(info);
-						continue;
+	                case eBookingProtocol.Pstn:
+	                    yield return new PstnBookingNumber(info);
+	                    continue;
 
-					case eBookingProtocol.Zoom:
-						yield return new ZoomBookingNumber(info);
-						continue;
+	                case eBookingProtocol.Zoom:
+	                    yield return new ZoomBookingNumber(info);
+	                    continue;
 
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
-		}
-	}
+	                default:
+	                    throw new ArgumentOutOfRangeException();
+	            }
+	        }
+	    }
+    }
 }

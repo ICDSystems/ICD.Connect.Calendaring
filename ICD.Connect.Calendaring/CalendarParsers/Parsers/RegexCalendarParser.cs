@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using ICD.Common.Utils;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
+using ICD.Common.Utils.Xml;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
@@ -8,30 +11,58 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 	/// </summary>
 	public sealed class RegexCalendarParser : AbstractCalendarParser
 	{
-		private readonly string m_Pattern;
-		private readonly string m_GroupName;
-		private readonly string m_SubstitutionPattern;
-		private readonly string m_SubstitutionReplacement;
+		public string Pattern { get; set; }
+
+		public string GroupName { get; set; }
+
+		public string SubstitutionPattern { get; set; }
+
+		public string SubstitutionReplacement { get; set; }
+
+		public eBookingProtocol Protocol { get; set; }
 
 		/// <summary>
-		/// Constructor.
+		/// Parses text into BookingProtocolInfo collection
 		/// </summary>
-		public RegexCalendarParser(string pattern, string groupName, string substitutionPattern, string substitutionReplacement)
-			: base()
-		{
-			m_Pattern = pattern;
-			m_GroupName = groupName;
-			m_SubstitutionPattern = substitutionPattern;
-			m_SubstitutionReplacement = substitutionReplacement;
-		}
-
+		/// <param name="text"></param>
+		/// <returns></returns>
 		public override IEnumerable<BookingProtocolInfo> ParseText(string text)
 		{
-			BookingParsingUtils.Pattern = m_Pattern;
-			BookingParsingUtils.GroupName = m_GroupName;
-			BookingParsingUtils.SubstitutionPattern = m_SubstitutionPattern;
-			BookingParsingUtils.SubstitutionReplacement = m_SubstitutionReplacement;
-			return BookingParsingUtils.GetProtocolInfos(text);
+			if (string.IsNullOrEmpty(text))
+				yield break;
+
+			IEnumerable<string> lines = text.Split().Where(l => !string.IsNullOrEmpty(l));
+
+			foreach (string line in lines)
+			{
+				Match match;
+				if (!RegexUtils.Matches(line, Pattern, out match))
+					continue;
+
+				string meetingNumber = match.Groups[GroupName].Value;
+
+				meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
+					? meetingNumber
+					: Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
+
+				yield return new BookingProtocolInfo
+				{
+					BookingProtocol = Protocol,
+					Number = meetingNumber
+				};
+			}
+		}
+
+		public static RegexCalendarParser FromXml(string xml)
+		{
+			return new RegexCalendarParser
+			{
+				Pattern = XmlUtils.TryReadChildElementContentAsString(xml, "Pattern"),
+				GroupName = XmlUtils.TryReadChildElementContentAsString(xml, "Group"),
+				SubstitutionPattern = XmlUtils.TryReadChildElementContentAsString(xml, "ReplacePattern"),
+				SubstitutionReplacement = XmlUtils.TryReadChildElementContentAsString(xml, "ReplaceReplacement"),
+				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eBookingProtocol>(xml, "Protocol", true) ?? eBookingProtocol.None
+			};
 		}
 	}
 }
