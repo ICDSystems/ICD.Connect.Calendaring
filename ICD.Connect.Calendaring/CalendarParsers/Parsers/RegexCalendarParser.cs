@@ -31,15 +31,11 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 			if (string.IsNullOrEmpty(text))
 				yield break;
 
-			IEnumerable<string> lines = text.Split().Where(l => !string.IsNullOrEmpty(l));
+			var matchCollection = Regex.Matches(text, Pattern);
 
-			foreach (string line in lines)
+			foreach (Match match in matchCollection)
 			{
-				Match match;
-				if (!RegexUtils.Matches(line, Pattern, out match))
-					continue;
-
-				string meetingNumber = match.Groups[GroupName].Value;
+				string meetingNumber = string.IsNullOrEmpty(GroupName) ? match.Groups[0].Value : match.Groups[GroupName].Value;
 
 				meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
 					? meetingNumber
