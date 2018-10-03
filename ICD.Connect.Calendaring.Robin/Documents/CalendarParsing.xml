@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CalendarParsers>
+  <!--Infomation for parsing Zoom number-->
+  <RegexParser>
+    <!--Regex pattern used to find meeting number(Required)-->
+    <Pattern>(?'zoomUrl'https:\/\/zoom.us\/j\/(?'meetingNumber'[0-9]+))</Pattern>
+    <!--Group Name for the meeting number(Optional)-->
+    <Group>meetingNumber</Group>
+    <!--Regex used to find text to Replace(Optional)-->
+    <ReplacePattern></ReplacePattern>
+    <!--Text to replace text found in ReplacePattern with(Optional)-->
+    <ReplaceReplacement></ReplaceReplacement>
+    <!--Protocol for meeting number(Required)-->
+    <Protocol>Zoom</Protocol>
+  </RegexParser>
+  <!--Infomation for parsing Pstn number-->
+  <RegexParser>
+    <Pattern><![CDATA[(\d[^0-9]?)?\(?\d{3}\)?[^0-9]?\d{3}[^0-9]?\d{4}]]></Pattern>
+    <Group></Group>
+    <ReplacePattern>[^0-9]</ReplacePattern>
+    <ReplaceReplacement></ReplaceReplacement>
+    <Protocol>Pstn</Protocol>
+  </RegexParser>
+  <!--Infomation for parsing Sip number-->
+  <RegexParser>
+    <Pattern>sip:[^\s]+</Pattern>
+    <Group></Group>
+    <ReplacePattern></ReplacePattern>
+    <ReplaceReplacement></ReplaceReplacement>
+    <Protocol>Sip</Protocol>
+  </RegexParser>
+</CalendarParsers>
