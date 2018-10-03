@@ -6,11 +6,15 @@
 		public string Number { get; set; }
     }
 
+	/// <summary>
+	/// The types of protocols for booking numbers.
+	/// Arranged in ascending order of least qualified to most qualified.
+	/// </summary>
 	public enum eBookingProtocol
 	{
-		None,
-		Sip,
-		Pstn,
-		Zoom
+		None = 0,
+		Pstn = 1,
+		Sip = 2,
+		Zoom = 3
 	}
 }

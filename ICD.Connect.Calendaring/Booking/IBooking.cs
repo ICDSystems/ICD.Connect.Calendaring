@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring.Booking
 {
@@ -38,5 +39,10 @@ namespace ICD.Connect.Calendaring.Booking
 		/// Returns true if meeting is private.
 		/// </summary>
 		bool IsPrivate { get; }
+
+		/// <summary>
+		/// Returns Booking Numbers.
+		/// </summary>
+		IEnumerable<IBookingNumber> GetBookingNumbers();
 	}
 }

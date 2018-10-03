@@ -8,11 +8,11 @@ namespace ICD.Connect.Calendaring.Comparers
 	{
 		public bool Equals(T x, T y)
 		{
-			return x.MeetingName == y.MeetingName
-				   && x.OrganizerName == y.OrganizerName
-				   && x.OrganizerEmail == y.OrganizerEmail
-				   && x.StartTime == y.StartTime
-				   && x.EndTime == y.EndTime;
+			return x.MeetingName == y.MeetingName &&
+			       x.OrganizerName == y.OrganizerName &&
+			       x.OrganizerEmail == y.OrganizerEmail &&
+			       x.StartTime == y.StartTime &&
+			       x.EndTime == y.EndTime;
 		}
 
 		public int GetHashCode(T zoomBooking)

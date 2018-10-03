@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ICD.Common.Properties;
+using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.IO;
+using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Robin.Components;
 using ICD.Connect.Calendaring.Robin.Controls.Calendar;
 using ICD.Connect.Devices;
@@ -53,13 +58,24 @@ namespace ICD.Connect.Calendaring.Robin
 
 		public string ResourceId { get; set; }
 
+	    public CalendarParserCollection CalendarParserCollection
+	    {
+	        get { return m_CalendarParserCollection; }
+	    }
+
+	    private readonly CalendarParserCollection m_CalendarParserCollection;
+
+	    private string m_CalendarParsingPath;
+
         #endregion
 
         public RobinServiceDevice()
 		{
+            m_CalendarParserCollection = new CalendarParserCollection();
+
             Components = new RobinServiceDeviceComponentFactory(this);
 
-			Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
+            Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
         #region Methods
@@ -164,7 +180,25 @@ namespace ICD.Connect.Calendaring.Robin
 	        UpdateCachedOnlineStatus();
 	    }
 
-        #endregion
+        /// <summary>
+        /// Sets the Calendar Parsing from the settings.
+        /// </summary>
+        /// <param name="configPath"></param>
+        private void SetCalendarParsers(string configPath)
+        {
+            m_CalendarParsingPath = configPath;
+
+            try
+	        {
+	            m_CalendarParserCollection.LoadParsers(configPath);
+	        }
+	        catch (Exception e)
+	        {
+	            Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
+	        }
+	    }
+
+	    #endregion
 
         #region Settings
 
@@ -175,7 +209,9 @@ namespace ICD.Connect.Calendaring.Robin
 		    Token = settings.Token;
 		    ResourceId = settings.ResourceId;
 
-			if (settings.Port != null)
+		    SetCalendarParsers(settings.CalendarParsingPath);
+
+            if (settings.Port != null)
 			{
 				var port = factory.GetOriginatorById<IWebPort>(settings.Port.Value);
 				SetPort(port);
@@ -186,7 +222,9 @@ namespace ICD.Connect.Calendaring.Robin
 	    {
             base.ClearSettingsFinal();
 
-			Token = null;
+	        m_CalendarParserCollection.ClearMatchers();
+
+            Token = null;
 	        ResourceId = null;
             SetPort(null);
 	    }
@@ -195,7 +233,9 @@ namespace ICD.Connect.Calendaring.Robin
 	    {
             base.CopySettingsFinal(settings);
 
-	        settings.Token = Token;
+	        settings.CalendarParsingPath = m_CalendarParsingPath;
+
+            settings.Token = Token;
 	        settings.ResourceId = ResourceId;
             settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 	    }

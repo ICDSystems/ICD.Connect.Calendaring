@@ -1,6 +1,6 @@
 ﻿namespace ICD.Connect.Calendaring.Booking
 {
-	public interface IPstnBooking : IBooking
+	public interface IPstnBookingNumber : IBookingNumber
 	{
 		string PhoneNumber { get; }
 	}
