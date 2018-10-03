@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
  - Added Robin Calender device
+ - Added booking number parsing
+ - Added number parsing to Robin Device
+ - Added support for multiple numbers
 
 ## [4.0.0] - 2018-04-24
 ### Changed
