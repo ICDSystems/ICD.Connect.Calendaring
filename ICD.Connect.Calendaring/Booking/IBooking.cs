@@ -31,11 +31,6 @@ namespace ICD.Connect.Calendaring.Booking
 		DateTime EndTime { get; }
 
 		/// <summary>
-		/// Returns the meeting type.
-		/// </summary>
-		eMeetingType Type { get; }
-
-		/// <summary>
 		/// Returns true if meeting is private.
 		/// </summary>
 		bool IsPrivate { get; }

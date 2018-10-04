@@ -41,12 +41,7 @@ namespace ICD.Connect.Calendaring.Devices
 
 		public override IEnumerable<IBookingNumber> GetBookingNumbers()
 		{
-			throw new NotImplementedException();
-		}
-
-		public override eMeetingType Type
-		{
-			get { return eMeetingType.AudioConference; }
+			return new List<IBookingNumber>{ new PstnBookingNumber(new BookingProtocolInfo{BookingProtocol = eBookingProtocol.Pstn, Number = "5555555555" })};
 		}
 
 		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
