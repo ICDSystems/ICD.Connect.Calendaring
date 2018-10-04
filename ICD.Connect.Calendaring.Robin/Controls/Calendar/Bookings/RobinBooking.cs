@@ -47,11 +47,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
 		}
 
-		public override eMeetingType Type
-		{
-			get { return eMeetingType.VideoConference; }
-		}
-
 	    public RobinBooking(Event @event, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 	    {
 	        if (@event == null)
@@ -63,7 +58,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
                 m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
 	    }
 
-	    private static IEnumerable<IBookingNumber> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		private static IEnumerable<IBookingNumber> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 	    {
 	        foreach (BookingProtocolInfo info in bookingProtocolInfo)
 	        {
