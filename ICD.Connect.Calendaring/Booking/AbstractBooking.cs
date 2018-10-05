@@ -10,7 +10,6 @@ namespace ICD.Connect.Calendaring.Booking
 		public abstract string OrganizerEmail { get; }
 		public abstract DateTime StartTime { get; }
 		public abstract DateTime EndTime { get; }
-		public abstract eMeetingType Type { get; }
 		public abstract bool IsPrivate { get; }
 		public abstract IEnumerable<IBookingNumber> GetBookingNumbers();
 	}
