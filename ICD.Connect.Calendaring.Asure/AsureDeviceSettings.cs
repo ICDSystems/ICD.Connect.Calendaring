@@ -1,4 +1,3 @@
-using System;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.WebPorts;
@@ -7,26 +6,14 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Calendaring.Asure
 {
-	[KrangSettings(FACTORY_NAME)]
+	[KrangSettings("AsureService", typeof(AsureDevice))]
 	public sealed class AsureDeviceSettings : AbstractDeviceSettings
 	{
-		private const string FACTORY_NAME = "AsureService";
-
 		private const string RESOURCE_ID_ELEMENT = "ResourceId";
 		private const string UPDATE_INTERVAL_ELEMENT = "UpdateInterval";
 		private const string PORT_ELEMENT = "Port";
 		private const string USERNAME_ELEMENT = "Username";
 		private const string PASSWORD_ELEMENT = "Password";
-
-		/// <summary>
-		/// Gets the originator factory name.
-		/// </summary>
-		public override string FactoryName { get { return FACTORY_NAME; } }
-
-		/// <summary>
-		/// Gets the type of the originator for this settings instance.
-		/// </summary>
-		public override Type OriginatorType { get { return typeof(AsureDevice); } }
 
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
