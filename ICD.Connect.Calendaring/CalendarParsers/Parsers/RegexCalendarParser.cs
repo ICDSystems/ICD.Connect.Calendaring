@@ -1,6 +1,4 @@
-﻿using ICD.Common.Utils;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ICD.Common.Utils.Xml;
 

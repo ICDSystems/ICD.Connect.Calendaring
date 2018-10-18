@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ICD.Connect.Calendaring.Booking
+﻿namespace ICD.Connect.Calendaring.Booking
 {
     public abstract class AbstractBookingNumber : IBookingNumber
     {

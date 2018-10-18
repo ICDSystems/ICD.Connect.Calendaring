@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ICD.Connect.Calendaring.Booking
+﻿namespace ICD.Connect.Calendaring.Booking
 {
 	public interface IBookingNumber
 	{

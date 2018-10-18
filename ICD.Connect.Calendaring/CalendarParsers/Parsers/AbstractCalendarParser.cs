@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
 	public abstract class AbstractCalendarParser : ICalendarParser
 	{
-		#region Constructors
-
 		/// <summary>
-		/// Constructor.
+		/// Parses text into BookingProtocolInfo collection
 		/// </summary>
-		protected AbstractCalendarParser()
-		{
-		}
-
-		#endregion
-
+		/// <param name="text"></param>
+		/// <returns></returns>
 		public abstract IEnumerable<BookingProtocolInfo> ParseText(string text);
 	}
 }
