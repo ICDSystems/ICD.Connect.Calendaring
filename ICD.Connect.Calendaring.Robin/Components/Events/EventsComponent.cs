@@ -49,8 +49,6 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
         /// </summary>
         public void UpdateBookings()
         {
-			m_Events.Clear();
-
 	        try
 	        {
 				Event[] events = GetReservations(Parent.ResourceId, DateTime.Today, DateTime.Today.AddDays(1));
@@ -60,6 +58,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 						@event.OrganizerName = m_UsersComponent.GetUser(@event.OrganizerId).UserName;
 				}
 
+				m_Events.Clear();
 				m_Events.AddRange(events);
 	        }
 	        catch (Exception e)
