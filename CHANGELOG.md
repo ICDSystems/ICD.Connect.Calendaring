@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Changed
  - Fixed bug where Robin events would periodically vanish
+ - Fixed bug where mock calendar control did not refresh
 
 ## [5.0.0] - 2018-10-18
 ### Added
