@@ -5,9 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [5.0.1] - 2018-10-30
 ### Changed
  - Fixed bug where Robin events would periodically vanish
  - Fixed bug where mock calendar control did not refresh
+ - Fixed loading issue where devices would not fail gracefully when a port was not available
 
 ## [5.0.0] - 2018-10-18
 ### Added
