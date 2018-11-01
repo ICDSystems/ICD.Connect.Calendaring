@@ -73,16 +73,8 @@
   <ItemGroup>
     <Compile Include="BookingProtocolInfo.cs" />
     <Compile Include="Booking\AbstractBooking.cs" />
-    <Compile Include="Booking\AbstractBookingNumber.cs" />
     <Compile Include="Booking\eMeetingType.cs" />
     <Compile Include="Booking\IBooking.cs" />
-    <Compile Include="Booking\IBookingNumber.cs" />
-    <Compile Include="Booking\IPstnBookingNumber.cs" />
-    <Compile Include="Booking\ISipBookingNumber.cs" />
-    <Compile Include="Booking\IZoomBookingNumber.cs" />
-    <Compile Include="Booking\PstnBookingNumber.cs" />
-    <Compile Include="Booking\SipBookingNumber.cs" />
-    <Compile Include="Booking\ZoomBookingNumber.cs" />
     <Compile Include="CalendarControl\AbstractCalendarControl.cs" />
     <Compile Include="CalendarControl\CalendarControlConsole.cs" />
     <Compile Include="CalendarControl\ICalendarControl.cs" />
@@ -91,6 +83,7 @@
     <Compile Include="CalendarParsers\Parsers\ICalendarParser.cs" />
     <Compile Include="CalendarParsers\Parsers\RegexCalendarParser.cs" />
     <Compile Include="Comparers\BookingComparer.cs" />
+    <Compile Include="ConferencingBookingUtils.cs" />
     <Compile Include="Controls\MockCalendarControl.cs" />
     <Compile Include="Devices\MockBooking.cs" />
     <Compile Include="Devices\MockCalendarDevice.cs" />
@@ -112,6 +105,10 @@
     <ProjectReference Include="..\..\ICD.Connect.API\ICD.Connect.API\ICD.Connect.API_SimplSharp.csproj">
       <Project>{727F5820-5A61-440D-8899-E454FE8238D7}</Project>
       <Name>ICD.Connect.API_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Conferencing\ICD.Connect.Conferencing\ICD.Connect.Conferencing_SimplSharp.csproj">
+      <Project>{1CCA89DA-1F1C-4997-A94F-ABCE878BD6DE}</Project>
+      <Name>ICD.Connect.Conferencing_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_SimplSharp.csproj">
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>

@@ -1,25 +1,14 @@
 ﻿using System;
 using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring
 {
 	public sealed class BookingProtocolInfo
     {
-	    public eBookingProtocol BookingProtocol { get; set; }
+	    public eDialProtocol DialProtocol { get; set; }
 		public string Number { get; set; }
     }
-
-	/// <summary>
-	/// The types of protocols for booking numbers.
-	/// Arranged in ascending order of least qualified to most qualified.
-	/// </summary>
-	public enum eBookingProtocol
-	{
-		None = 0,
-		Pstn = 1,
-		Sip = 2,
-		Zoom = 3
-	}
 
 	public static class BookingProtocolExtensions
 	{
@@ -28,18 +17,18 @@ namespace ICD.Connect.Calendaring
 		/// </summary>
 		/// <param name="extends"></param>
 		/// <returns></returns>
-		public static eMeetingType ToMeetingType(this eBookingProtocol extends)
+		public static eMeetingType ToMeetingType(this eDialProtocol extends)
 		{
 			switch (extends)
 			{
-				case eBookingProtocol.Zoom:
-				case eBookingProtocol.Sip:
+				case eDialProtocol.Zoom:
+				case eDialProtocol.Sip:
 					return eMeetingType.VideoConference;
 
-				case eBookingProtocol.Pstn:
+				case eDialProtocol.Pstn:
 					return eMeetingType.AudioConference;
 
-				case eBookingProtocol.None:
+				case eDialProtocol.None:
 					return eMeetingType.Presentation;
 
 				default:

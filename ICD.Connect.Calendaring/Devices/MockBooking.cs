@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Devices
 {
@@ -39,9 +40,9 @@ namespace ICD.Connect.Calendaring.Devices
 			get { return m_IsPrivate; }
 		}
 
-		public override IEnumerable<IBookingNumber> GetBookingNumbers()
+		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
-			return new List<IBookingNumber>{ new PstnBookingNumber(new BookingProtocolInfo{BookingProtocol = eBookingProtocol.Pstn, Number = "5555555555" })};
+			return new List<IDialContext>{ new PstnDialContext { DialString = "5555555555" } };
 		}
 
 		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)

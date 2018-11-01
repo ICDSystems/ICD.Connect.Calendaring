@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Booking
 {
@@ -11,6 +12,6 @@ namespace ICD.Connect.Calendaring.Booking
 		public abstract DateTime StartTime { get; }
 		public abstract DateTime EndTime { get; }
 		public abstract bool IsPrivate { get; }
-		public abstract IEnumerable<IBookingNumber> GetBookingNumbers();
+		public abstract IEnumerable<IDialContext> GetBookingNumbers();
 	}
 }

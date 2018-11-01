@@ -4,13 +4,14 @@ using System.Linq;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Robin.Components.Events;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 {
 	public sealed class RobinBooking : AbstractBooking
 	{
 		private readonly Event m_Event;
-		private readonly List<IBookingNumber> m_BookingNumbers;
+		private readonly List<IDialContext> m_BookingNumbers;
 
 		public override string MeetingName
 		{
@@ -42,7 +43,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 			get { return m_Event.IsPrivate.ToLower() == "private"; }
 		}
 
-		public override IEnumerable<IBookingNumber> GetBookingNumbers()
+		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
 		}
@@ -58,25 +59,25 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
 				m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
 		}
 
-		private static IEnumerable<IBookingNumber> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 		{
 			foreach (BookingProtocolInfo info in bookingProtocolInfo)
 			{
-				switch (info.BookingProtocol)
+				switch (info.DialProtocol)
 				{
-					case eBookingProtocol.None:
+					case eDialProtocol.None:
 						continue;
 
-					case eBookingProtocol.Sip:
-						yield return new SipBookingNumber(info);
+					case eDialProtocol.Sip:
+						yield return new SipDialContext { DialString = info.Number };
 						continue;
 
-					case eBookingProtocol.Pstn:
-						yield return new PstnBookingNumber(info);
+					case eDialProtocol.Pstn:
+						yield return new PstnDialContext { DialString = info.Number };
 						continue;
 
-					case eBookingProtocol.Zoom:
-						yield return new ZoomBookingNumber(info);
+					case eDialProtocol.Zoom:
+						yield return new ZoomDialContext { DialString = info.Number };
 						continue;
 
 					default:
