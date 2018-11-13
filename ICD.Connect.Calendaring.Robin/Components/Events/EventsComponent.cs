@@ -90,7 +90,10 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 			return JsonConvert.DeserializeObject<Event[]>(data);
 		}
 
-		public override void ParentOnOnSetPort(object sender, EventArgs e)
+		/// <summary>
+		/// Override to get initial values from the service.
+		/// </summary>
+		protected override void Initialize()
 		{
 			UpdateBookings();
 		}

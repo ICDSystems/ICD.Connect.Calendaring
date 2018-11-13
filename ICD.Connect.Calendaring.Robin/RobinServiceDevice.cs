@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
+using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Calendaring.CalendarParsers;
@@ -17,7 +18,10 @@ namespace ICD.Connect.Calendaring.Robin
 {
 	public sealed class RobinServiceDevice : AbstractDevice<RobinServiceDeviceSettings>
 	{
-		public event EventHandler OnSetPort;
+		/// <summary>
+		/// Raises the new port that has been assigned.
+		/// </summary>
+		public event EventHandler<GenericEventArgs<IWebPort>> OnSetPort;
 
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
@@ -93,7 +97,7 @@ namespace ICD.Connect.Calendaring.Robin
 			m_Port = port;
 			Subscribe(m_Port);
 
-			OnSetPort.Raise(this);
+			OnSetPort.Raise(this, new GenericEventArgs<IWebPort>(m_Port));
 			UpdateCachedOnlineStatus();
 		}
 
