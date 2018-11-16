@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Utils.EventArguments;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Protocol.Network.WebPorts;
 
 namespace ICD.Connect.Calendaring.Robin.Components
 {
@@ -102,6 +104,13 @@ namespace ICD.Connect.Calendaring.Robin.Components
 			yield break;
 		}
 
+		/// <summary>
+		/// Override to get initial values from the service.
+		/// </summary>
+		protected virtual void Initialize()
+		{
+		}
+
 		#endregion
 
 		#region Private
@@ -124,8 +133,15 @@ namespace ICD.Connect.Calendaring.Robin.Components
 			parent.OnSetPort -= ParentOnOnSetPort;
 		}
 
-		public virtual void ParentOnOnSetPort(object sender, EventArgs e)
+		/// <summary>
+		/// Called when the parent port changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="args"></param>
+		private void ParentOnOnSetPort(object sender, GenericEventArgs<IWebPort> args)
 		{
+			if (args.Data != null)
+				Initialize();
 		}
 
 		#endregion

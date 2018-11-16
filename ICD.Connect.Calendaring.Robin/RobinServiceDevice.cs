@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ICD.Common.Properties;
-using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.IO;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Robin.Components;
@@ -21,7 +18,12 @@ namespace ICD.Connect.Calendaring.Robin
 {
 	public sealed class RobinServiceDevice : AbstractDevice<RobinServiceDeviceSettings>
 	{
-		public event EventHandler OnSetPort;
+		/// <summary>
+		/// Raises the new port that has been assigned.
+		/// </summary>
+		public event EventHandler<GenericEventArgs<IWebPort>> OnSetPort;
+
+		private readonly CalendarParserCollection m_CalendarParserCollection;
 
 		private readonly IDictionary<string, List<string>> m_Headers =
 			new Dictionary<string, List<string>>
@@ -29,11 +31,12 @@ namespace ICD.Connect.Calendaring.Robin
 				{"Connection", new List<string> {"keep-alive"}}
 			};
 
+		private string m_CalendarParsingPath;
 		private IWebPort m_Port;
 
 		#region Properties
 
-        public RobinServiceDeviceComponentFactory Components { get; private set; }
+		public RobinServiceDeviceComponentFactory Components { get; private set; }
 
 		public string Token
 		{
@@ -58,49 +61,45 @@ namespace ICD.Connect.Calendaring.Robin
 
 		public string ResourceId { get; set; }
 
-	    public CalendarParserCollection CalendarParserCollection
-	    {
-	        get { return m_CalendarParserCollection; }
-	    }
+		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
-	    private readonly CalendarParserCollection m_CalendarParserCollection;
+		#endregion
 
-	    private string m_CalendarParsingPath;
-
-        #endregion
-
-        public RobinServiceDevice()
+		/// <summary>
+		/// Constructor.
+		/// </summary>
+		public RobinServiceDevice()
 		{
-            m_CalendarParserCollection = new CalendarParserCollection();
+			m_CalendarParserCollection = new CalendarParserCollection();
 
-            Components = new RobinServiceDeviceComponentFactory(this);
+			Components = new RobinServiceDeviceComponentFactory(this);
 
-            Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
+			Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
-        #region Methods
+		#region Methods
 
-        /// <summary>
-        /// Sets the port for communication with the service.
-        /// </summary>
-        /// <param name="port"></param>
-        [PublicAPI]
-	    public void SetPort(IWebPort port)
-	    {
-	        if (port == m_Port)
-	            return;
+		/// <summary>
+		/// Sets the port for communication with the service.
+		/// </summary>
+		/// <param name="port"></param>
+		[PublicAPI]
+		public void SetPort(IWebPort port)
+		{
+			if (port == m_Port)
+				return;
 
-	        Unsubscribe(m_Port);
+			Unsubscribe(m_Port);
 
-	        if (port != null)
-	            port.Accept = "application/json";
+			if (port != null)
+				port.Accept = "application/json";
 
-	        m_Port = port;
-	        Subscribe(m_Port);
+			m_Port = port;
+			Subscribe(m_Port);
 
-		    OnSetPort.Raise(this);
+			OnSetPort.Raise(this, new GenericEventArgs<IWebPort>(m_Port));
 			UpdateCachedOnlineStatus();
-	    }
+		}
 
 		public string Request(string uri)
 		{
@@ -135,110 +134,122 @@ namespace ICD.Connect.Calendaring.Robin
 
 		#endregion
 
-        #region Private Methods
-
-        /// <summary>
-        /// Gets the current online status of the device.
-        /// </summary>
-        /// <returns></returns>
-        protected override bool GetIsOnlineStatus()
-	    {
-	        return m_Port != null && m_Port.IsOnline;
-	    }
+		#region Private Methods
 
 		/// <summary>
-        /// Subscribe to the port events.
-        /// </summary>
-        /// <param name="port"></param>
-        private void Subscribe(IWebPort port)
-	    {
-	        if (port == null)
-	            return;
+		/// Gets the current online status of the device.
+		/// </summary>
+		/// <returns></returns>
+		protected override bool GetIsOnlineStatus()
+		{
+			return m_Port != null && m_Port.IsOnline;
+		}
 
-	        port.OnIsOnlineStateChanged += PortOnIsOnlineStateChanged;
-	    }
+		/// <summary>
+		/// Subscribe to the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Subscribe(IWebPort port)
+		{
+			if (port == null)
+				return;
 
-	    /// <summary>
-	    /// Unsubscribe from the port events.
-	    /// </summary>
-	    /// <param name="port"></param>
-	    private void Unsubscribe(IWebPort port)
-	    {
-	        if (port == null)
-	            return;
+			port.OnIsOnlineStateChanged += PortOnIsOnlineStateChanged;
+		}
 
-	        port.OnIsOnlineStateChanged -= PortOnIsOnlineStateChanged;
-	    }
+		/// <summary>
+		/// Unsubscribe from the port events.
+		/// </summary>
+		/// <param name="port"></param>
+		private void Unsubscribe(IWebPort port)
+		{
+			if (port == null)
+				return;
 
-	    /// <summary>
-	    /// Called when the port online state changes.
-	    /// </summary>
-	    /// <param name="sender"></param>
-	    /// <param name="eventArgs"></param>
-	    private void PortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs eventArgs)
-	    {
-	        UpdateCachedOnlineStatus();
-	    }
+			port.OnIsOnlineStateChanged -= PortOnIsOnlineStateChanged;
+		}
 
-        /// <summary>
-        /// Sets the Calendar Parsing from the settings.
-        /// </summary>
-        /// <param name="configPath"></param>
-        private void SetCalendarParsers(string configPath)
-        {
-            m_CalendarParsingPath = configPath;
+		/// <summary>
+		/// Called when the port online state changes.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="eventArgs"></param>
+		private void PortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs eventArgs)
+		{
+			UpdateCachedOnlineStatus();
+		}
 
-            try
-	        {
-	            m_CalendarParserCollection.LoadParsers(configPath);
-	        }
-	        catch (Exception e)
-	        {
-	            Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
-	        }
-	    }
+		/// <summary>
+		/// Sets the Calendar Parsing from the settings.
+		/// </summary>
+		/// <param name="configPath"></param>
+		private void SetCalendarParsers(string configPath)
+		{
+			m_CalendarParsingPath = configPath;
 
-	    #endregion
+			try
+			{
+				m_CalendarParserCollection.LoadParsers(configPath);
+			}
+			catch (Exception e)
+			{
+				Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
+			}
+		}
 
-        #region Settings
+		#endregion
 
-        protected override void ApplySettingsFinal(RobinServiceDeviceSettings settings, IDeviceFactory factory)
+		#region Settings
+
+		/// <summary>
+		/// Override to apply settings to the instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		protected override void ApplySettingsFinal(RobinServiceDeviceSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
-		    Token = settings.Token;
-		    ResourceId = settings.ResourceId;
+			Token = settings.Token;
+			ResourceId = settings.ResourceId;
 
-		    SetCalendarParsers(settings.CalendarParsingPath);
+			SetCalendarParsers(settings.CalendarParsingPath);
 
-            if (settings.Port != null)
+			if (settings.Port != null)
 			{
 				var port = factory.GetOriginatorById<IWebPort>(settings.Port.Value);
 				SetPort(port);
 			}
 		}
 
-	    protected override void ClearSettingsFinal()
-	    {
-            base.ClearSettingsFinal();
+		/// <summary>
+		/// Override to clear the instance settings.
+		/// </summary>
+		protected override void ClearSettingsFinal()
+		{
+			base.ClearSettingsFinal();
 
-	        m_CalendarParserCollection.ClearMatchers();
+			m_CalendarParserCollection.ClearMatchers();
 
-            Token = null;
-	        ResourceId = null;
-            SetPort(null);
-	    }
+			Token = null;
+			ResourceId = null;
+			SetPort(null);
+		}
 
-	    protected override void CopySettingsFinal(RobinServiceDeviceSettings settings)
-	    {
-            base.CopySettingsFinal(settings);
+		/// <summary>
+		/// Override to apply properties to the settings instance.
+		/// </summary>
+		/// <param name="settings"></param>
+		protected override void CopySettingsFinal(RobinServiceDeviceSettings settings)
+		{
+			base.CopySettingsFinal(settings);
 
-	        settings.CalendarParsingPath = m_CalendarParsingPath;
+			settings.CalendarParsingPath = m_CalendarParsingPath;
 
-            settings.Token = Token;
-	        settings.ResourceId = ResourceId;
-            settings.Port = m_Port == null ? (int?)null : m_Port.Id;
-	    }
+			settings.Token = Token;
+			settings.ResourceId = ResourceId;
+			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
+		}
 
 		#endregion
 

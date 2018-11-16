@@ -492,20 +492,24 @@ namespace ICD.Connect.Calendaring.Asure
 
 			Username = settings.Username;
 			Password = settings.Password;
+			ResourceId = settings.ResourceId;
+			UpdateInterval = settings.UpdateInterval ?? DEFAULT_REFRESH_INTERVAL;
 
 			IWebPort port = null;
 
 			if (settings.Port != null)
 			{
-				port = factory.GetPortById((int)settings.Port) as IWebPort;
-				if (port == null)
+				try
+				{
+					port = factory.GetPortById((int)settings.Port) as IWebPort;
+				}
+				catch (KeyNotFoundException)
+				{
 					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+				}
 			}
 
 			SetPort(port);
-
-			ResourceId = settings.ResourceId;
-			UpdateInterval = settings.UpdateInterval ?? DEFAULT_REFRESH_INTERVAL;
 		}
 
 		#endregion
