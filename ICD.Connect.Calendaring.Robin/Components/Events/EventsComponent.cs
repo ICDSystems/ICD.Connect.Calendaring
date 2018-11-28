@@ -83,9 +83,9 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 		/// <returns></returns>
 		private Event[] GetReservations(string resourceId, DateTime startTime, DateTime endTime)
 		{
-			string uri = string.Format("spaces/{0}/events?after={1:yyyy-MM-ddTHH:mm:ss zzz}&before={2:yyyy-MM-ddTHH:mm:ss zzz}&per_page=300", resourceId, startTime, endTime);
+			string path = string.Format("spaces/{0}/events?after={1:yyyy-MM-ddTHH:mm:ss zzz}&before={2:yyyy-MM-ddTHH:mm:ss zzz}&per_page=300", resourceId, startTime, endTime);
 
-			string data = Parent.Request(uri);
+			string data = Parent.Request(path);
 
 			return JsonConvert.DeserializeObject<Event[]>(data);
 		}

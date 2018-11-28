@@ -70,9 +70,9 @@ namespace ICD.Connect.Calendaring.Robin.Components.Users
 		/// <returns></returns>
 		private User GetUserInfo(string userId)
 		{
-			string uri = string.Format("users/{0}", userId);
+			string path = string.Format("users/{0}", userId);
 
-			string data = Parent.Request(uri);
+			string data = Parent.Request(path);
 
 			return JsonConvert.DeserializeObject<User>(data);
 		}

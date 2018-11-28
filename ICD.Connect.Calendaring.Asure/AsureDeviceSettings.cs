@@ -96,12 +96,8 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public AsureDeviceSettings()
 		{
-			// https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
-			m_UriProperties = new UriProperties
-			{
-				UriScheme = "https",
-				UriPath = "/ResourceScheduler.WebService/ResourceSchedulerService.asmx",
-			};
+			m_UriProperties = new UriProperties();
+			m_UriProperties.SetUriFromAddress("https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx");
 		}
 
 		/// <summary>
