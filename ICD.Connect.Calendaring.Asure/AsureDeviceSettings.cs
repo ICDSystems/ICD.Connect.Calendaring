@@ -81,6 +81,14 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public string UriFragment { get { return m_UriProperties.UriFragment; } set { m_UriProperties.UriFragment = value; } }
 
+		/// <summary>
+		/// Clears the configured values.
+		/// </summary>
+		void IUriProperties.Clear()
+		{
+			m_UriProperties.Clear();
+		}
+
 		#endregion
 
 		/// <summary>
