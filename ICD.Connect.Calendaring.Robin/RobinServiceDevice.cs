@@ -10,7 +10,9 @@ using ICD.Connect.Calendaring.Robin.Components;
 using ICD.Connect.Calendaring.Robin.Controls.Calendar;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
+using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
+using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings;
 using Newtonsoft.Json;
 
@@ -22,6 +24,8 @@ namespace ICD.Connect.Calendaring.Robin
 		/// Raises the new port that has been assigned.
 		/// </summary>
 		public event EventHandler<GenericEventArgs<IWebPort>> OnSetPort;
+
+		private readonly UriProperties m_UriProperties;
 
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
@@ -70,11 +74,25 @@ namespace ICD.Connect.Calendaring.Robin
 		/// </summary>
 		public RobinServiceDevice()
 		{
+			m_UriProperties = new UriProperties();
+
 			m_CalendarParserCollection = new CalendarParserCollection();
 
 			Components = new RobinServiceDeviceComponentFactory(this);
 
 			Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
+		}
+
+		/// <summary>
+		/// Release resources.
+		/// </summary>
+		protected override void DisposeFinal(bool disposing)
+		{
+			OnSetPort = null;
+
+			base.DisposeFinal(disposing);
+
+			SetPort(null);
 		}
 
 		#region Methods
@@ -89,6 +107,8 @@ namespace ICD.Connect.Calendaring.Robin
 			if (port == m_Port)
 				return;
 
+			ConfigurePort(port);
+
 			Unsubscribe(m_Port);
 
 			if (port != null)
@@ -101,14 +121,25 @@ namespace ICD.Connect.Calendaring.Robin
 			UpdateCachedOnlineStatus();
 		}
 
-		public string Request(string uri)
+		/// <summary>
+		/// Configures the given port for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		private void ConfigurePort(IWebPort port)
+		{
+			// URI
+			if (port != null)
+				port.ApplyDeviceConfiguration(m_UriProperties);
+		}
+
+		public string Request(string path)
 		{
 			bool success;
 			string response;
 
 			try
 			{
-				success = m_Port.Get(uri, m_Headers, out response);
+				success = m_Port.Get(path, m_Headers, out response);
 			}
 				// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
@@ -210,16 +241,28 @@ namespace ICD.Connect.Calendaring.Robin
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+			m_UriProperties.Copy(settings);
+
 			Token = settings.Token;
 			ResourceId = settings.ResourceId;
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
+			IWebPort port = null;
+
 			if (settings.Port != null)
 			{
-				var port = factory.GetOriginatorById<IWebPort>(settings.Port.Value);
-				SetPort(port);
+				try
+				{
+					port = factory.GetPortById((int)settings.Port) as IWebPort;
+				}
+				catch (KeyNotFoundException)
+				{
+					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+				}
 			}
+
+			SetPort(port);
 		}
 
 		/// <summary>
@@ -234,6 +277,8 @@ namespace ICD.Connect.Calendaring.Robin
 			Token = null;
 			ResourceId = null;
 			SetPort(null);
+
+			m_UriProperties.Clear();
 		}
 
 		/// <summary>
@@ -249,6 +294,8 @@ namespace ICD.Connect.Calendaring.Robin
 			settings.Token = Token;
 			settings.ResourceId = ResourceId;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
+
+			settings.Copy(m_UriProperties);
 		}
 
 		#endregion

@@ -480,6 +480,8 @@ namespace ICD.Connect.Calendaring.Asure
 			SetPort(null);
 			ResourceId = 0;
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
+
+			m_UriProperties.Clear();
 		}
 
 		/// <summary>
