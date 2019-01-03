@@ -7,6 +7,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Calendaring.Asure.Controls.Calendar;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
@@ -77,6 +78,8 @@ namespace ICD.Connect.Calendaring.Asure
 
 			m_UpdateTimer = new SafeTimer(RefreshCacheHeartbeat, DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
+
+			Controls.Add(new AsureCalendarControl(this, 0));
 		}
 
 		#region Methods
