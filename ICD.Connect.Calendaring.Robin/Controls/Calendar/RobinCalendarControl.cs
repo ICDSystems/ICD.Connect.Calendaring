@@ -10,7 +10,6 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
 using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Calendaring.Robin.Components.Events;
-using ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
@@ -54,7 +53,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			m_SortedBookings = new List<RobinBooking>();
 			m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
-
 			m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
@@ -125,10 +123,11 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		{
 			bool change = false;
 
-			Event[] events = m_EventsComponent.GetEvents()
-			                                  .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
-			                                  .Distinct()
-			                                  .ToArray();
+			Event[] events =
+				m_EventsComponent.GetEvents()
+				                 .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
+				                 .Distinct()
+				                 .ToArray();
 
 			m_BookingSection.Enter();
 
@@ -174,7 +173,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 				m_HashBooking.Add(robinBooking);
 
 				m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
-
 			}
 			finally
 			{

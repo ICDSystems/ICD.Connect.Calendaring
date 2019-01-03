@@ -5,7 +5,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Robin.Components.Events;
 
-namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
+namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
 	public sealed class RobinBooking : AbstractBooking
 	{
