@@ -29,7 +29,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		/// <summary>
 		/// Sort events by start time.
 		/// </summary>
-		private static readonly PredicateComparer<Event, DateTime> s_BookingComparer;
+		private static readonly PredicateComparer<Event, DateTime> s_EventComparer;
 
 		/// <summary>
 		/// Compare events by id.
@@ -41,7 +41,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		/// </summary>
 		static RobinServiceDeviceCalendarControl()
 		{
-			s_BookingComparer = new PredicateComparer<Event, DateTime>(e => e.MeetingStart.DateTimeInfo);
+			s_EventComparer = new PredicateComparer<Event, DateTime>(e => e.MeetingStart.DateTimeInfo);
 			s_EventEqualityComparer = new PredicateEqualityComparer<Event, string>(e => e.Id);
 		}
 
@@ -55,7 +55,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		{
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			m_EventToBooking = new IcdOrderedDictionary<Event, RobinBooking>(s_BookingComparer, s_EventEqualityComparer);
+			m_EventToBooking = new IcdOrderedDictionary<Event, RobinBooking>(s_EventComparer, s_EventEqualityComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
@@ -136,7 +136,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			try
 			{
-				IcdHashSet<Event> existing = m_EventToBooking.Keys.ToIcdHashSet();
+				IcdHashSet<Event> existing = m_EventToBooking.Keys.ToIcdHashSet(s_EventEqualityComparer);
 				IcdHashSet<Event> removeEventsList = existing.Subtract(events);
 
 				foreach (Event @event in removeEventsList)
@@ -182,21 +182,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		private bool RemoveEvent(Event @event)
 		{
-			m_BookingSection.Enter();
-
-			try
-			{
-				if (!m_EventToBooking.ContainsKey(@event))
-					return false;
-
-				m_EventToBooking.Remove(@event);
-			}
-			finally
-			{
-				m_BookingSection.Leave();
-			}
-
-			return true;
+			return m_BookingSection.Execute(() => m_EventToBooking.Remove(@event));
 		}
 
 		#endregion

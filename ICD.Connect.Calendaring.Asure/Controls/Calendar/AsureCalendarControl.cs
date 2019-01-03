@@ -8,7 +8,6 @@ using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
-using ICD.Connect.Calendaring.Comparers;
 
 namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 {
@@ -19,21 +18,26 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 
-		private readonly List<AsureBooking> m_SortedBookings;
-		private readonly IcdHashSet<AsureBooking> m_HashBooking;
+		private readonly IcdOrderedDictionary<ReservationData, AsureBooking> m_ReservationToBooking;
 		private readonly SafeCriticalSection m_BookingSection;
 
 		/// <summary>
-		/// Sort events by start time.
+		/// Sort reservations by start time.
 		/// </summary>
-		private static readonly PredicateComparer<AsureBooking, DateTime> s_BookingComparer;
+		private static readonly PredicateComparer<ReservationData, DateTime> s_ReservationComparer;
+
+		/// <summary>
+		/// Compare reservations by id.
+		/// </summary>
+		private static readonly PredicateEqualityComparer<ReservationData, int> s_ReservationEqualityComparer; 
 
 		/// <summary>
 		/// Static constructor.
 		/// </summary>
 		static AsureCalendarControl()
 		{
-			s_BookingComparer = new PredicateComparer<AsureBooking, DateTime>(b => b.StartTime);
+			s_ReservationComparer = new PredicateComparer<ReservationData, DateTime>(r => r.ScheduleData.Start ?? DateTime.MinValue);
+			s_ReservationEqualityComparer = new PredicateEqualityComparer<ReservationData, int>(r => r.ReservationBaseData.Id);
 		}
 
 		/// <summary>
@@ -44,8 +48,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public AsureCalendarControl(AsureDevice parent, int id)
 			: base(parent, id)
 		{
-			m_SortedBookings = new List<AsureBooking>();
-			m_HashBooking = new IcdHashSet<AsureBooking>(new BookingsComparer<AsureBooking>());
+			m_ReservationToBooking = new IcdOrderedDictionary<ReservationData, AsureBooking>(s_ReservationComparer, s_ReservationEqualityComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			parent.OnCacheUpdated += ParentOnCacheUpdated;
@@ -79,7 +82,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override IEnumerable<IBooking> GetBookings()
 		{
-			return m_BookingSection.Execute(() => m_SortedBookings.ToArray(m_SortedBookings.Count));
+			return m_BookingSection.Execute(() => m_ReservationToBooking.Values.ToArray(m_ReservationToBooking.Count));
 		}
 
 		#endregion
@@ -98,14 +101,11 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 			try
 			{
-				IcdHashSet<AsureBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<AsureBooking>());
-				IcdHashSet<AsureBooking> current =
-					reservations.Select(r => new AsureBooking(r))
-					            .ToIcdHashSet(new BookingsComparer<AsureBooking>());
+				IcdHashSet<ReservationData> existing = m_ReservationToBooking.Keys.ToIcdHashSet(s_ReservationEqualityComparer);
+				IcdHashSet<ReservationData> removeBookingList = existing.Subtract(reservations);
 
-				IcdHashSet<AsureBooking> removeBookingList = existing.Subtract(current);
-				foreach (AsureBooking booking in removeBookingList)
-					change |= RemoveBooking(booking);
+				foreach (ReservationData reservation in removeBookingList)
+					change |= RemoveBooking(reservation);
 
 				foreach (ReservationData reservation in reservations)
 					change |= AddBooking(reservation);
@@ -127,14 +127,12 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 			try
 			{
-				AsureBooking robinBooking = new AsureBooking(reservation);
-
-				if (m_HashBooking.Contains(robinBooking))
+				if (m_ReservationToBooking.ContainsKey(reservation))
 					return false;
 
-				m_HashBooking.Add(robinBooking);
+				AsureBooking booking = new AsureBooking(reservation);
 
-				m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
+				m_ReservationToBooking.Add(reservation, booking);
 			}
 			finally
 			{
@@ -144,24 +142,9 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			return true;
 		}
 
-		private bool RemoveBooking(AsureBooking booking)
+		private bool RemoveBooking(ReservationData booking)
 		{
-			m_BookingSection.Enter();
-
-			try
-			{
-				if (!m_HashBooking.Contains(booking))
-					return false;
-
-				m_HashBooking.Remove(booking);
-				m_SortedBookings.Remove(booking);
-			}
-			finally
-			{
-				m_BookingSection.Leave();
-			}
-
-			return true;
+			return m_BookingSection.Execute(() => m_ReservationToBooking.Remove(booking));
 		}
 
 		#endregion
