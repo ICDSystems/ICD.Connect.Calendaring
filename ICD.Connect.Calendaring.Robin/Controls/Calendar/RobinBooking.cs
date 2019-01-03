@@ -12,6 +12,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		private readonly Event m_Event;
 		private readonly List<IBookingNumber> m_BookingNumbers;
 
+		public Event Event { get { return m_Event; } }
+
 		public override string MeetingName
 		{
 			get { return m_Event.MeetingName; }

@@ -8,7 +8,6 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
-using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Calendaring.Robin.Components.Events;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
@@ -24,21 +23,26 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		private readonly EventsComponent m_EventsComponent;
 		private readonly SafeTimer m_RefreshTimer;
-		private readonly List<RobinBooking> m_SortedBookings;
-		private readonly IcdHashSet<RobinBooking> m_HashBooking;
+		private readonly IcdOrderedDictionary<Event, RobinBooking> m_EventToBooking;
 		private readonly SafeCriticalSection m_BookingSection;
 
 		/// <summary>
 		/// Sort events by start time.
 		/// </summary>
-		private static readonly PredicateComparer<RobinBooking, DateTime> s_BookingComparer;
+		private static readonly PredicateComparer<Event, DateTime> s_BookingComparer;
+
+		/// <summary>
+		/// Compare events by id.
+		/// </summary>
+		private static readonly PredicateEqualityComparer<Event, string> s_EventEqualityComparer; 
 
 		/// <summary>
 		/// Static constructor.
 		/// </summary>
 		static RobinServiceDeviceCalendarControl()
 		{
-			s_BookingComparer = new PredicateComparer<RobinBooking, DateTime>(b => b.StartTime);
+			s_BookingComparer = new PredicateComparer<Event, DateTime>(e => e.MeetingStart.DateTimeInfo);
+			s_EventEqualityComparer = new PredicateEqualityComparer<Event, string>(e => e.Id);
 		}
 
 		/// <summary>
@@ -51,8 +55,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		{
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			m_SortedBookings = new List<RobinBooking>();
-			m_HashBooking = new IcdHashSet<RobinBooking>(new BookingsComparer<RobinBooking>());
+			m_EventToBooking = new IcdOrderedDictionary<Event, RobinBooking>(s_BookingComparer, s_EventEqualityComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
@@ -89,7 +92,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		/// </summary>
 		public override IEnumerable<IBooking> GetBookings()
 		{
-			return m_BookingSection.Execute(() => m_SortedBookings.ToArray(m_SortedBookings.Count));
+			return m_BookingSection.Execute(() => m_EventToBooking.Values.ToArray(m_EventToBooking.Count));
 		}
 
 		#endregion
@@ -133,17 +136,14 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			try
 			{
-				IcdHashSet<RobinBooking> existing = m_SortedBookings.ToIcdHashSet(new BookingsComparer<RobinBooking>());
-				IcdHashSet<RobinBooking> current =
-					events.Select(b => new RobinBooking(b, Parent.CalendarParserCollection.ParseText(b.Description)))
-					      .ToIcdHashSet(new BookingsComparer<RobinBooking>());
+				IcdHashSet<Event> existing = m_EventToBooking.Keys.ToIcdHashSet();
+				IcdHashSet<Event> removeEventsList = existing.Subtract(events);
 
-				IcdHashSet<RobinBooking> removeBookingList = existing.Subtract(current);
-				foreach (RobinBooking booking in removeBookingList)
-					change |= RemoveBooking(booking);
+				foreach (Event @event in removeEventsList)
+					change |= RemoveEvent(@event);
 
 				foreach (Event @event in events)
-					change |= AddBooking(@event);
+					change |= AddEvent(@event);
 			}
 			finally
 			{
@@ -158,21 +158,19 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		#region Private Methods
 
-		private bool AddBooking(Event @event)
+		private bool AddEvent(Event @event)
 		{
 			m_BookingSection.Enter();
 
 			try
 			{
+				if (m_EventToBooking.ContainsKey(@event))
+					return false;
+
 				IEnumerable<BookingProtocolInfo> bookingNumbers = Parent.CalendarParserCollection.ParseText(@event.Description);
 				RobinBooking robinBooking = new RobinBooking(@event, bookingNumbers);
 
-				if (m_HashBooking.Contains(robinBooking))
-					return false;
-
-				m_HashBooking.Add(robinBooking);
-
-				m_SortedBookings.AddSorted(robinBooking, s_BookingComparer);
+				m_EventToBooking.Add(@event, robinBooking);
 			}
 			finally
 			{
@@ -182,17 +180,16 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			return true;
 		}
 
-		private bool RemoveBooking(RobinBooking robinBooking)
+		private bool RemoveEvent(Event @event)
 		{
 			m_BookingSection.Enter();
 
 			try
 			{
-				if (!m_HashBooking.Contains(robinBooking))
+				if (!m_EventToBooking.ContainsKey(@event))
 					return false;
 
-				m_HashBooking.Remove(robinBooking);
-				m_SortedBookings.Remove(robinBooking);
+				m_EventToBooking.Remove(@event);
 			}
 			finally
 			{
