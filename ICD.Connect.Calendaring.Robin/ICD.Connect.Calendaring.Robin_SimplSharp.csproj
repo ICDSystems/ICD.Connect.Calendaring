@@ -77,7 +77,7 @@
     <Compile Include="Components\Users\User.cs" />
     <Compile Include="Components\Users\UsersComponent.cs" />
     <Compile Include="Components\RobinServiceDeviceComponentFactory.cs" />
-    <Compile Include="Controls\Calendar\Bookings\RobinBooking.cs" />
+    <Compile Include="Controls\Calendar\RobinBooking.cs" />
     <Compile Include="Controls\Calendar\RobinCalendarControl.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />

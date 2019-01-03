@@ -46,10 +46,10 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 		public string OrganizerEmail { get; private set; }
 
 		/// <summary>
-		/// Zoom meeting id to join for the meeting
+		/// Event id.
 		/// </summary>
 		[JsonProperty("id")]
-		public string MeetingNumber { get; private set; }
+		public string Id { get; private set; }
 
 	    /// <summary>
 	    /// Zoom meeting id to join for the meeting
