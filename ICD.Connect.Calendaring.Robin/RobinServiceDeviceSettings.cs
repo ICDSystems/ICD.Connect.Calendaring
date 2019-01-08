@@ -91,6 +91,7 @@ namespace ICD.Connect.Calendaring.Robin
 		public RobinServiceDeviceSettings()
 		{
 			m_UriProperties = new UriProperties();
+			UpdateUriDefaults();
 		}
 
 		/// <summary>

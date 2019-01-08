@@ -97,7 +97,7 @@ namespace ICD.Connect.Calendaring.Asure
 		public AsureDeviceSettings()
 		{
 			m_UriProperties = new UriProperties();
-			m_UriProperties.SetUriFromAddress("https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx");
+			UpdateUriDefaults();
 		}
 
 		/// <summary>
@@ -132,6 +132,13 @@ namespace ICD.Connect.Calendaring.Asure
 			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
+
+			UpdateUriDefaults();
+		}
+
+		private void UpdateUriDefaults()
+		{
+			m_UriProperties.ApplyDefaultValuesFromAddress("https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx");
 		}
 	}
 }
