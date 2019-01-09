@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
  - Added Asure calendar control
+ - Added port configuration features to calendar devices
 
 ## [5.0.2] - 2018-11-20
 ### Changed
