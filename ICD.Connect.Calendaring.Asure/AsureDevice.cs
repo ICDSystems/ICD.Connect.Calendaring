@@ -14,8 +14,9 @@ using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
-using ICD.Connect.Protocol.Network.WebPorts;
-using ICD.Connect.Settings.Core;
+using ICD.Connect.Protocol.Network.Ports.Web;
+using ICD.Connect.Protocol.Network.Settings;
+using ICD.Connect.Settings;
 
 namespace ICD.Connect.Calendaring.Asure
 {
@@ -32,13 +33,13 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public event EventHandler OnCacheUpdated;
 
-		private IWebPort m_Port;
-
+		private readonly UriProperties m_UriProperties;
 		private readonly SafeTimer m_UpdateTimer;
-
-		private bool m_Cached;
 		private readonly Dictionary<int, ReservationData> m_Cache;
 		private readonly SafeCriticalSection m_CacheSection;
+
+		private IWebPort m_Port;
+		private bool m_Cached;
 
 		#region Properties
 
@@ -73,6 +74,8 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public AsureDevice()
 		{
+			m_UriProperties = new UriProperties();
+
 			m_Cache = new Dictionary<int, ReservationData>();
 			m_CacheSection = new SafeCriticalSection();
 
@@ -108,6 +111,8 @@ namespace ICD.Connect.Calendaring.Asure
 			if (port == m_Port)
 				return;
 
+			ConfigurePort(port);
+
 			Unsubscribe(m_Port);
 
 			if (port != null)
@@ -117,6 +122,17 @@ namespace ICD.Connect.Calendaring.Asure
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Configures the given port for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		private void ConfigurePort(IWebPort port)
+		{
+			// URI
+			if (port != null)
+				port.ApplyDeviceConfiguration(m_UriProperties);
 		}
 
 		/// <summary>
@@ -380,7 +396,7 @@ namespace ICD.Connect.Calendaring.Asure
 			}
 			catch (Exception e)
 			{
-				Logger.AddEntry(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
+				Log(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
 			}
 		}
 
@@ -467,6 +483,8 @@ namespace ICD.Connect.Calendaring.Asure
 			SetPort(null);
 			ResourceId = 0;
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
+
+			m_UriProperties.Clear();
 		}
 
 		/// <summary>
@@ -482,6 +500,8 @@ namespace ICD.Connect.Calendaring.Asure
 			settings.ResourceId = ResourceId;
 			settings.UpdateInterval = UpdateInterval;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
+
+			settings.Copy(m_UriProperties);
 		}
 
 		/// <summary>
@@ -492,6 +512,8 @@ namespace ICD.Connect.Calendaring.Asure
 		protected override void ApplySettingsFinal(AsureDeviceSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
+
+			m_UriProperties.Copy(settings);
 
 			Username = settings.Username;
 			Password = settings.Password;

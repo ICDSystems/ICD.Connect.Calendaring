@@ -1,7 +1,7 @@
 ﻿using System;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
-using ICD.Connect.Protocol.Network.WebPorts;
 
 namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 {

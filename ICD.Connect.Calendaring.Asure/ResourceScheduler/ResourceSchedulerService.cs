@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
+using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
-using ICD.Connect.Protocol.Network.WebPorts;
 
 namespace ICD.Connect.Calendaring.Asure.ResourceScheduler
 {
