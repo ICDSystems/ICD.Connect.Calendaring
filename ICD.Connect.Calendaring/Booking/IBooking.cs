@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Booking
 {
@@ -38,6 +39,6 @@ namespace ICD.Connect.Calendaring.Booking
 		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>
-		IEnumerable<IBookingNumber> GetBookingNumbers();
+		IEnumerable<IDialContext> GetBookingNumbers();
 	}
 }

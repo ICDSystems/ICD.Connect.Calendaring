@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ICD.Common.Utils.Xml;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
@@ -17,7 +18,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 
 		public string SubstitutionReplacement { get; set; }
 
-		public eBookingProtocol Protocol { get; set; }
+		public eDialProtocol Protocol { get; set; }
 
 		/// <summary>
 		/// Parses text into BookingProtocolInfo collection
@@ -41,7 +42,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 
 				yield return new BookingProtocolInfo
 				{
-					BookingProtocol = Protocol,
+					DialProtocol = Protocol,
 					Number = meetingNumber
 				};
 			}
@@ -55,7 +56,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				GroupName = XmlUtils.TryReadChildElementContentAsString(xml, "Group"),
 				SubstitutionPattern = XmlUtils.TryReadChildElementContentAsString(xml, "ReplacePattern"),
 				SubstitutionReplacement = XmlUtils.TryReadChildElementContentAsString(xml, "ReplaceReplacement"),
-				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eBookingProtocol>(xml, "Protocol", true) ?? eBookingProtocol.None
+				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.None
 			};
 		}
 	}
