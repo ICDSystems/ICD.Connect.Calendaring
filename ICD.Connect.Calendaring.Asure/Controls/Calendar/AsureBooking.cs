@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 {
@@ -74,7 +75,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>
-		public override IEnumerable<IBookingNumber> GetBookingNumbers()
+		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			yield break;
 		}
