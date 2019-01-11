@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [6.0.0] - 2019-01-10
+ - Added port configuration features to calendar devices
+
+## [5.1.0] - 2019-01-10
+### Added
+ - Added Asure calendar control
+
 ## [5.0.2] - 2018-11-20
 ### Changed
  - Fixed null reference where Robin Calendar would update bookings with a null port

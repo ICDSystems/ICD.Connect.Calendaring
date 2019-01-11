@@ -6,12 +6,14 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Robin.Components.Events;
 using ICD.Connect.Conferencing.DialContexts;
 
-namespace ICD.Connect.Calendaring.Robin.Controls.Calendar.Bookings
+namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
 	public sealed class RobinBooking : AbstractBooking
 	{
 		private readonly Event m_Event;
 		private readonly List<IDialContext> m_BookingNumbers;
+
+		public Event Event { get { return m_Event; } }
 
 		public override string MeetingName
 		{
