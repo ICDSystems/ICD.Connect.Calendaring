@@ -82,7 +82,6 @@
     <Compile Include="CalendarParsers\Parsers\AbstractCalendarParser.cs" />
     <Compile Include="CalendarParsers\Parsers\ICalendarParser.cs" />
     <Compile Include="CalendarParsers\Parsers\RegexCalendarParser.cs" />
-    <Compile Include="Comparers\BookingComparer.cs" />
     <Compile Include="ConferencingBookingUtils.cs" />
     <Compile Include="Controls\MockCalendarControl.cs" />
     <Compile Include="Devices\MockBooking.cs" />
