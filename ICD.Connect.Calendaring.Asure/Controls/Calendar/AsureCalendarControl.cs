@@ -27,17 +27,11 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		private static readonly PredicateComparer<ReservationData, DateTime> s_ReservationComparer;
 
 		/// <summary>
-		/// Compare reservations by id.
-		/// </summary>
-		private static readonly PredicateEqualityComparer<ReservationData, int> s_ReservationEqualityComparer; 
-
-		/// <summary>
 		/// Static constructor.
 		/// </summary>
 		static AsureCalendarControl()
 		{
 			s_ReservationComparer = new PredicateComparer<ReservationData, DateTime>(r => r.ScheduleData.Start ?? DateTime.MinValue);
-			s_ReservationEqualityComparer = new PredicateEqualityComparer<ReservationData, int>(r => r.ReservationBaseData.Id);
 		}
 
 		/// <summary>
@@ -48,7 +42,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public AsureCalendarControl(AsureDevice parent, int id)
 			: base(parent, id)
 		{
-			m_ReservationToBooking = new IcdOrderedDictionary<ReservationData, AsureBooking>(s_ReservationComparer, s_ReservationEqualityComparer);
+			m_ReservationToBooking = new IcdOrderedDictionary<ReservationData, AsureBooking>(s_ReservationComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			parent.OnCacheUpdated += ParentOnCacheUpdated;
@@ -101,7 +95,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 			try
 			{
-				IcdHashSet<ReservationData> existing = m_ReservationToBooking.Keys.ToIcdHashSet(s_ReservationEqualityComparer);
+				IcdHashSet<ReservationData> existing = m_ReservationToBooking.Keys.ToIcdHashSet();
 				IcdHashSet<ReservationData> removeBookingList = existing.Subtract(reservations);
 
 				foreach (ReservationData reservation in removeBookingList)

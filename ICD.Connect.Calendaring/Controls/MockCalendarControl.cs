@@ -34,6 +34,17 @@ namespace ICD.Connect.Calendaring.Controls
 		}
 
 		/// <summary>
+		/// Override to release resources.
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected override void DisposeFinal(bool disposing)
+		{
+			m_RefreshTimer.Dispose();
+
+			base.DisposeFinal(disposing);
+		}
+
+		/// <summary>
 		/// Updates the view.
 		/// </summary>
 		public override void Refresh()
