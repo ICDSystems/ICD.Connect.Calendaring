@@ -134,6 +134,9 @@ namespace ICD.Connect.Calendaring.Robin
 
 		public string Request(string path)
 		{
+			if (m_Port == null)
+				throw new InvalidOperationException("Failed to make request - Port is null");
+
 			bool success;
 			string response;
 
@@ -141,22 +144,22 @@ namespace ICD.Connect.Calendaring.Robin
 			{
 				success = m_Port.Get(path, m_Headers, out response);
 			}
-				// Catch HTTP or HTTPS exception, without dependency on Crestron
+			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
 			{
-				string message = string.Format("{0} failed to dispatch - {1}", "GetReservations", e.Message);
+				string message = string.Format("Failed to make request - {0}", e.Message);
 				throw new InvalidOperationException(message, e);
 			}
 
 			if (!success)
 			{
-				string message = string.Format("{0} failed to dispatch", "GetReservations");
+				string message = string.Format("Request did not succeed");
 				throw new InvalidOperationException(message);
 			}
 
 			if (string.IsNullOrEmpty(response))
 			{
-				string message = string.Format("{0} failed to dispatch - received empty response", "GetReservations");
+				string message = string.Format("Failed to make request - Received empty response");
 				throw new InvalidOperationException(message);
 			}
 
