@@ -28,5 +28,10 @@
 		{
 			get { return "sip:" + MeetingNumber + "@zmus.us"; }
 		}
+
+		public override string ToString()
+		{
+			return MeetingNumber + "@zmus.us";
+		}
 	}
 }

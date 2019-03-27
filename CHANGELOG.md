@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+ - IBookingNumber implementations override ToString
+
 ## [5.1.0] - 2019-01-10
 ### Added
  - Added Asure calendar control

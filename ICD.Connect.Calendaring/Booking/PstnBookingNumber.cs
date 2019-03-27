@@ -18,5 +18,10 @@
 		{
 			get { return eBookingProtocol.Pstn; }
 		}
+
+		public override string ToString()
+		{
+			return m_PhoneNumber;
+		}
 	}
 }

@@ -23,5 +23,10 @@
 		{
 			get {return eBookingProtocol.Sip;}
 		}
+
+		public override string ToString()
+		{
+			return m_SipUri;
+		}
 	}
 }
