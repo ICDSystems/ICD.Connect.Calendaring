@@ -47,13 +47,13 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public RobinServiceDeviceCalendarControl(RobinServiceDevice parent, int id)
 			: base(parent, id)
 		{
-			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
-
 			m_EventToBooking = new IcdOrderedDictionary<Event, RobinBooking>(s_EventComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();
 			Subscribe(m_EventsComponent);
+
+			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 		}
 
 		/// <summary>
@@ -154,6 +154,9 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		private bool AddEvent(Event @event)
 		{
+			if (@event == null)
+				throw new ArgumentNullException("event");
+
 			m_BookingSection.Enter();
 
 			try
@@ -176,6 +179,9 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		private bool RemoveEvent(Event @event)
 		{
+			if (@event == null)
+				throw new ArgumentNullException("event");
+
 			return m_BookingSection.Execute(() => m_EventToBooking.Remove(@event));
 		}
 

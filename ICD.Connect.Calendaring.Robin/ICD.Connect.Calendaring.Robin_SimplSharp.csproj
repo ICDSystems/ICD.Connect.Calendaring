@@ -80,7 +80,7 @@
     <Compile Include="Components\Users\UsersComponent.cs" />
     <Compile Include="Components\RobinServiceDeviceComponentFactory.cs" />
     <Compile Include="Controls\Calendar\RobinBooking.cs" />
-    <Compile Include="Controls\Calendar\RobinCalendarControl.cs" />
+    <Compile Include="Controls\Calendar\RobinServiceDeviceCalendarControl.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
