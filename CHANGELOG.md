@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.0.2] - 2019-05-02
+### Changed
+ - Using JsonConverters to deserialize Robin calendar JSON due to release obfuscation issues
+
 ## [7.0.1] - 2019-01-29
 ### Changed
  - Fixed issue with calendar booking de-duplication that was preventing bookings from updating
