@@ -1,76 +1,65 @@
 ﻿using System;
-using ICD.Common.Properties;
+using ICD.Connect.Calendaring.Robin.Components.Converters;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Robin.Components.Events
 {
-	[UsedImplicitly]
+	[JsonConverter(typeof(EventConverter))]
 	public sealed class Event
 	{
 		/// <summary>
 		/// Name of the meeting
 		/// </summary>
-		[JsonProperty("title")]
-		public string MeetingName { get; private set; }
+		public string MeetingName { get; set; }
 
 		/// <summary>
 		/// Scheduled start time of the meeting
 		/// </summary>
-		[JsonProperty("start")]
-		public DateInfo MeetingStart { get; private set; }
+		public DateInfo MeetingStart { get; set; }
 
 		/// <summary>
 		/// Scheduled end time for the meeting
 		/// </summary>
-		[JsonProperty("end")]
-		public DateInfo MeetingEnd { get; private set; }
+		public DateInfo MeetingEnd { get; set; }
 
 		/// <summary>
 		/// ID of the person who created the meeting.
 		/// </summary>
-		[JsonProperty("creator_id")]
-		public string OrganizerId{ get; private set; }
+		public string OrganizerId { get; set; }
 
-	    /// <summary>
-	    /// Name of the person who created the meeting.
-	    /// </summary>
-	    /// <remarks>
-	    /// Not returned in Robin events response.
-	    /// </remarks>
-	    public string OrganizerName { get; internal set; }
+		/// <summary>
+		/// Name of the person who created the meeting.
+		/// </summary>
+		/// <remarks>
+		/// Not returned in Robin events response.
+		/// </remarks>
+		public string OrganizerName { get; set; }
 
-        /// <summary>
-        /// Email of the person who created the meeting
-        /// </summary>
-        [JsonProperty("creator_email")]
-		public string OrganizerEmail { get; private set; }
+		/// <summary>
+		/// Email of the person who created the meeting
+		/// </summary>
+		public string OrganizerEmail { get; set; }
 
 		/// <summary>
 		/// Event id.
 		/// </summary>
-		[JsonProperty("id")]
-		public string Id { get; private set; }
+		public string Id { get; set; }
 
-	    /// <summary>
-	    /// Zoom meeting id to join for the meeting
-	    /// </summary>
-	    [JsonProperty("description")]
-	    public string Description { get; private set; }
+		/// <summary>
+		/// Zoom meeting id to join for the meeting
+		/// </summary>
+		public string Description { get; set; }
 
-        /// <summary>
-        /// Zoom meeting id to join for the meeting
-        /// </summary>
-        [JsonProperty("visibility")]
-	    public string IsPrivate { get; private set; }
+		/// <summary>
+		/// Zoom meeting id to join for the meeting
+		/// </summary>
+		public string IsPrivate { get; set; }
 
-		[UsedImplicitly]
+		[JsonConverter(typeof(DateInfoConverter))]
 		public sealed class DateInfo
-	    {
-	        [JsonProperty("date_time")]
-            public DateTime DateTimeInfo { get; private set; }
-
-	        [JsonProperty("time_zone")]
-            public string TimeZoneInfo { get; private set; }
-	    }
-    }
+		{
+			public DateTime DateTimeInfo { get; set; }
+			public string TimeZoneInfo { get; set; }
+		}
+	}
 }

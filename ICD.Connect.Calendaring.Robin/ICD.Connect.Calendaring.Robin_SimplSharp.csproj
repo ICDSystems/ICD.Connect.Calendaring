@@ -72,7 +72,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\AbstractRobinServiceDeviceComponent.cs" />
+    <Compile Include="Components\Converters\UserConverter.cs" />
     <Compile Include="Components\Events\Event.cs" />
+    <Compile Include="Components\Converters\EventConverter.cs" />
     <Compile Include="Components\Events\EventsComponent.cs" />
     <Compile Include="Components\Users\User.cs" />
     <Compile Include="Components\Users\UsersComponent.cs" />

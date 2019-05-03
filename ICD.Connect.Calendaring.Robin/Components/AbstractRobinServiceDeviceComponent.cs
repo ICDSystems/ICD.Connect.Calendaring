@@ -121,7 +121,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <param name="parent"></param>
 		private void Subscribe(RobinServiceDevice parent)
 		{
-			parent.OnSetPort += ParentOnOnSetPort;
+			parent.OnSetPort += ParentOnSetPort;
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// <param name="parent"></param>
 		private void Unsubscribe(RobinServiceDevice parent)
 		{
-			parent.OnSetPort -= ParentOnOnSetPort;
+			parent.OnSetPort -= ParentOnSetPort;
 		}
 
 		/// <summary>
@@ -138,7 +138,7 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="args"></param>
-		private void ParentOnOnSetPort(object sender, GenericEventArgs<IWebPort> args)
+		private void ParentOnSetPort(object sender, GenericEventArgs<IWebPort> args)
 		{
 			if (args.Data != null)
 				Initialize();
