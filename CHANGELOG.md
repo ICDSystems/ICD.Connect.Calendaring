@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [5.2.0] - 2019-05-15
 ### Added
  - IBookingNumber implementations override ToString
+
+### Changed
+ - Fixed MockCalendar bookings
 
 ## [5.1.0] - 2019-01-10
 ### Added
