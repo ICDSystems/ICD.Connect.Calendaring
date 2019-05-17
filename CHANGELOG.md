@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0] - 2019-01-10
  - Added port configuration features to calendar devices
 
+## [5.2.0] - 2019-05-15
+### Added
+ - IBookingNumber implementations override ToString
+
+### Changed
+ - Fixed MockCalendar bookings
+
 ## [5.1.0] - 2019-01-10
 ### Added
  - Added Asure calendar control

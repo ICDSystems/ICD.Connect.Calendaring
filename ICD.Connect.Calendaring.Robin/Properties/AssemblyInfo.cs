@@ -5,4 +5,3 @@ using System.Reflection;
 [assembly: AssemblyProduct("ICD.Connect.Calendaring.Robin")]
 [assembly: AssemblyCopyright("Copyright © ICD Systems 2019")]
 [assembly: AssemblyVersion("7.0.2.0")]
-

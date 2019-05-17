@@ -16,7 +16,7 @@ namespace ICD.Connect.Calendaring.Controls
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 
-		private const int TIMER_REFRESH_INTERVAL = 2 * 60 * 60 * 1000;
+		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
 		private readonly List<IBooking> m_BookingList;
 		private readonly SafeTimer m_RefreshTimer;
@@ -39,6 +39,8 @@ namespace ICD.Connect.Calendaring.Controls
 		/// <param name="disposing"></param>
 		protected override void DisposeFinal(bool disposing)
 		{
+			OnBookingsChanged = null;
+
 			m_RefreshTimer.Dispose();
 
 			base.DisposeFinal(disposing);
@@ -54,11 +56,11 @@ namespace ICD.Connect.Calendaring.Controls
 			DateTime timeNow = IcdEnvironment.GetLocalTime();
 			DateTime defaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
 
-			m_BookingList.Add(new MockBooking("Old Meeting 1", "Organizer1@email.biz", "The Organizer1", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true));
-			m_BookingList.Add(new MockBooking("Old Meeting 2", "Organizer2@email.biz", "The Organizer2", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1), false));
-			m_BookingList.Add(new MockBooking("New Meeting 1", "Organizer3@email.biz", "The Organizer3", defaultMeetingTime, defaultMeetingTime.AddMinutes(30), false));
-			m_BookingList.Add(new MockBooking("New Meeting 2", "Organizer4@email.biz", "The Organizer4", defaultMeetingTime.AddHours(1), defaultMeetingTime.AddHours(1).AddMinutes(30), true));
-			m_BookingList.Add(new MockBooking("New Meeting 3", "Organizer5@email.biz", "The Organizer5", defaultMeetingTime.AddHours(2), defaultMeetingTime.AddHours(2).AddMinutes(30), false));
+			m_BookingList.Add(new MockBooking("Old Meeting 1", "The Organizer1", "Organizer1@email.biz", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true));
+			m_BookingList.Add(new MockBooking("Old Meeting 2", "The Organizer2", "Organizer2@email.biz", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1), false));
+			m_BookingList.Add(new MockBooking("New Meeting 1", "The Organizer3", "Organizer3@email.biz", defaultMeetingTime, defaultMeetingTime.AddMinutes(30), false));
+			m_BookingList.Add(new MockBooking("New Meeting 2", "The Organizer4", "Organizer4@email.biz", defaultMeetingTime.AddHours(1), defaultMeetingTime.AddHours(1).AddMinutes(30), true));
+			m_BookingList.Add(new MockBooking("New Meeting 3", "The Organizer5", "Organizer5@email.biz", defaultMeetingTime.AddHours(2), defaultMeetingTime.AddHours(2).AddMinutes(30), false));
 
 			OnBookingsChanged.Raise(this);
 		}
