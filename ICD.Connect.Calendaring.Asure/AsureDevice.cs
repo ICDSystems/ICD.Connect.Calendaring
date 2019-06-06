@@ -117,6 +117,9 @@ namespace ICD.Connect.Calendaring.Asure
 			Subscribe(m_Port);
 
 			UpdateCachedOnlineStatus();
+
+			if (m_Port != null)
+				RefreshCache();
 		}
 
 		/// <summary>
