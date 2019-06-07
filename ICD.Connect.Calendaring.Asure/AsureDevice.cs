@@ -11,6 +11,7 @@ using ICD.Connect.Calendaring.Asure.Controls.Calendar;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
+using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
@@ -32,15 +33,18 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public event EventHandler OnCacheUpdated;
 
-		private IWebPort m_Port;
-
+		private readonly CalendarParserCollection m_CalendarParserCollection;
 		private readonly SafeTimer m_UpdateTimer;
 
+		private string m_CalendarParsingPath;
+		private IWebPort m_Port;
 		private bool m_Cached;
 		private readonly Dictionary<int, ReservationData> m_Cache;
 		private readonly SafeCriticalSection m_CacheSection;
 
 		#region Properties
+
+		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
 		/// <summary>
 		/// Gets/sets ID for the resource to be used when making bookings.
@@ -73,6 +77,8 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public AsureDevice()
 		{
+			m_CalendarParserCollection = new CalendarParserCollection();
+
 			m_Cache = new Dictionary<int, ReservationData>();
 			m_CacheSection = new SafeCriticalSection();
 
@@ -416,6 +422,24 @@ namespace ICD.Connect.Calendaring.Asure
 			return m_Port != null && m_Port.IsOnline;
 		}
 
+		/// <summary>
+		/// Sets the Calendar Parsing from the settings.
+		/// </summary>
+		/// <param name="configPath"></param>
+		private void SetCalendarParsers(string configPath)
+		{
+			m_CalendarParsingPath = configPath;
+
+			try
+			{
+				m_CalendarParserCollection.LoadParsers(configPath);
+			}
+			catch (Exception e)
+			{
+				Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
+			}
+		}
+
 		#endregion
 
 		#region Port Callbacks
@@ -465,6 +489,7 @@ namespace ICD.Connect.Calendaring.Asure
 		{
 			base.ClearSettingsFinal();
 
+			m_CalendarParserCollection.ClearMatchers();
 			Username = null;
 			Password = null;
 			SetPort(null);
@@ -480,6 +505,7 @@ namespace ICD.Connect.Calendaring.Asure
 		{
 			base.CopySettingsFinal(settings);
 
+			settings.CalendarParsingPath = m_CalendarParsingPath;
 			settings.Username = Username;
 			settings.Password = Password;
 			settings.ResourceId = ResourceId;
@@ -500,6 +526,8 @@ namespace ICD.Connect.Calendaring.Asure
 			Password = settings.Password;
 			ResourceId = settings.ResourceId;
 			UpdateInterval = settings.UpdateInterval ?? DEFAULT_REFRESH_INTERVAL;
+
+			SetCalendarParsers(settings.CalendarParsingPath);
 
 			IWebPort port = null;
 

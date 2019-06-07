@@ -14,15 +14,16 @@ namespace ICD.Connect.Calendaring.Asure
 		private const string PORT_ELEMENT = "Port";
 		private const string USERNAME_ELEMENT = "Username";
 		private const string PASSWORD_ELEMENT = "Password";
+		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
 
 		public string Username { get; set; }
 		public string Password { get; set; }
-
 		public int ResourceId { get; set; }
 		public long? UpdateInterval { get; set; }
+		public string CalendarParsingPath { get; set; }
 
 		/// <summary>
 		/// Writes property elements to xml.
@@ -37,6 +38,7 @@ namespace ICD.Connect.Calendaring.Asure
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(USERNAME_ELEMENT, Username);
 			writer.WriteElementString(PASSWORD_ELEMENT, Password);
+			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 		}
 
 		/// <summary>
@@ -47,17 +49,12 @@ namespace ICD.Connect.Calendaring.Asure
 		{
 			base.ParseXml(xml);
 
-			int? port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
-			int resourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
-			long? updateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
-			string username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
-			string password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
-
-			Port = port;
-			ResourceId = resourceId;
-			UpdateInterval = updateInterval;
-			Username = username;
-			Password = password;
+			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
+			ResourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
+			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
+			Username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
+			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
 		}
 	}
 }

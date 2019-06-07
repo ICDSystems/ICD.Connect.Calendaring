@@ -130,7 +130,9 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 				if (m_ReservationToBooking.ContainsKey(reservation))
 					return false;
 
-				AsureBooking booking = new AsureBooking(reservation);
+				IEnumerable<BookingProtocolInfo> bookingProtocolInfos =
+					Parent.CalendarParserCollection.ParseText(reservation.ReservationBaseData.Notes);
+				AsureBooking booking = new AsureBooking(reservation, bookingProtocolInfos);
 
 				m_ReservationToBooking.Add(reservation, booking);
 			}
