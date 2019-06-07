@@ -5,10 +5,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Changed
- - Added Asure Calendar Parsing
- - Asure Calendar now refreshes when the port is assigned
 
+## [5.3.0] - 2019-06-07
+### Changed
+ - Parsing Asure Calendar notes for call-in information
+ - Asure Calendar now refreshes when the port is assigned
 
 ## [5.2.0] - 2019-05-15
 ### Added
