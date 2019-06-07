@@ -15,6 +15,7 @@ namespace ICD.Connect.Calendaring.Asure
 		private const string PORT_ELEMENT = "Port";
 		private const string USERNAME_ELEMENT = "Username";
 		private const string PASSWORD_ELEMENT = "Password";
+		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private readonly UriProperties m_UriProperties;
 
@@ -36,6 +37,8 @@ namespace ICD.Connect.Calendaring.Asure
 		/// Gets/sets the configurable service password.
 		/// </summary>
 		public string Password { get; set; }
+
+		public string CalendarParsingPath { get; set; }
 
 		#endregion
 
@@ -113,6 +116,7 @@ namespace ICD.Connect.Calendaring.Asure
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(USERNAME_ELEMENT, Username);
 			writer.WriteElementString(PASSWORD_ELEMENT, Password);
+			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
 		}
@@ -130,6 +134,7 @@ namespace ICD.Connect.Calendaring.Asure
 			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
 			Username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
 			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 

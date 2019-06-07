@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0] - 2019-01-10
  - Added port configuration features to calendar devices
 
+## [5.3.0] - 2019-06-07
+### Changed
+ - Parsing Asure Calendar notes for call-in information
+ - Asure Calendar now refreshes when the port is assigned
+
 ## [5.2.0] - 2019-05-15
 ### Added
  - IBookingNumber implementations override ToString

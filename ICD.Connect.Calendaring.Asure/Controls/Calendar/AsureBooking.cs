@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Conferencing.DialContexts;
@@ -10,6 +11,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 	public sealed class AsureBooking : AbstractBooking
 	{
 		private readonly ReservationData m_Reservation;
+		private readonly List<IDialContext> m_BookingNumbers;
 
 		#region Properties
 
@@ -61,23 +63,54 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override bool IsPrivate { get { return false; } }
 
+		public override IEnumerable<IDialContext> GetBookingNumbers()
+		{
+			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
+		}
+
 		#endregion
 
 		/// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="reservation"></param>
-		public AsureBooking(ReservationData reservation)
+		/// <param name="bookingProtocolInfo"></param>
+		public AsureBooking(ReservationData reservation, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 		{
+			if (reservation == null)
+				throw new ArgumentNullException("reservation");
+
 			m_Reservation = reservation;
+
+			if (bookingProtocolInfo != null)
+				m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
 		}
 
-		/// <summary>
-		/// Returns Booking Numbers.
-		/// </summary>
-		public override IEnumerable<IDialContext> GetBookingNumbers()
+		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 		{
-			yield break;
+			foreach (BookingProtocolInfo info in bookingProtocolInfo)
+			{
+				switch (info.DialProtocol)
+				{
+					case eDialProtocol.None:
+						continue;
+
+					case eDialProtocol.Sip:
+						yield return new SipDialContext { DialString = info.Number };
+						continue;
+
+					case eDialProtocol.Pstn:
+						yield return new PstnDialContext { DialString = info.Number };
+						continue;
+
+					case eDialProtocol.Zoom:
+						yield return new ZoomDialContext { DialString = info.Number };
+						continue;
+
+					default:
+						throw new ArgumentOutOfRangeException();
+				}
+			}
 		}
 	}
 }
