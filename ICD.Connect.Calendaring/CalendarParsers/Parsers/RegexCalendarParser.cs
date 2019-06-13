@@ -48,7 +48,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				yield return new BookingProtocolInfo
 				{
 					BookingProtocol = Protocol,
-					Number = meetingNumber
+					Number = meetingNumber,
 					Password = meetingPassword
 				};
 			}
