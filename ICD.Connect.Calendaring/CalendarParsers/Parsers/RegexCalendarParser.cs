@@ -49,7 +49,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				yield return new BookingProtocolInfo
 				{
 					DialProtocol = Protocol,
-					Number = meetingNumber
+					Number = meetingNumber,
 					Password = meetingPassword
 				};
 			}
