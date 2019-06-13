@@ -7,6 +7,7 @@ namespace ICD.Connect.Calendaring
     {
 	    public eBookingProtocol BookingProtocol { get; set; }
 		public string Number { get; set; }
+		public string Password { get; set; }
     }
 
 	/// <summary>

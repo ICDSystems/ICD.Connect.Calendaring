@@ -34,15 +34,22 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 			foreach (Match match in matchCollection)
 			{
 				string meetingNumber = string.IsNullOrEmpty(GroupName) ? match.Groups[0].Value : match.Groups[GroupName].Value;
+				string meetingPassword = string.IsNullOrEmpty(GroupName)
+					                         ? match.Groups[1].Value
+					                         : match.Groups[GroupName].Value;
 
 				meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
 					? meetingNumber
 					: Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
+				meetingPassword = string.IsNullOrEmpty(SubstitutionPattern)
+					                  ? meetingPassword
+					                  : Regex.Replace(meetingPassword, SubstitutionPattern, SubstitutionReplacement);
 
 				yield return new BookingProtocolInfo
 				{
 					BookingProtocol = Protocol,
 					Number = meetingNumber
+					Password = meetingPassword
 				};
 			}
 		}
