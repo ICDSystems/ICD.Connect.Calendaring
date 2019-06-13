@@ -8,6 +8,7 @@ namespace ICD.Connect.Calendaring
     {
 	    public eDialProtocol DialProtocol { get; set; }
 		public string Number { get; set; }
+		public string Password { get; set; }
     }
 
 	public static class BookingProtocolExtensions

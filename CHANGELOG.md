@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [6.0.0] - 2019-01-10
  - Added port configuration features to calendar devices
 
+## [5.4.0] - 2019-06-13
+### Added
+ - Added a calendar password parsing for associated call-in passwords
+
 ## [5.3.0] - 2019-06-07
 ### Changed
  - Parsing Asure Calendar notes for call-in information

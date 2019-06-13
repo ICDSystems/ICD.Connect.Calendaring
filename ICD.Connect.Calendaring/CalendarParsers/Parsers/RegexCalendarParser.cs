@@ -14,6 +14,8 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 
 		public string GroupName { get; set; }
 
+		public string PasswordGroup { get; set; }
+
 		public string SubstitutionPattern { get; set; }
 
 		public string SubstitutionReplacement { get; set; }
@@ -34,7 +36,11 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 
 			foreach (Match match in matchCollection)
 			{
-				string meetingNumber = string.IsNullOrEmpty(GroupName) ? match.Groups[0].Value : match.Groups[GroupName].Value;
+				string meetingNumber = string.IsNullOrEmpty(GroupName) ? match.Value 
+					                       : match.Groups[GroupName].Value;
+
+				string meetingPassword = string.IsNullOrEmpty(PasswordGroup) ? null 
+					                         : match.Groups[PasswordGroup].Value;
 
 				meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
 					? meetingNumber
@@ -44,6 +50,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				{
 					DialProtocol = Protocol,
 					Number = meetingNumber
+					Password = meetingPassword
 				};
 			}
 		}
@@ -54,6 +61,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 			{
 				Pattern = XmlUtils.TryReadChildElementContentAsString(xml, "Pattern"),
 				GroupName = XmlUtils.TryReadChildElementContentAsString(xml, "Group"),
+				PasswordGroup = XmlUtils.TryReadChildElementContentAsString(xml, "PasswordGroup"),
 				SubstitutionPattern = XmlUtils.TryReadChildElementContentAsString(xml, "ReplacePattern"),
 				SubstitutionReplacement = XmlUtils.TryReadChildElementContentAsString(xml, "ReplaceReplacement"),
 				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.None
