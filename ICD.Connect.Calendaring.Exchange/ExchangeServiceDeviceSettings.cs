@@ -7,7 +7,7 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 
 namespace ICD.Connect.Calendaring.Exchange
 {
-	[KrangSettings("RobinServiceDevice", typeof(ExchangeServiceDevice))]
+	[KrangSettings("ExchangeServiceDevice", typeof(ExchangeServiceDevice))]
 	public sealed class ExchangeServiceDeviceSettings : AbstractDeviceSettings, IUriSettings
 	{
 		private const string PORT_ELEMENT = "Port";
