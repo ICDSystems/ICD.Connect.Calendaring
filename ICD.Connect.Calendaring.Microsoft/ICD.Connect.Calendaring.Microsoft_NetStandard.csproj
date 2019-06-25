@@ -4,8 +4,8 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>ICD.Connect.Calendaring.Exchange</RootNamespace>
-    <AssemblyName>ICD.Connect.Calendaring.Exchange</AssemblyName>
+    <RootNamespace>ICD.Connect.Calendaring.Microsoft</RootNamespace>
+    <AssemblyName>ICD.Connect.Calendaring.Microsoft</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Deterministic>true</Deterministic>
     <EazfuscatorIntegration>MSBuild</EazfuscatorIntegration>
@@ -18,6 +18,9 @@
   <PropertyGroup>
     <OutputPath>binNetCoreApp\$(Configuration)\</OutputPath>
     <DefineConstants>TRACE;STANDARD</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="SIMPLSharpLogs\**" />
@@ -32,10 +35,17 @@
     <None Remove="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ICD - Copy.Connect.Calendaring.Microsoft_NetStandard.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Independentsoft.Exchange" Version="3.0.530">
+		<IncludeAssets>all</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_NetStandard.csproj" />
     <ProjectReference Include="..\ICD.Connect.Calendaring\ICD.Connect.Calendaring_NetStandard.csproj" />
   </ItemGroup>
-
 </Project>
