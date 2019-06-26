@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using ICD.Common.Properties;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
@@ -11,14 +12,17 @@ using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.Utils;
 using ICD.Connect.Settings;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365
 {
 	public sealed class Office365CalendarDevice : AbstractDevice<Office365CalendarDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
+		private readonly SafeCriticalSection m_ThisSection;
 
 		private IWebPort m_Port;
+		private string m_Token;
 
 		#region Properties
 
@@ -36,6 +40,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		public Office365CalendarDevice()
 		{
 			m_UriProperties = new UriProperties();
+			m_ThisSection = new SafeCriticalSection();
 
 			Controls.Add(new Office365CalendarDeviceCalendarControl(this, Controls.Count));
 		}
@@ -221,6 +226,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 				yield return command;
 
 			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
+			//yield return new ConsoleCommand("GetEvents", "", () => GetEvents());
+
 		}
 
 		private string RenewToken()
@@ -234,7 +241,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 				{"Content-Type", new List<string> {"application/x-www-form-urlencoded"}}
 			};
 			
-
 			// Build request body
 			Dictionary<string, string> body = new Dictionary<string, string>
 			{
@@ -254,10 +260,15 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			if (!m_Port.Post(url, headers, bodyData, out result))
 			{
 				Log(eSeverity.Error, "Failed to get token - {0}", result);
-				return result;
+				m_Token = null;
+				return null;
 			}
 
-			return result;
+			// Get the token string value out of the JSON
+			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(result);
+			m_Token = response.AccessToken;
+
+			return m_Token;
 		}
 
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()

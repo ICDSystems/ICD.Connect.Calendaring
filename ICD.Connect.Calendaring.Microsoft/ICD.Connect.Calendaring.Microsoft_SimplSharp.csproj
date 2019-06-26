@@ -56,11 +56,19 @@
     </Reference>
     <Reference Include="SimplSharpExchangeWebServices, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\ProgramData\Crestron\SDK\SimplSharpExchangeWebServices.dll</HintPath>
+      <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpExchangeWebServices.dll</HintPath>
     </Reference>
     <Reference Include="SimplSharpHelperInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpHelperInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpNewtonsoft, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpNewtonsoft.dll</HintPath>
+    </Reference>
+    <Reference Include="SimplSharpReflectionInterface, Version=1.0.5583.25238, Culture=neutral, PublicKeyToken=1099c178b3b54c3b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\ProgramData\Crestron\SDK\SimplSharpReflectionInterface.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,11 +77,24 @@
   <ItemGroup>
     <Compile Include="Exchange\ExchangeCalendarDevice.cs" />
     <Compile Include="Exchange\ExchangeCalendarDeviceSettings.cs" />
+    <Compile Include="Office365\Converters\CalendarEventAttendeeConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventBodyConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventCategoryConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventEmailAddressConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventLocationConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventOrganizerConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventResponseStatusConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventTimeConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarViewResponseConverter.cs" />
+    <Compile Include="Office365\Converters\TokenResponseConverter.cs" />
     <Compile Include="Office365\Office365CalendarDevice.cs" />
     <Compile Include="Office365\Office365CalendarDeviceCalendarControl.cs" />
     <Compile Include="Office365\Office365CalendarDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Office365\Responses\CalendarViewResponse.cs" />
+    <Compile Include="Office365\Responses\TokenResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>
