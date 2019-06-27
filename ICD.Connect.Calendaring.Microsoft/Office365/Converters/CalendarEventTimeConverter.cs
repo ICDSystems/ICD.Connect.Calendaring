@@ -15,7 +15,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 			switch (property)
 			{
 				case ATTRIBUTE_DATE_TIME:
-					instance.DateTime = reader.GetValueAsString();
+					instance.DateTime = reader.GetValueAsDateTime();
 					break;
 				case ATTRIBUTE_TIME_ZONE:
 					instance.TimeZone = reader.GetValueAsString();

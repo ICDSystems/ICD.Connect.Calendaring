@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Calendaring.Microsoft.Office365.Controls;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
@@ -22,7 +24,9 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		private readonly SafeCriticalSection m_ThisSection;
 
 		private IWebPort m_Port;
+
 		private string m_Token;
+		private DateTime m_TokenExpireTime;
 
 		#region Properties
 
@@ -31,6 +35,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		public string Client { get; set; }
 
 		public string Secret { get; set; }
+
+		public string UserId { get; set; }
 
 		#endregion
 
@@ -42,7 +48,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			m_UriProperties = new UriProperties();
 			m_ThisSection = new SafeCriticalSection();
 
-			Controls.Add(new Office365CalendarDeviceCalendarControl(this, Controls.Count));
+			Controls.Add(new Office365CalendarControl(this, Controls.Count));
 		}
 
 		/// <summary>
@@ -154,6 +160,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Tenant = settings.Tenant;
 			Client = settings.Client;
 			Secret = settings.Secret;
+			UserId = settings.UserId;
 
 			m_UriProperties.Copy(settings);
 
@@ -184,6 +191,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Tenant = null;
 			Client = null;
 			Secret = null;
+			UserId = null;
 
 			SetPort(null);
 
@@ -201,6 +209,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			settings.Tenant = Tenant;
 			settings.Client = Client;
 			settings.Secret = Secret;
+			settings.UserId = UserId;
 
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
@@ -226,8 +235,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 				yield return command;
 
 			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
-			//yield return new ConsoleCommand("GetEvents", "", () => GetEvents());
-
 		}
 
 		private string RenewToken()
@@ -266,9 +273,43 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			// Get the token string value out of the JSON
 			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(result);
+
 			m_Token = response.AccessToken;
+			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
 
 			return m_Token;
+		}
+
+		public IEnumerable<CalendarEvent> GetEvents()
+		{
+			if (m_Token == null || IcdEnvironment.GetLocalTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{"Authorization", new List<string>{"Bearer " + m_Token}},
+				{"Content-Type", new List<string> {"application/x-www-form-urlencoded"}}
+			};
+
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/events", UserId);
+
+			string result;
+			bool success = m_Port.Get(url, headers, out result);
+
+			CalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(result))
+				response = JsonConvert.DeserializeObject<CalendarViewResponse>(result);
+
+			if (!success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+
+			return response == null
+				? Enumerable.Empty<CalendarEvent>()
+				: response.Value;
 		}
 
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()

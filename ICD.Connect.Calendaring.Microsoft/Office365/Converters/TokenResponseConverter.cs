@@ -1,11 +1,10 @@
 ﻿using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Json;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 {
-	public sealed class TokenResponseConverter : AbstractGenericJsonConverter<TokenResponse>
+	public sealed class TokenResponseConverter : AbstractResponseConverter<TokenResponse>
 	{
 		/*
 		{

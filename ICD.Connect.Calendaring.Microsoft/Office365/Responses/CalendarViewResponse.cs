@@ -1,10 +1,11 @@
-﻿using ICD.Connect.Calendaring.Microsoft.Office365.Converters;
+﻿using System;
+using ICD.Connect.Calendaring.Microsoft.Office365.Converters;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 {
 	[JsonConverter(typeof(CalendarViewResponseConverter))]
-	public sealed class CalendarViewResponse
+	public sealed class CalendarViewResponse : AbstractResponse
 	{
 		public string DataContext { get; set; }
 		public CalendarEvent[] Value { get; set; }
@@ -78,7 +79,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 	[JsonConverter(typeof(CalendarEventTimeConverter))]
 	public sealed class CalendarEventTime
 	{
-		public string DateTime { get; set; }
+		public DateTime DateTime { get; set; }
 		public string TimeZone { get; set; }
 	}
 

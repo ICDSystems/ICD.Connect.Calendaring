@@ -18,26 +18,30 @@ namespace ICD.Connect.Calendaring.CalendarControl
 	    public abstract event EventHandler OnBookingsChanged;
 
 	    /// <summary>
+	    /// Constructor.
+	    /// </summary>
+	    /// <param name="parent"></param>
+	    /// <param name="id"></param>
+	    protected AbstractCalendarControl(T parent, int id)
+		    : base(parent, id)
+	    {
+	    }
+
+	    #region Methods
+
+	    /// <summary>
 	    /// Updates the view.
 	    /// </summary>
 	    [PublicAPI]
 	    public abstract void Refresh();
 
 	    /// <summary>
-	    /// Updates the view.
+		/// Gets the collection of calendar bookings.
 	    /// </summary>
 	    [PublicAPI]
 	    public abstract IEnumerable<IBooking> GetBookings();
 
-		/// <summary>
-		/// Constructor.
-		/// </summary>
-		/// <param name="parent"></param>
-		/// <param name="id"></param>
-	    protected AbstractCalendarControl(T parent, int id)
-		    : base(parent, id)
-	    {
-	    }
+	    #endregion
 
 	    #region Console
 

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 {
 	[JsonConverter(typeof(TokenResponseConverter))]
-	public sealed class TokenResponse
+	public sealed class TokenResponse : AbstractResponse
 	{
 		public string TokenType { get; set; }
 		public int ExpiresInSeconds { get; set; }

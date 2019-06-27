@@ -1,12 +1,11 @@
 ﻿using System.Linq;
 using ICD.Common.Utils.Extensions;
-using ICD.Common.Utils.Json;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 {
-	public sealed class CalendarViewResponseConverter : AbstractGenericJsonConverter<CalendarViewResponse>
+	public sealed class CalendarViewResponseConverter : AbstractResponseConverter<CalendarViewResponse>
 	{
 		private const string ATTRIBUTE_DATA_CONTEXT = "@odata.context";
 		private const string ATTRIBUTE_VALUE = "value";
@@ -20,7 +19,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		/// <param name="serializer"></param>
 		protected override void ReadProperty(string property, JsonReader reader, CalendarViewResponse instance, JsonSerializer serializer)
 		{
-			switch (property)
+		switch (property)
 			{
 				case ATTRIBUTE_DATA_CONTEXT:
 					instance.DataContext = reader.GetValueAsString();

@@ -18,7 +18,7 @@ namespace ICD.Connect.Calendaring.CalendarControl
 		void Refresh();
 
 		/// <summary>
-		/// Gets booking information.
+		/// Gets the collection of calendar bookings.
 		/// </summary>
 		IEnumerable<IBooking> GetBookings();
 	}

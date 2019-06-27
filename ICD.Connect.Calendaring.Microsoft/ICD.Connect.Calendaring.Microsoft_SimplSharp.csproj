@@ -77,6 +77,9 @@
   <ItemGroup>
     <Compile Include="Exchange\ExchangeCalendarDevice.cs" />
     <Compile Include="Exchange\ExchangeCalendarDeviceSettings.cs" />
+    <Compile Include="Office365\Controls\Office365Booking.cs" />
+    <Compile Include="Office365\Controls\Office365CalendarControl.cs" />
+    <Compile Include="Office365\Converters\AbstractResponseConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventAttendeeConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventBodyConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventCategoryConverter.cs" />
@@ -87,13 +90,15 @@
     <Compile Include="Office365\Converters\CalendarEventTimeConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventConverter.cs" />
     <Compile Include="Office365\Converters\CalendarViewResponseConverter.cs" />
+    <Compile Include="Office365\Converters\ErrorConverter.cs" />
     <Compile Include="Office365\Converters\TokenResponseConverter.cs" />
     <Compile Include="Office365\Office365CalendarDevice.cs" />
-    <Compile Include="Office365\Office365CalendarDeviceCalendarControl.cs" />
     <Compile Include="Office365\Office365CalendarDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
+    <Compile Include="Office365\Responses\AbstractResponse.cs" />
     <Compile Include="Office365\Responses\CalendarViewResponse.cs" />
+    <Compile Include="Office365\Converters\InnerErrorConverter.cs" />
     <Compile Include="Office365\Responses\TokenResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
@@ -106,6 +111,10 @@
     <ProjectReference Include="..\..\ICD.Connect.API\ICD.Connect.API\ICD.Connect.API_SimplSharp.csproj">
       <Project>{727F5820-5A61-440D-8899-E454FE8238D7}</Project>
       <Name>ICD.Connect.API_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Conferencing\ICD.Connect.Conferencing\ICD.Connect.Conferencing_SimplSharp.csproj">
+      <Project>{1CCA89DA-1F1C-4997-A94F-ABCE878BD6DE}</Project>
+      <Name>ICD.Connect.Conferencing_SimplSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_SimplSharp.csproj">
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>
