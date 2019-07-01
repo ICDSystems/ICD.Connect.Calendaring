@@ -20,7 +20,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 		public string CreatedDateTime { get; set; }
 		public string LastModifiedDateTime { get; set; }
 		public string ChangeKey { get; set; }
-		public CalendarEventCategory[] Categories { get; set; }
+		public string[] Categories { get; set; }
 		public string OriginalStartTimeZone { get; set; }
 		public string OriginalEndTimeZone { get; set; }
 // ReSharper disable InconsistentNaming
@@ -49,15 +49,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 		public CalendarEventTime End { get; set; }
 		public CalendarEventLocation Location { get; set; }
 		public CalendarEventLocation[] Locations { get; set; }
-		public CalendarEventAttendee[] Attendees { get; set; } // TODO - Add some attendees
+		public CalendarEventAttendees[] Attendees { get; set; } // TODO - Add some attendees
 		public CalendarEventOrganizer Organizer { get; set; }
-	}
-
-
-	[JsonConverter(typeof(CalendarEventCategoryConverter))]
-	public sealed class CalendarEventCategory
-	{
-
 	}
 
 	[JsonConverter(typeof(CalendarEventResponseStatusConverter))]
@@ -90,12 +83,39 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 		public string LocationType { get; set; }
 		public string UniqueId { get; set; }
 		public string UniqueIdType { get; set; }
+		public CalendarEventLocationAddress Address { get; set; }
+		public string Coordinates { get; set; }
+	}
+	[JsonConverter(typeof(CalendarEventLocationAddressConverter))]
+	public sealed class CalendarEventLocationAddress
+	{
+		public string Street { get; set; }
+		public string City { get; set; }
+		public string State { get; set; }
+		public string CountryOrRegion { get; set; }
+		public string PostalCode { get; set; }
 	}
 
-	[JsonConverter(typeof(CalendarEventAttendeeConverter))]
-	public sealed class CalendarEventAttendee
+	[JsonConverter(typeof(CalendarEventAttendeesConverter))]
+	public sealed class CalendarEventAttendees
 	{
+		public string Type { get; set; }
+		public AttendeesStatus Status { get; set; }
+		public AttendeesEmail EmailAdress { get; set; }
 		
+	}
+	[JsonConverter(typeof(CalendarEventAttendeesEmailConverter))]
+	public class AttendeesEmail
+	{
+		public string Name { get; set; }
+		public string Address { get; set; }
+	}
+
+	[JsonConverter(typeof(CalendarEventAttendeesStatusConverter))]
+	public class AttendeesStatus
+	{
+		public string Response { get; set; }
+		public string Time { get; set; }
 	}
 
 	[JsonConverter(typeof(CalendarEventOrganizerConverter))]
@@ -110,4 +130,5 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 		public string Name { get; set; }
 		public string Address { get; set; }
 	}
+
 }

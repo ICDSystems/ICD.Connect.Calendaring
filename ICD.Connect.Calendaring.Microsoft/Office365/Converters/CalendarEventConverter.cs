@@ -131,7 +131,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 					instance.ChangeKey = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_CATEGORIES:
-					instance.Categories = serializer.DeserializeArray<CalendarEventCategory>(reader).ToArray();
+					instance.Categories = serializer.DeserializeArray<string>(reader).ToArray();
 					break;
 				case ATTRIBUTE_ORIGINAL_START_TIME_ZONE:
 					instance.OriginalStartTimeZone = reader.GetValueAsString();
@@ -212,7 +212,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 					instance.Locations = serializer.DeserializeArray<CalendarEventLocation>(reader).ToArray();
 					break;
 				case ATTRIBITES_ATTENDEES:
-					instance.Attendees = serializer.DeserializeArray<CalendarEventAttendee>(reader).ToArray();
+					instance.Attendees = serializer.DeserializeArray<CalendarEventAttendees>(reader).ToArray();
 					break;
 				case ATTRIBUTE_ORGANIZER:
 					instance.Organizer = serializer.Deserialize<CalendarEventOrganizer>(reader);

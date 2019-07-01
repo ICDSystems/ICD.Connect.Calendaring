@@ -80,10 +80,12 @@
     <Compile Include="Office365\Controls\Office365Booking.cs" />
     <Compile Include="Office365\Controls\Office365CalendarControl.cs" />
     <Compile Include="Office365\Converters\AbstractResponseConverter.cs" />
-    <Compile Include="Office365\Converters\CalendarEventAttendeeConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventAttendeesConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventAttendeesEmailConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventAttendeesStatusConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventBodyConverter.cs" />
-    <Compile Include="Office365\Converters\CalendarEventCategoryConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventEmailAddressConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventLocationAddressConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventLocationConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventOrganizerConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventResponseStatusConverter.cs" />
