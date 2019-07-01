@@ -5,6 +5,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
+using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Microsoft.Office365.Controls;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using ICD.Connect.Devices;
@@ -21,8 +22,9 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 	public sealed class Office365CalendarDevice : AbstractDevice<Office365CalendarDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
-		private readonly SafeCriticalSection m_ThisSection;
+		private readonly CalendarParserCollection m_CalendarParserCollection;
 
+		private string m_CalendarParsingPath;
 		private IWebPort m_Port;
 
 		private string m_Token;
@@ -38,6 +40,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 		public string UserId { get; set; }
 
+		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
+
 		#endregion
 
 		/// <summary>
@@ -46,7 +50,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		public Office365CalendarDevice()
 		{
 			m_UriProperties = new UriProperties();
-			m_ThisSection = new SafeCriticalSection();
+			m_CalendarParserCollection = new CalendarParserCollection();
 
 			Controls.Add(new Office365CalendarControl(this, Controls.Count));
 		}
@@ -144,6 +148,24 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			UpdateCachedOnlineStatus();
 		}
 
+		/// <summary>
+		/// Sets the Calendar Parsing from the settings.
+		/// </summary>
+		/// <param name="configPath"></param>
+		private void SetCalendarParsers(string configPath)
+		{
+			m_CalendarParsingPath = configPath;
+
+			try
+			{
+				m_CalendarParserCollection.LoadParsers(configPath);
+			}
+			catch (Exception e)
+			{
+				Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
+			}
+		}
+
 		#endregion
 
 		#region Settings
@@ -157,12 +179,14 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		{
 			base.ApplySettingsFinal(settings, factory);
 
+			m_UriProperties.Copy(settings);
+
 			Tenant = settings.Tenant;
 			Client = settings.Client;
 			Secret = settings.Secret;
 			UserId = settings.UserId;
 
-			m_UriProperties.Copy(settings);
+			SetCalendarParsers(settings.CalendarParsingPath);
 
 			IWebPort port = null;
 
@@ -188,6 +212,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		{
 			base.ClearSettingsFinal();
 
+			m_CalendarParserCollection.ClearMatchers();
+
 			Tenant = null;
 			Client = null;
 			Secret = null;
@@ -205,6 +231,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		protected override void CopySettingsFinal(Office365CalendarDeviceSettings settings)
 		{
 			base.CopySettingsFinal(settings);
+
+			settings.CalendarParsingPath = m_CalendarParsingPath;
 
 			settings.Tenant = Tenant;
 			settings.Client = Client;

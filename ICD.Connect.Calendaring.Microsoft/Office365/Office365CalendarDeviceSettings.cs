@@ -15,6 +15,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		private const string CLIENT_ELEMENT = "Client";
 		private const string SECRET_ELEMENT = "Secret";
 		private const string USER_ID_ELEMENT = "UserId";
+		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private readonly UriProperties m_UriProperties;
 
@@ -33,6 +34,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		public string Secret { get; set; }
 
 		public string UserId { get; set; }
+
+		public string CalendarParsingPath { get; set; }
 
 		#endregion
 
@@ -106,10 +109,11 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			base.WriteElements(writer);
 
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
-			writer.WriteElementString(TENANT_ELEMENT, IcdXmlConvert.ToString(Tenant));
-			writer.WriteElementString(CLIENT_ELEMENT, IcdXmlConvert.ToString(Client));
-			writer.WriteElementString(SECRET_ELEMENT, IcdXmlConvert.ToString(Secret));
-			writer.WriteElementString(USER_ID_ELEMENT, IcdXmlConvert.ToString(UserId));
+			writer.WriteElementString(TENANT_ELEMENT, Tenant);
+			writer.WriteElementString(CLIENT_ELEMENT, Client);
+			writer.WriteElementString(SECRET_ELEMENT, Secret);
+			writer.WriteElementString(USER_ID_ELEMENT, UserId);
+			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
 		}
@@ -127,6 +131,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Client = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ELEMENT);
 			Secret = XmlUtils.TryReadChildElementContentAsString(xml, SECRET_ELEMENT);
 			UserId = XmlUtils.TryReadChildElementContentAsString(xml, USER_ID_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 
