@@ -1,6 +1,4 @@
 ﻿using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
-using ICD.Connect.Protocol.EventArguments;
-using Independentsoft.Email.Mime;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
