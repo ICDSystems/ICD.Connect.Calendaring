@@ -6,20 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-##Changed 
- - test: Fixing robin tests
- - refactor: Removing unused using directives
- - refactor: Removing unused code
- - chore: Tidying 2017 project
- - feat: adding classes to the ICD.Connect.Calendaring.Microsoft/Office365
- - feat: adding changes to ICD.Connect.Calendaring.Microsoft/office365
- - feat: Additional calendar event converters for handling attendees and locations
- - feat: Adding calendar parsing to Office365
- - feat: Adding default CalendarParsers path to Robin, Asure and Office365
- - feat: Clarifying exception messages when a CalendarParser config is missing on disk
- - feat: De-duplicating parsed booking info
- - feat: Adding more changes to ICD.Connect.Calendaring.Microsoft/Office365
- 
+### Added 
+ - Added Office365 calendar device
 
 ## [7.0.2] - 2019-05-02
 ### Changed
