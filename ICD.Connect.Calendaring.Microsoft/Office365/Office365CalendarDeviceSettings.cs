@@ -96,6 +96,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		/// </summary>
 		public Office365CalendarDeviceSettings()
 		{
+			CalendarParsingPath = "CalendarParsing.xml";
+
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
 		}

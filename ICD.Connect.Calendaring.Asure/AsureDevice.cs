@@ -453,7 +453,7 @@ namespace ICD.Connect.Calendaring.Asure
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "failed to load Calendar Parsers {0} - {1}", configPath, e.Message);
+				Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
 		}
 

@@ -99,6 +99,8 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public AsureDeviceSettings()
 		{
+			CalendarParsingPath = "CalendarParsing.xml";
+
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
 		}
