@@ -88,7 +88,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 
 		public IEnumerable<BookingProtocolInfo> ParseText(string text)
 		{
-			return GetParsers().SelectMany(p => p.ParseText(text));
+			return GetParsers().SelectMany(p => p.ParseText(text)).Distinct();
 		}
 
 		#endregion
