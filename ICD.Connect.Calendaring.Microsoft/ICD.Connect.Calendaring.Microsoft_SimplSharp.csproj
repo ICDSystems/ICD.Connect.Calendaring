@@ -87,6 +87,7 @@
     <Compile Include="Office365\Converters\CalendarEventEmailAddressConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventLocationAddressConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventLocationConverter.cs" />
+    <Compile Include="Office365\Converters\CalendarEventLocationCoordinatesConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventOrganizerConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventResponseStatusConverter.cs" />
     <Compile Include="Office365\Converters\CalendarEventTimeConverter.cs" />

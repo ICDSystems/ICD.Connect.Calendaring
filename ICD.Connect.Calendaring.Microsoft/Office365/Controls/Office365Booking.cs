@@ -11,7 +11,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 	public sealed class Office365Booking : AbstractBooking
 	{
 		private readonly CalendarEvent m_CalendarEvent;
-		private readonly IList<IDialContext> m_BookingNumbers; 
+		private readonly IList<IDialContext> m_BookingNumbers;
 
 		/// <summary>
 		/// Returns the name of the meeting.
@@ -59,7 +59,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		public Office365Booking(CalendarEvent calendarEvent, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
 		{
 			if (calendarEvent == null)
-				throw new ArgumentNullException("event");
+				throw new ArgumentNullException("calendarEvent");
 
 			if (bookingProtocolInfo == null)
 				throw new ArgumentNullException("bookingProtocolInfo");

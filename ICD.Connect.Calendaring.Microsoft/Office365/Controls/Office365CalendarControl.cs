@@ -103,7 +103,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		/// </summary>
 		public override IEnumerable<IBooking> GetBookings()
 		{
-			return m_BookingsSection.Execute(() => m_Bookings.Cast<IBooking>().ToArray());
+			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
 	}
 }

@@ -57,7 +57,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 	public sealed class CalendarEventResponseStatus
 	{
 		public string Response { get; set; }
-		public string Time { get; set; }
+		public DateTime Time { get; set; }
 
 	}
 
@@ -80,11 +80,19 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 	public sealed class CalendarEventLocation
 	{
 		public string DisplayName { get; set; }
+		public string LocationUri { get; set; }
 		public string LocationType { get; set; }
 		public string UniqueId { get; set; }
 		public string UniqueIdType { get; set; }
 		public CalendarEventLocationAddress Address { get; set; }
-		public string Coordinates { get; set; }
+		public CalendarEventLocationCoordinates Coordinates { get; set; }
+	}
+	[JsonConverter(typeof(CalendarEventLocationCoordinatesConverter))]
+	public sealed class CalendarEventLocationCoordinates
+	{
+		public string Latitude { get; set; }
+		public string Longitude { get; set; }
+		
 	}
 	[JsonConverter(typeof(CalendarEventLocationAddressConverter))]
 	public sealed class CalendarEventLocationAddress
@@ -115,7 +123,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 	public class AttendeesStatus
 	{
 		public string Response { get; set; }
-		public string Time { get; set; }
+		public DateTime Time { get; set; }
 	}
 
 	[JsonConverter(typeof(CalendarEventOrganizerConverter))]

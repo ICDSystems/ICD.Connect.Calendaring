@@ -8,13 +8,21 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 {
 	public sealed class CalendarEventLocationAddressConverter : AbstractGenericJsonConverter<CalendarEventLocationAddress>
 	{
+		/*
+		{
+            "street": "",
+            "city": "",
+            "state": "",
+            "countryOrRegion": "",
+            "postalCode": ""
+         }
+		*/
+
 		private const string ATTRIBUTE_STREET = "street";
 		private const string ATTRIBUTE_CITY = "city";
 		private const string ATTRIBUTE_STATE = "state";
 		private const string ATTRIBUTE_COUNTRY_OR_REGION = "countryOrRegion";
 		private const string ATTRIBUTE_POSTAL_CODE = "postalCode";
-
-
 
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventLocationAddress instance, JsonSerializer serializer)
 		{

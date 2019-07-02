@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Calendaring.CalendarParsers;
@@ -271,10 +272,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			m_Port.Accept = "*/*";
 
 			// Build request header
-			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
-			{
-				{"Content-Type", new List<string> {"application/x-www-form-urlencoded"}}
-			};
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>> { };
 			
 			// Build request body
 			Dictionary<string, string> body = new Dictionary<string, string>
@@ -316,10 +314,13 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
 			{
 				{"Authorization", new List<string>{"Bearer " + m_Token}},
-				{"Content-Type", new List<string> {"application/x-www-form-urlencoded"}}
+				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
 			};
 
-			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/events", UserId);
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
+			                           UserId,
+			                           IcdEnvironment.GetLocalTime().StartOfDay().ToUniversalTime().ToString("o"),
+			                           IcdEnvironment.GetLocalTime().EndOfDay().ToUniversalTime().ToString("o"));
 
 			string result;
 			bool success = m_Port.Get(url, headers, out result);
