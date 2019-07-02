@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+#if SIMPLSHARP
+using Crestron.SimplSharp.CrestronIO;
+#else
+using System.IO;
+#endif
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.IO;
@@ -52,9 +57,14 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 		/// <param name="path"></param>
 		public void LoadParsers(string path)
 		{
+			if (string.IsNullOrEmpty(path))
+				throw new ArgumentException("Path can not be null or empty");
+
 			m_ParsersSection.Enter();
 
-			string calendarParserPath =  PathUtils.GetDefaultConfigPath("CalendarParsing", path);
+			string calendarParserPath = PathUtils.GetDefaultConfigPath("CalendarParsing", path);
+			if (!IcdFile.Exists(calendarParserPath))
+				throw new FileNotFoundException("No file at path " + calendarParserPath);
 
 			string xml = IcdFile.ReadToEnd(calendarParserPath, new UTF8Encoding(false));
 			xml = EncodingUtils.StripUtf8Bom(xml);
