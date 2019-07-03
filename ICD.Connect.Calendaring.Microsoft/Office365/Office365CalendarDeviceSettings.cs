@@ -1,42 +1,39 @@
-using ICD.Common.Utils.Xml;
+﻿using ICD.Common.Utils.Xml;
 using ICD.Connect.Devices;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings.Attributes;
 using ICD.Connect.Settings.Attributes.SettingsProperties;
 
-namespace ICD.Connect.Calendaring.Asure
+namespace ICD.Connect.Calendaring.Microsoft.Office365
 {
-	[KrangSettings("AsureService", typeof(AsureDevice))]
-	public sealed class AsureDeviceSettings : AbstractDeviceSettings, IUriSettings
+	[KrangSettings("Office365Calendar", typeof(Office365CalendarDevice))]
+	public sealed class Office365CalendarDeviceSettings : AbstractDeviceSettings, IUriSettings
 	{
-		private const string RESOURCE_ID_ELEMENT = "ResourceId";
-		private const string UPDATE_INTERVAL_ELEMENT = "UpdateInterval";
 		private const string PORT_ELEMENT = "Port";
-		private const string USERNAME_ELEMENT = "Username";
-		private const string PASSWORD_ELEMENT = "Password";
+		private const string TENANT_ELEMENT = "Tenant";
+		private const string CLIENT_ELEMENT = "Client";
+		private const string SECRET_ELEMENT = "Secret";
+		private const string USER_ID_ELEMENT = "UserId";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private readonly UriProperties m_UriProperties;
 
 		#region Properties
 
+		/// <summary>
+		/// The port id.
+		/// </summary>
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
 
-		public int ResourceId { get; set; }
+		public string Tenant { get; set; }
 
-		public long? UpdateInterval { get; set; }
+		public string Client { get; set; }
+		
+		public string Secret { get; set; }
 
-		/// <summary>
-		/// Gets/sets the configurable service username.
-		/// </summary>
-		public string Username { get; set; }
-
-		/// <summary>
-		/// Gets/sets the configurable service password.
-		/// </summary>
-		public string Password { get; set; }
+		public string UserId { get; set; }
 
 		public string CalendarParsingPath { get; set; }
 
@@ -97,7 +94,7 @@ namespace ICD.Connect.Calendaring.Asure
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public AsureDeviceSettings()
+		public Office365CalendarDeviceSettings()
 		{
 			CalendarParsingPath = "CalendarParsing.xml";
 
@@ -113,11 +110,11 @@ namespace ICD.Connect.Calendaring.Asure
 		{
 			base.WriteElements(writer);
 
-			writer.WriteElementString(RESOURCE_ID_ELEMENT, IcdXmlConvert.ToString(ResourceId));
-			writer.WriteElementString(UPDATE_INTERVAL_ELEMENT, IcdXmlConvert.ToString(UpdateInterval));
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
-			writer.WriteElementString(USERNAME_ELEMENT, Username);
-			writer.WriteElementString(PASSWORD_ELEMENT, Password);
+			writer.WriteElementString(TENANT_ELEMENT, Tenant);
+			writer.WriteElementString(CLIENT_ELEMENT, Client);
+			writer.WriteElementString(SECRET_ELEMENT, Secret);
+			writer.WriteElementString(USER_ID_ELEMENT, UserId);
 			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
@@ -132,10 +129,10 @@ namespace ICD.Connect.Calendaring.Asure
 			base.ParseXml(xml);
 
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
-			ResourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
-			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
-			Username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
-			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
+			Tenant = XmlUtils.TryReadChildElementContentAsString(xml, TENANT_ELEMENT);
+			Client = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ELEMENT);
+			Secret = XmlUtils.TryReadChildElementContentAsString(xml, SECRET_ELEMENT);
+			UserId = XmlUtils.TryReadChildElementContentAsString(xml, USER_ID_ELEMENT);
 			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
@@ -145,7 +142,7 @@ namespace ICD.Connect.Calendaring.Asure
 
 		private void UpdateUriDefaults()
 		{
-			m_UriProperties.ApplyDefaultValuesFromAddress("https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx");
+			m_UriProperties.ApplyDefaultValuesFromAddress("https://graph.microsoft.com/v2.0/");
 		}
 	}
 }

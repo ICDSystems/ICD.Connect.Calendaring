@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This configuration is generated automatically. Only change this file if you know what you are doing. Any invalid data, whitespace, and comments will be deleted the next time this is generated. -->
+<IcdConfig id="1" type="Krang">
+	<Ports>
+		<Port type="HTTP" id="1000">
+			<Name>HTTP Port 1 for Office365</Name>
+			<CombineName>HTTP Port 1 for Office365</CombineName>
+			<Description/>
+			<Hide>false</Hide>
+		</Port>
+	</Ports>
+	<Devices>
+		<Device type="Office365Calendar" id="2000">
+			<Name>Office365 Calendar</Name>
+			<Port>1000</Port>
+			<Tenant>674ca295-8fec-43a2-957c-0d4e6f2e16bb</Tenant>
+			<Client>bfd05f66-d691-4af5-8d27-6cd99094999e</Client>
+			<Secret>ReLEyn7Z/KbYEYStQD?ZTJlHk+LH8=95</Secret>
+			<UserId>6629d7bad-e44b-4ee4-891b-45e4fc6b254a</UserId>
+		</Device>
+	</Devices>
+	<Rooms />
+	<VolumePoints />
+	<ConferencePoints />
+	<Hide>false</Hide>
+</IcdConfig>

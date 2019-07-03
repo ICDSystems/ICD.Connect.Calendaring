@@ -90,6 +90,8 @@ namespace ICD.Connect.Calendaring.Robin
 		/// </summary>
 		public RobinServiceDeviceSettings()
 		{
+			CalendarParsingPath = "CalendarParsing.xml";
+
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
 		}

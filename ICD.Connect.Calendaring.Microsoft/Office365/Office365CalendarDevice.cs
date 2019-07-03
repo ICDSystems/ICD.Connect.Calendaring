@@ -2,68 +2,44 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
-using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.Calendaring.CalendarParsers;
-using ICD.Connect.Calendaring.Robin.Components;
-using ICD.Connect.Calendaring.Robin.Controls.Calendar;
+using ICD.Connect.Calendaring.Microsoft.Office365.Controls;
+using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
+using ICD.Connect.Protocol.Network.Utils;
 using ICD.Connect.Settings;
 using Newtonsoft.Json;
 
-namespace ICD.Connect.Calendaring.Robin
+namespace ICD.Connect.Calendaring.Microsoft.Office365
 {
-	public sealed class RobinServiceDevice : AbstractDevice<RobinServiceDeviceSettings>
+	public sealed class Office365CalendarDevice : AbstractDevice<Office365CalendarDeviceSettings>
 	{
-		/// <summary>
-		/// Raises the new port that has been assigned.
-		/// </summary>
-		public event EventHandler<GenericEventArgs<IWebPort>> OnSetPort;
-
 		private readonly UriProperties m_UriProperties;
-
 		private readonly CalendarParserCollection m_CalendarParserCollection;
-
-		private readonly IDictionary<string, List<string>> m_Headers =
-			new Dictionary<string, List<string>>
-			{
-				{"Connection", new List<string> {"keep-alive"}}
-			};
 
 		private string m_CalendarParsingPath;
 		private IWebPort m_Port;
 
+		private string m_Token;
+		private DateTime m_TokenExpireTime;
+
 		#region Properties
 
-		public RobinServiceDeviceComponentFactory Components { get; private set; }
+		public string Tenant { get; set; }
 
-		public string Token
-		{
-			get
-			{
-				List<string> values;
-				return m_Headers.TryGetValue("Authorization", out values) ? values.FirstOrDefault() : null;
-			}
-			set
-			{
-				List<string> values;
-				if (!m_Headers.TryGetValue("Authorization", out values))
-				{
-					values = new List<string>();
-					m_Headers.Add("Authorization", values);
-				}
+		public string Client { get; set; }
 
-				values.Clear();
-				values.Add(value);
-			}
-		}
+		public string Secret { get; set; }
 
-		public string ResourceId { get; set; }
+		public string UserId { get; set; }
 
 		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
@@ -72,15 +48,12 @@ namespace ICD.Connect.Calendaring.Robin
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public RobinServiceDevice()
+		public Office365CalendarDevice()
 		{
 			m_UriProperties = new UriProperties();
-
 			m_CalendarParserCollection = new CalendarParserCollection();
 
-			Components = new RobinServiceDeviceComponentFactory(this);
-
-			Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
+			Controls.Add(new Office365CalendarControl(this, Controls.Count));
 		}
 
 		/// <summary>
@@ -88,8 +61,6 @@ namespace ICD.Connect.Calendaring.Robin
 		/// </summary>
 		protected override void DisposeFinal(bool disposing)
 		{
-			OnSetPort = null;
-
 			base.DisposeFinal(disposing);
 
 			SetPort(null);
@@ -117,7 +88,6 @@ namespace ICD.Connect.Calendaring.Robin
 			m_Port = port;
 			Subscribe(m_Port);
 
-			OnSetPort.Raise(this, new GenericEventArgs<IWebPort>(m_Port));
 			UpdateCachedOnlineStatus();
 		}
 
@@ -130,40 +100,6 @@ namespace ICD.Connect.Calendaring.Robin
 			// URI
 			if (port != null)
 				port.ApplyDeviceConfiguration(m_UriProperties);
-		}
-
-		public string Request(string path)
-		{
-			if (m_Port == null)
-				throw new InvalidOperationException("Failed to make request - Port is null");
-
-			bool success;
-			string response;
-
-			try
-			{
-				success = m_Port.Get(path, m_Headers, out response);
-			}
-			// Catch HTTP or HTTPS exception, without dependency on Crestron
-			catch (Exception e)
-			{
-				string message = string.Format("Failed to make request - {0}", e.Message);
-				throw new InvalidOperationException(message, e);
-			}
-
-			if (!success)
-			{
-				string message = string.Format("Request did not succeed");
-				throw new InvalidOperationException(message);
-			}
-
-			if (string.IsNullOrEmpty(response))
-			{
-				string message = string.Format("Failed to make request - Received empty response");
-				throw new InvalidOperationException(message);
-			}
-
-			return JsonConvert.DeserializeObject<Dictionary<string, object>>(response)["data"].ToString();
 		}
 
 		#endregion
@@ -240,14 +176,16 @@ namespace ICD.Connect.Calendaring.Robin
 		/// </summary>
 		/// <param name="settings"></param>
 		/// <param name="factory"></param>
-		protected override void ApplySettingsFinal(RobinServiceDeviceSettings settings, IDeviceFactory factory)
+		protected override void ApplySettingsFinal(Office365CalendarDeviceSettings settings, IDeviceFactory factory)
 		{
 			base.ApplySettingsFinal(settings, factory);
 
 			m_UriProperties.Copy(settings);
 
-			Token = settings.Token;
-			ResourceId = settings.ResourceId;
+			Tenant = settings.Tenant;
+			Client = settings.Client;
+			Secret = settings.Secret;
+			UserId = settings.UserId;
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
@@ -277,8 +215,11 @@ namespace ICD.Connect.Calendaring.Robin
 
 			m_CalendarParserCollection.ClearMatchers();
 
-			Token = null;
-			ResourceId = null;
+			Tenant = null;
+			Client = null;
+			Secret = null;
+			UserId = null;
+
 			SetPort(null);
 
 			m_UriProperties.Clear();
@@ -288,14 +229,17 @@ namespace ICD.Connect.Calendaring.Robin
 		/// Override to apply properties to the settings instance.
 		/// </summary>
 		/// <param name="settings"></param>
-		protected override void CopySettingsFinal(RobinServiceDeviceSettings settings)
+		protected override void CopySettingsFinal(Office365CalendarDeviceSettings settings)
 		{
 			base.CopySettingsFinal(settings);
 
 			settings.CalendarParsingPath = m_CalendarParsingPath;
 
-			settings.Token = Token;
-			settings.ResourceId = ResourceId;
+			settings.Tenant = Tenant;
+			settings.Client = Client;
+			settings.Secret = Secret;
+			settings.UserId = UserId;
+
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
@@ -308,7 +252,99 @@ namespace ICD.Connect.Calendaring.Robin
 		/// <summary>
 		/// Gets the help information for the node.
 		/// </summary>
-		public override string ConsoleHelp { get { return "The Robin service device"; } }
+		public override string ConsoleHelp { get { return "The Exchange service device"; } }
+
+		/// <summary>
+		/// Gets the child console commands.
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand command in GetBaseConsoleCommands())
+				yield return command;
+
+			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
+		}
+
+		private string RenewToken()
+		{
+			// Set port accept type
+			m_Port.Accept = "*/*";
+
+			// Build request header
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>> { };
+			
+			// Build request body
+			Dictionary<string, string> body = new Dictionary<string, string>
+			{
+				{"client_id", Client},
+				{"grant_type", "client_credentials"},
+				{"client_secret", Secret},
+				{"scope", "https://graph.microsoft.com/.default"}
+			};
+
+			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
+
+			string scope = Uri.EscapeDataString("https://graph.microsoft.com/.default");
+			string url = string.Format("https://login.microsoftonline.com/{0}/oauth2/v2.0/token?scope={1}", Tenant, scope);
+
+			// Dispatch!
+			string result;
+			if (!m_Port.Post(url, headers, bodyData, out result))
+			{
+				Log(eSeverity.Error, "Failed to get token - {0}", result);
+				m_Token = null;
+				return null;
+			}
+
+			// Get the token string value out of the JSON
+			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(result);
+
+			m_Token = response.AccessToken;
+			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+
+			return m_Token;
+		}
+
+		public IEnumerable<CalendarEvent> GetEvents()
+		{
+			if (m_Token == null || IcdEnvironment.GetLocalTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{"Authorization", new List<string>{"Bearer " + m_Token}},
+				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
+			};
+
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
+			                           UserId,
+			                           IcdEnvironment.GetLocalTime().StartOfDay().ToUniversalTime().ToString("o"),
+			                           IcdEnvironment.GetLocalTime().EndOfDay().ToUniversalTime().ToString("o"));
+
+			string result;
+			bool success = m_Port.Get(url, headers, out result);
+
+			CalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(result))
+				response = JsonConvert.DeserializeObject<CalendarViewResponse>(result);
+
+			if (!success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+
+			return response == null
+				? Enumerable.Empty<CalendarEvent>()
+				: response.Value;
+		}
+
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
+		}
 
 		#endregion
 	}

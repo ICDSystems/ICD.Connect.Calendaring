@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using ICD.Connect.Calendaring.Robin.Components.Converters;
+﻿using ICD.Connect.Calendaring.Robin.Components.Converters;
 using ICD.Connect.Calendaring.Robin.Components.Events;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Calendaring.Robin.Tests_NetStandard.Components.Converters
+namespace ICD.Connect.Calendaring.Robin.Tests.Components.Converters
 {
 	[TestFixture]
 	public sealed class EventConverterTest
 	{
-		private EventConverter test;
+		private EventConverter m_Test;
 
 		[SetUp]
 		public void Setup()
 		{
-			test = new EventConverter();
+			m_Test = new EventConverter();
 		}
 
 		[Test]
 		public void CanConvert_ReturnsTrueForEventType()
 		{
-			test.CanConvert(typeof(Event));
+			m_Test.CanConvert(typeof(Event));
 		}
 
 		[Test]

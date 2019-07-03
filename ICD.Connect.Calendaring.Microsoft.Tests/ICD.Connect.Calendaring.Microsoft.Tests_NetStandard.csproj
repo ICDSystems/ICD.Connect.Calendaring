@@ -4,8 +4,8 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-	<RootNamespace>ICD.Connect.Calendaring.Robin.Tests</RootNamespace>
-	<AssemblyName>ICD.Connect.Calendaring.Robin.Tests</AssemblyName>
+	<RootNamespace>ICD.Connect.Calendaring.Microsoft.Tests</RootNamespace>
+	<AssemblyName>ICD.Connect.Calendaring.Microsoft.Tests</AssemblyName>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -26,7 +26,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\ICD.Connect.Calendaring.Robin\ICD.Connect.Calendaring.Robin_NetStandard.csproj" />
+    <ProjectReference Include="..\ICD.Connect.Calendaring.Microsoft\ICD.Connect.Calendaring.Microsoft_NetStandard.csproj" />
   </ItemGroup>
 
 </Project>
