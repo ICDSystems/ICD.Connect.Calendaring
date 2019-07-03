@@ -3,15 +3,15 @@
 <IcdConfig id="1" type="Krang">
 	<Ports>
 		<Port type="HTTP" id="1000">
-			<Name>HTTP Port 1 for Office360</Name>
-			<CombineName>HTTP Port 1 for Office360</CombineName>
+			<Name>HTTP Port 1 for Office365</Name>
+			<CombineName>HTTP Port 1 for Office365</CombineName>
 			<Description/>
 			<Hide>false</Hide>
 		</Port>
 	</Ports>
 	<Devices>
 		<Device type="Office365Calendar" id="2000">
-			<Name>Office360 Calendaring</Name>
+			<Name>Office365 Calendar</Name>
 			<Port>1000</Port>
 			<Tenant>674ca295-8fec-43a2-957c-0d4e6f2e16bb</Tenant>
 			<Client>bfd05f66-d691-4af5-8d27-6cd99094999e</Client>
