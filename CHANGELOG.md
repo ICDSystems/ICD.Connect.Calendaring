@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [7.1.0] - 2019-07-03
 ### Added 
  - Added Office365 calendar device
+ - Added default "CalendarParsing.xml" path value to calendar settings
+ 
+### Changed
+ - De-duplicating booking info parsed from calendar event bodies
 
 ## [7.0.2] - 2019-05-02
 ### Changed
