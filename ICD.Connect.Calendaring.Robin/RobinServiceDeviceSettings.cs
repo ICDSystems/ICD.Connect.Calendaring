@@ -15,6 +15,8 @@ namespace ICD.Connect.Calendaring.Robin
 		private const string RESOURCEID_ELEMENT = "ResourceId";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
+		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
+
 		private readonly UriProperties m_UriProperties;
 
 		#region Properties
@@ -90,7 +92,7 @@ namespace ICD.Connect.Calendaring.Robin
 		/// </summary>
 		public RobinServiceDeviceSettings()
 		{
-			CalendarParsingPath = "CalendarParsing.xml";
+			CalendarParsingPath = DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
@@ -123,7 +125,8 @@ namespace ICD.Connect.Calendaring.Robin
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			Token = XmlUtils.TryReadChildElementContentAsString(xml, TOKEN_ELEMENT);
 			ResourceId = XmlUtils.TryReadChildElementContentAsString(xml, RESOURCEID_ELEMENT);
-			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
+			                      DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties.ParseXml(xml);
 

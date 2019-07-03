@@ -17,6 +17,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		private const string USER_ID_ELEMENT = "UserId";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
+		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
+
 		private readonly UriProperties m_UriProperties;
 
 		#region Properties
@@ -96,7 +98,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		/// </summary>
 		public Office365CalendarDeviceSettings()
 		{
-			CalendarParsingPath = "CalendarParsing.xml";
+			CalendarParsingPath = DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
@@ -133,7 +135,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Client = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ELEMENT);
 			Secret = XmlUtils.TryReadChildElementContentAsString(xml, SECRET_ELEMENT);
 			UserId = XmlUtils.TryReadChildElementContentAsString(xml, USER_ID_ELEMENT);
-			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
+			                      DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties.ParseXml(xml);
 

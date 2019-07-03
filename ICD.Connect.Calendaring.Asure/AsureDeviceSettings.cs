@@ -17,6 +17,8 @@ namespace ICD.Connect.Calendaring.Asure
 		private const string PASSWORD_ELEMENT = "Password";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
+		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
+
 		private readonly UriProperties m_UriProperties;
 
 		#region Properties
@@ -99,7 +101,7 @@ namespace ICD.Connect.Calendaring.Asure
 		/// </summary>
 		public AsureDeviceSettings()
 		{
-			CalendarParsingPath = "CalendarParsing.xml";
+			CalendarParsingPath = DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties = new UriProperties();
 			UpdateUriDefaults();
@@ -136,7 +138,8 @@ namespace ICD.Connect.Calendaring.Asure
 			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
 			Username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
 			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
-			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
+			                      DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties.ParseXml(xml);
 
