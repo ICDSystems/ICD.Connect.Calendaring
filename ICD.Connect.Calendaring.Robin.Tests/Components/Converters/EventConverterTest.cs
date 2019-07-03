@@ -8,18 +8,18 @@ namespace ICD.Connect.Calendaring.Robin.Tests.Components.Converters
 	[TestFixture]
 	public sealed class EventConverterTest
 	{
-		private EventConverter test;
+		private EventConverter m_Test;
 
 		[SetUp]
 		public void Setup()
 		{
-			test = new EventConverter();
+			m_Test = new EventConverter();
 		}
 
 		[Test]
 		public void CanConvert_ReturnsTrueForEventType()
 		{
-			test.CanConvert(typeof(Event));
+			m_Test.CanConvert(typeof(Event));
 		}
 
 		[Test]
