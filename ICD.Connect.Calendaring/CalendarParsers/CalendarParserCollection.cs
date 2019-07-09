@@ -12,6 +12,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.IO;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Calendaring.CalendarParsers.Parsers;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.CalendarParsers
 {
@@ -86,7 +87,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 
 		#region Methods
 
-		public IEnumerable<BookingProtocolInfo> ParseText(string text)
+		public IEnumerable<IDialContext> ParseText(string text)
 		{
 			return GetParsers().SelectMany(p => p.ParseText(text)).Distinct();
 		}

@@ -9,6 +9,7 @@ using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
 using ICD.Connect.Calendaring.Robin.Components.Events;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 {
@@ -164,8 +165,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 				if (m_EventToBooking.ContainsKey(@event))
 					return false;
 
-				IEnumerable<BookingProtocolInfo> bookingNumbers = Parent.CalendarParserCollection.ParseText(@event.Description);
-				RobinBooking robinBooking = new RobinBooking(@event, bookingNumbers);
+				IEnumerable<IDialContext> dialContexts = Parent.CalendarParserCollection.ParseText(@event.Description);
+				RobinBooking robinBooking = new RobinBooking(@event, dialContexts);
 
 				m_EventToBooking.Add(@event, robinBooking);
 			}

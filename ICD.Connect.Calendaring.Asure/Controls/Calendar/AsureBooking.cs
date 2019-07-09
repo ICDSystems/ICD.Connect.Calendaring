@@ -11,7 +11,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 	public sealed class AsureBooking : AbstractBooking
 	{
 		private readonly ReservationData m_Reservation;
-		private readonly List<IDialContext> m_BookingNumbers;
+		private readonly List<IDialContext> m_DialContexts;
 
 		#region Properties
 
@@ -65,7 +65,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
-			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
+			return m_DialContexts.ToArray(m_DialContexts.Count);
 		}
 
 		#endregion
@@ -74,43 +74,16 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// Constructor.
 		/// </summary>
 		/// <param name="reservation"></param>
-		/// <param name="bookingProtocolInfo"></param>
-		public AsureBooking(ReservationData reservation, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		/// <param name="dialContexts"></param>
+		public AsureBooking(ReservationData reservation, IEnumerable<IDialContext> dialContexts)
 		{
 			if (reservation == null)
 				throw new ArgumentNullException("reservation");
 
 			m_Reservation = reservation;
 
-			if (bookingProtocolInfo != null)
-				m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
-		}
-
-		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
-		{
-			foreach (BookingProtocolInfo info in bookingProtocolInfo)
-			{
-				switch (info.DialProtocol)
-				{
-					case eDialProtocol.None:
-						continue;
-
-					case eDialProtocol.Sip:
-						yield return new SipDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Pstn:
-						yield return new PstnDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Zoom:
-						yield return new ZoomDialContext { DialString = info.Number };
-						continue;
-
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
+			if (dialContexts != null)
+				m_DialContexts = dialContexts.ToList();
 		}
 	}
 }

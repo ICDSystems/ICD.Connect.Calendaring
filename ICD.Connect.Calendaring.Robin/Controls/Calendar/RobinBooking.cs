@@ -11,7 +11,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	public sealed class RobinBooking : AbstractBooking
 	{
 		private readonly Event m_Event;
-		private readonly List<IDialContext> m_BookingNumbers;
+		private readonly List<IDialContext> m_DialContexts;
 
 		public Event Event { get { return m_Event; } }
 
@@ -47,45 +47,18 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
-			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
+			return m_DialContexts.ToArray(m_DialContexts.Count);
 		}
 
-		public RobinBooking(Event @event, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		public RobinBooking(Event robinEvent, IEnumerable<IDialContext> dialContexts)
 		{
-			if (@event == null)
+			if (robinEvent == null)
 				throw new ArgumentNullException("event");
 
-			m_Event = @event;
+			m_Event = robinEvent;
 
-			if (bookingProtocolInfo != null)
-				m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
-		}
-
-		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
-		{
-			foreach (BookingProtocolInfo info in bookingProtocolInfo)
-			{
-				switch (info.DialProtocol)
-				{
-					case eDialProtocol.None:
-						continue;
-
-					case eDialProtocol.Sip:
-						yield return new SipDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Pstn:
-						yield return new PstnDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Zoom:
-						yield return new ZoomDialContext { DialString = info.Number };
-						continue;
-
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
+			if (dialContexts != null)
+				m_DialContexts = dialContexts.ToList();
 		}
 	}
 }
