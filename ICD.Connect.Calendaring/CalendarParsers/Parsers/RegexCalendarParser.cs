@@ -27,7 +27,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public override IEnumerable<BookingProtocolInfo> ParseText(string text)
+		public override IEnumerable<IDialContext> ParseText(string text)
 		{
 			if (string.IsNullOrEmpty(text))
 				yield break;
@@ -46,10 +46,9 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 					? meetingNumber
 					: Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
 
-				yield return new BookingProtocolInfo
+				yield return new ThinDialContext(Protocol)
 				{
-					DialProtocol = Protocol,
-					Number = meetingNumber,
+					DialString = meetingNumber,
 					Password = meetingPassword
 				};
 			}

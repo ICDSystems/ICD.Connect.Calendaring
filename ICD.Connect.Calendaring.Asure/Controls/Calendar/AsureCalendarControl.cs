@@ -8,6 +8,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.CalendarControl;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 {
@@ -124,7 +125,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 				if (m_ReservationToBooking.ContainsKey(reservation))
 					return false;
 
-				IEnumerable<BookingProtocolInfo> bookingProtocolInfos =
+				IEnumerable<IDialContext> bookingProtocolInfos =
 					Parent.CalendarParserCollection.ParseText(reservation.ReservationBaseData.Notes);
 				AsureBooking booking = new AsureBooking(reservation, bookingProtocolInfos);
 

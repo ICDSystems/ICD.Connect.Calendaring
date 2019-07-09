@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Removed BookingProtocolInfo in favor of IDialContext
+
 ## [7.1.0] - 2019-07-03
 ### Added 
  - Added Office365 calendar device

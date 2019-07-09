@@ -64,7 +64,7 @@ namespace ICD.Connect.Calendaring
 			if (preferredDialer == null)
 				return eMeetingType.Presentation;
 
-			eMeetingType meetingType = dialContext.Protocol.ToMeetingType();
+			eMeetingType meetingType = GetMeetingType(dialContext.Protocol);
 
 			// Get the intersection of the supported conference source types against the booking source types
 			eCallType supported = preferredDialer.Supports;
@@ -112,7 +112,7 @@ namespace ICD.Connect.Calendaring
 
 		public static eCallType GetConferenceSourceType(eDialProtocol protocol)
 		{
-			return GetConferenceSourceType(protocol.ToMeetingType());
+			return GetConferenceSourceType(GetMeetingType(protocol));
 		}
 
 		public static eCallType GetConferenceSourceType(eMeetingType meetingType)
@@ -128,6 +128,30 @@ namespace ICD.Connect.Calendaring
 
 				default:
 					throw new ArgumentOutOfRangeException("meetingType");
+			}
+		}
+		
+		/// <summary>
+		/// Converts the booking protocol to the best possible meeting type.
+		/// </summary>
+		/// <param name="protocol"></param>
+		/// <returns></returns>
+		public static eMeetingType GetMeetingType(eDialProtocol protocol)
+		{
+			switch (protocol)
+			{
+				case eDialProtocol.Zoom:
+				case eDialProtocol.Sip:
+					return eMeetingType.VideoConference;
+
+				case eDialProtocol.Pstn:
+					return eMeetingType.AudioConference;
+
+				case eDialProtocol.None:
+					return eMeetingType.Presentation;
+
+				default:
+					throw new ArgumentOutOfRangeException("extends");
 			}
 		}
 	}
