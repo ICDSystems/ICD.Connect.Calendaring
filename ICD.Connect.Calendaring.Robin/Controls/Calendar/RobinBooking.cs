@@ -53,7 +53,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public RobinBooking(Event robinEvent, IEnumerable<IDialContext> dialContexts)
 		{
 			if (robinEvent == null)
-				throw new ArgumentNullException("event");
+				throw new ArgumentNullException("robinEvent");
 
 			m_Event = robinEvent;
 
