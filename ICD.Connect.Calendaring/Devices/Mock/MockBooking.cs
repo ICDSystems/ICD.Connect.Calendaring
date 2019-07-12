@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Conferencing.DialContexts;
 
-namespace ICD.Connect.Calendaring.Devices
+namespace ICD.Connect.Calendaring.Devices.Mock
 {
 	public class MockBooking : AbstractBooking
 	{

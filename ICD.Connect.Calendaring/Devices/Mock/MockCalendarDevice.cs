@@ -1,7 +1,6 @@
-﻿using ICD.Connect.Calendaring.Controls;
-using ICD.Connect.Devices;
+﻿using ICD.Connect.Devices;
 
-namespace ICD.Connect.Calendaring.Devices
+namespace ICD.Connect.Calendaring.Devices.Mock
 {
 	public sealed class MockCalendarDevice : AbstractDevice<MockCalendarDeviceSettings>
 	{
