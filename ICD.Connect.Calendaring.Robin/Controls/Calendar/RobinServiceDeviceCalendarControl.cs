@@ -7,7 +7,7 @@ using ICD.Common.Utils.Comparers;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
-using ICD.Connect.Calendaring.CalendarControl;
+using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Robin.Components.Events;
 
 namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
@@ -79,6 +79,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public override void Refresh()
 		{
 			m_EventsComponent.UpdateBookings();
+
 		}
 
 		/// <summary>
