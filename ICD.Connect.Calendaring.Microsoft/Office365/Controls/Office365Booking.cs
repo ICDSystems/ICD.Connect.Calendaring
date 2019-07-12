@@ -55,48 +55,18 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		/// Constructor.
 		/// </summary>
 		/// <param name="calendarEvent"></param>
-		/// <param name="bookingProtocolInfo"></param>
-		public Office365Booking(CalendarEvent calendarEvent, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		/// <param name="dialContexts"></param>
+		public Office365Booking(CalendarEvent calendarEvent, IEnumerable<IDialContext> dialContexts)
 		{
 			if (calendarEvent == null)
 				throw new ArgumentNullException("calendarEvent");
 
-			if (bookingProtocolInfo == null)
-				throw new ArgumentNullException("bookingProtocolInfo");
+			if (dialContexts == null)
+				throw new ArgumentNullException("dialContexts");
 
 			m_CalendarEvent = calendarEvent;
 
-			m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
-		}
-
-		/// <summary>
-		/// Returns Booking Numbers.
-		/// </summary>
-		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
-		{
-			foreach (BookingProtocolInfo info in bookingProtocolInfo)
-			{
-				switch (info.DialProtocol)
-				{
-					case eDialProtocol.None:
-						continue;
-
-					case eDialProtocol.Sip:
-						yield return new SipDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Pstn:
-						yield return new PstnDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Zoom:
-						yield return new ZoomDialContext { DialString = info.Number };
-						continue;
-
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
+			m_BookingNumbers = dialContexts.ToList();
 		}
 	}
 }

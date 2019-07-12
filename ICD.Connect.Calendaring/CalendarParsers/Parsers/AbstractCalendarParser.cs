@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ICD.Connect.Conferencing.DialContexts;
+using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
@@ -9,6 +10,6 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public abstract IEnumerable<BookingProtocolInfo> ParseText(string text);
+		public abstract IEnumerable<IDialContext> ParseText(string text);
 	}
 }

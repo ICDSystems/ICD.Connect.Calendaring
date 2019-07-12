@@ -10,6 +10,7 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 {
@@ -91,11 +92,11 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 
 		private Office365Booking GetBooking(CalendarEvent calendarEvent)
 		{
-			IEnumerable<BookingProtocolInfo> bookingNumbers =
+			IEnumerable<IDialContext> dialContexts =
 				Parent.CalendarParserCollection
 				      .ParseText(calendarEvent.Body.Content);
 
-			return new Office365Booking(calendarEvent, bookingNumbers);
+			return new Office365Booking(calendarEvent, dialContexts);
 		}
 
 		/// <summary>
