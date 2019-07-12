@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Devices.Controls;
 
-namespace ICD.Connect.Calendaring.CalendarControl
+namespace ICD.Connect.Calendaring.Controls
 {
 	public interface ICalendarControl : IDeviceControl
 	{
