@@ -11,6 +11,7 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Devices.iCalendar.Parser;
 using ICD.Connect.Calendaring.iCalendar.Controls.Calendar;
+using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Devices.iCalendar
 {
@@ -27,11 +28,13 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 
 		private static readonly PredicateComparer<iCalendarEvent, DateTime> s_CalendarEventComparer;
 
+		/// <summary>
+		/// Static constructor.
+		/// </summary>
 		static iCalendarServiceDeviceCalendarControl()
 		{
 			s_CalendarEventComparer = new PredicateComparer<iCalendarEvent, DateTime>(e => e.DtStart);
 		}
-
 
 		/// <summary>
 		/// Constructor.
@@ -52,6 +55,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public override void Refresh()
 		{
 			m_BookingSection.Enter();
+
 			try
 			{
 				iCalendarCalendar calendar = Parent.GetCalendar();
@@ -74,16 +78,14 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			}
 
 			OnBookingsChanged.Raise(this);
-
 		}
 
 		private iCalendarBooking GetBookings(iCalendarEvent iCalendarEvent)
 		{
-			IEnumerable<BookingProtocolInfo> boookingNumbers =
+			IEnumerable<IDialContext> bookingNumbers =
 				Parent.CalendarParserCollection.ParseText(iCalendarEvent.Description);
 
-			return new iCalendarBooking(iCalendarEvent, boookingNumbers);
-			
+			return new iCalendarBooking(iCalendarEvent, bookingNumbers);
 		}
 
 		/// <summary>

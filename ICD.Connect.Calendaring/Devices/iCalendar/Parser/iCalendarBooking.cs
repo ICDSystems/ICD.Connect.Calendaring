@@ -13,7 +13,7 @@ namespace ICD.Connect.Calendaring.iCalendar.Controls.Calendar
 // ReSharper restore InconsistentNaming
 	{
 		private readonly iCalendarEvent m_Event;
-		private readonly IList<IDialContext> m_BookingNumbers;
+		private readonly IList<IDialContext> m_DialContexts;
 
 		public iCalendarEvent Event { get { return m_Event; } }
 
@@ -55,45 +55,18 @@ namespace ICD.Connect.Calendaring.iCalendar.Controls.Calendar
 
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
-			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);
+			return m_DialContexts.ToArray(m_DialContexts.Count);
 		}
 
-		public iCalendarBooking(iCalendarEvent @event, IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
+		public iCalendarBooking(iCalendarEvent @event, IEnumerable<IDialContext> dialContexts)
 		{
 			if (@event == null)
 				throw new ArgumentNullException("event");
 
 			m_Event = @event;
 
-			if (bookingProtocolInfo != null)
-				m_BookingNumbers = ParseBookingNumbers(bookingProtocolInfo).ToList();
-		}
-
-		private static IEnumerable<IDialContext> ParseBookingNumbers(IEnumerable<BookingProtocolInfo> bookingProtocolInfo)
-		{
-			foreach (BookingProtocolInfo info in bookingProtocolInfo)
-			{
-				switch (info.DialProtocol)
-				{
-					case eDialProtocol.None:
-						continue;
-
-					case eDialProtocol.Sip:
-						yield return new SipDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Pstn:
-						yield return new PstnDialContext { DialString = info.Number };
-						continue;
-
-					case eDialProtocol.Zoom:
-						yield return new ZoomDialContext { DialString = info.Number };
-						continue;
-
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
+			if (dialContexts != null)
+				m_DialContexts = dialContexts.ToList();
 		}
 	}
 }
