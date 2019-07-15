@@ -7,7 +7,7 @@ using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 
-namespace ICD.Connect.Calendaring.CalendarControl
+namespace ICD.Connect.Calendaring.Controls
 {
     public abstract class AbstractCalendarControl<T> : AbstractDeviceControl<T>, ICalendarControl
 	    where T : IDeviceBase

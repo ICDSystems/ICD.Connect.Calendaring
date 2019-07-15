@@ -7,7 +7,7 @@ using ICD.Common.Utils.Comparers;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Booking;
-using ICD.Connect.Calendaring.CalendarControl;
+using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Asure.Controls.Calendar

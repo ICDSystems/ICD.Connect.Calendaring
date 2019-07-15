@@ -4,10 +4,9 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
-using ICD.Connect.Calendaring.CalendarControl;
-using ICD.Connect.Calendaring.Devices;
+using ICD.Connect.Calendaring.Controls;
 
-namespace ICD.Connect.Calendaring.Controls
+namespace ICD.Connect.Calendaring.Devices.Mock
 {
 	public sealed class MockCalendarControl : AbstractCalendarControl<MockCalendarDevice>
 	{

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This configuration is generated automatically. Only change this file if you know what you are doing. Any invalid data, whitespace, and comments will be deleted the next time this is generated. -->
+<IcdConfig id="1" type="Krang">
+  <Ports>
+    <Port type="HTTP" id="1000">
+      <Name>HTTP Port 1 for iCalendar</Name>
+      <CombineName>HTTP Port 1 iCalendar</CombineName>
+      <Description/>
+      <Hide>false</Hide>
+	  <Uri>
+	  <!--https://calendar.google.com/calendar/ical/laura.gomez%40profound-tech.com/private-e1586d4e1c46484cd36504324e32bc7c/basic.ics-->
+        <Scheme>https</Scheme>
+        <Username />
+        <Password />
+        <Host>calendar.google.com</Host>
+        <Port />
+        <Path>/calendar/ical/laura.gomez%40profound-tech.com/private-e1586d4e1c46484cd36504324e32bc7c/basic.ics</Path>
+        <Query />
+        <Fragment />
+      </Uri>
+    </Port>
+  </Ports>
+  <Devices>
+    <Device type="iCalendarServiceDevice" id="2000">
+      <Name>iCalendar</Name>
+      <Port>1000</Port>
+    </Device>
+  </Devices>
+  <Rooms />
+  <VolumePoints />
+  <ConferencePoints />
+  <Hide>false</Hide>
+</IcdConfig>

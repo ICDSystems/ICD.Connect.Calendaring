@@ -74,18 +74,26 @@
     <Compile Include="Booking\AbstractBooking.cs" />
     <Compile Include="Booking\eMeetingType.cs" />
     <Compile Include="Booking\IBooking.cs" />
-    <Compile Include="CalendarControl\AbstractCalendarControl.cs" />
-    <Compile Include="CalendarControl\CalendarControlConsole.cs" />
-    <Compile Include="CalendarControl\ICalendarControl.cs" />
+    <Compile Include="Controls\AbstractCalendarControl.cs" />
+    <Compile Include="Controls\CalendarControlConsole.cs" />
+    <Compile Include="Controls\ICalendarControl.cs" />
     <Compile Include="CalendarParsers\CalendarParserCollection.cs" />
     <Compile Include="CalendarParsers\Parsers\AbstractCalendarParser.cs" />
     <Compile Include="CalendarParsers\Parsers\ICalendarParser.cs" />
     <Compile Include="CalendarParsers\Parsers\RegexCalendarParser.cs" />
     <Compile Include="ConferencingBookingUtils.cs" />
-    <Compile Include="Controls\MockCalendarControl.cs" />
-    <Compile Include="Devices\MockBooking.cs" />
-    <Compile Include="Devices\MockCalendarDevice.cs" />
-    <Compile Include="Devices\MockCalendarDeviceSettings.cs" />
+    <Compile Include="Devices\iCalendar\iCalendarServiceDeviceCalendarControl.cs" />
+    <Compile Include="Devices\iCalendar\Parser\iCalendarAttendee.cs" />
+    <Compile Include="Devices\iCalendar\Parser\iCalendarCalendar.cs" />
+    <Compile Include="Devices\iCalendar\Parser\iCalendarEvent.cs" />
+    <Compile Include="Devices\iCalendar\Parser\iCalendarUtils.cs" />
+    <Compile Include="Devices\iCalendar\iCalendarServiceDevice.cs" />
+    <Compile Include="Devices\iCalendar\iCalendarServiceDeviceSettings.cs" />
+    <Compile Include="Devices\iCalendar\Parser\iCalendarBooking.cs" />
+    <Compile Include="Devices\Mock\MockCalendarControl.cs" />
+    <Compile Include="Devices\Mock\MockBooking.cs" />
+    <Compile Include="Devices\Mock\MockCalendarDevice.cs" />
+    <Compile Include="Devices\Mock\MockCalendarDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
     <None Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,6 +116,14 @@
       <Project>{FD46A717-5836-4B73-ADD0-2706639DA8ED}</Project>
       <Name>ICD.Connect.Devices_SimplSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_SimplSharp.csproj">
+      <Project>{5ED52F05-EA6C-4FC5-8AA0-9B9727F6AECD}</Project>
+      <Name>ICD.Connect.Protocol.Network_SimplSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol\ICD.Connect.Protocol_SimplSharp.csproj">
+      <Project>{2E4E01B8-D4EA-4FB1-9FCE-0A0DC8D83C8A}</Project>
+      <Name>ICD.Connect.Protocol_SimplSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_SimplSharp.csproj">
       <Project>{5B84EB3C-1C3A-4C4D-98C2-69F67CF51D5A}</Project>
       <Name>ICD.Connect.Settings_SimplSharp</Name>
@@ -116,6 +132,9 @@
       <Project>{9512C0A5-F966-4AC6-9668-62C6F343B0CD}</Project>
       <Name>ICD.Connect.Telemetry_SimplSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Documentation\iCaldendarRoomConfig-Base.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <PropertyGroup>

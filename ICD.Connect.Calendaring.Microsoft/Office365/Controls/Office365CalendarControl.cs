@@ -8,7 +8,7 @@ using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Common.Utils.Timers;
-using ICD.Connect.Calendaring.CalendarControl;
+using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using ICD.Connect.Conferencing.DialContexts;
 
