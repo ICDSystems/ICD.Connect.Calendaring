@@ -19,7 +19,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		/// <param name="serializer"></param>
 		protected override void ReadProperty(string property, JsonReader reader, CalendarViewResponse instance, JsonSerializer serializer)
 		{
-		switch (property)
+			switch (property)
 			{
 				case ATTRIBUTE_DATA_CONTEXT:
 					instance.DataContext = reader.GetValueAsString();
