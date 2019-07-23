@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Properties;
+using ICD.Common.Utils;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
+using ICD.Connect.API.Commands;
 using ICD.Connect.Calendaring.CalendarParsers;
+using ICD.Connect.Calendaring.Google.Responses;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
+using ICD.Connect.Protocol.Network.Utils;
 using ICD.Connect.Settings;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Google
 {
@@ -19,9 +26,15 @@ namespace ICD.Connect.Calendaring.Google
 
 		private string m_CalendarParsingPath;
 		private IWebPort m_Port;
-
+		private string m_Token;
+		private DateTime m_TokenExpireTime;
+		private string m_JWT;
+		
 		#region Properties
 
+		public string ClientEmail { get; set; }
+		public string CalendarId { get; set; }
+		public string PrivateKey { get; set; }
 		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
 		#endregion
@@ -162,6 +175,9 @@ namespace ICD.Connect.Calendaring.Google
 			base.ApplySettingsFinal(settings, factory);
 
 			m_UriProperties.Copy(settings);
+			ClientEmail = settings.ClientEmail;
+			CalendarId = settings.CalendarId;
+			PrivateKey = settings.PrivateKey;
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
@@ -191,6 +207,10 @@ namespace ICD.Connect.Calendaring.Google
 
 			m_CalendarParserCollection.ClearMatchers();
 
+
+			ClientEmail = null;
+			CalendarId = null;
+			PrivateKey = null;
 			SetPort(null);
 
 			m_UriProperties.Clear();
@@ -206,9 +226,108 @@ namespace ICD.Connect.Calendaring.Google
 
 			settings.CalendarParsingPath = m_CalendarParsingPath;
 
+			settings.ClientEmail = ClientEmail;
+			settings.CalendarId = CalendarId;
+			settings.PrivateKey = PrivateKey;
+
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
+		}
+
+		#endregion
+		#region Console
+		public override string ConsoleHelp { get { return "The Google service device"; } }
+
+		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			foreach (IConsoleCommand command in GetBaseConsoleCommands())
+				yield return command;
+			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
+		}
+
+		private string RenewToken()
+		{
+			// Assemble the payload
+			/*			string payload = @"{
+				""iss"": " + ClientEmail + @",
+				""iat"": " + DateTime.Now.ToUnixTimestamp() + @",
+				""exp"": " + (DateTime.Now + new TimeSpan(0, 30, 0)).ToUnixTimestamp() + @",
+				""aud"": ""https://www.googleapis.com/oauth2/v4/token"",
+				""scope"": ""https://www.googleapis.com/auth/calendar""
+			}";*/
+
+			string payload =
+				@"{""iss"": ""calendar-service@calendaring.iam.gserviceaccount.com"", ""iat"": " +
+				(int)DateTime.Now.ToUnixTimestamp() + @", ""exp"": " +
+				(int)(DateTime.Now + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
+				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
+
+			// Build the request token
+			string jwt = JwtUtils.SignRs256(payload, PrivateKey);
+
+			// Request the OAuth token
+			m_Port.Accept = "*/*";
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{ "Content-Type", new List<string>{"application/x-www-form-urlencoded"} }
+			};
+
+			Dictionary<string, string> body = new Dictionary<string, string>
+			{
+				{"grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"},
+				{"assertion", jwt}
+			};
+
+			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
+
+			const string url = "https://www.googleapis.com/oauth2/v4/token";
+
+			//Dispatch!
+			string result;
+			if (!m_Port.Post(url, headers, bodyData, out result))
+			{
+				Log(eSeverity.Error, "Failed to get token - {0}", result);
+				m_Token = null;
+				return null;
+			}
+
+			//Get the token string value out of the JSON
+			GoogleTokenResponse response = JsonConvert.DeserializeObject<GoogleTokenResponse>(result);
+			m_Token = response.AccessToken;
+			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+			return m_Token;
+			//throw new NotImplementedException();
+		}
+
+		public IEnumerable<GoogleCalendarEvent> GetEvents()
+		{
+			if (m_Token == null || IcdEnvironment.GetLocalTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}",
+			                           CalendarId, m_Token);
+			string result;
+			bool success = m_Port.Get(url, out result);
+
+			GoogleCalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(result))
+				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(result);
+			if (!success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+
+			return response == null
+				       ? Enumerable.Empty<GoogleCalendarEvent>()
+				       : response.Items;
+
+		}
+		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
+		{
+			return base.GetConsoleCommands();
 		}
 
 		#endregion

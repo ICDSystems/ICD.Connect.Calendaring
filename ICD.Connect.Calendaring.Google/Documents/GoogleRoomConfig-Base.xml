@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- This configuration is generated automatically. Only change this file if you know what you are doing. Any invalid data, whitespace, and comments will be deleted the next time this is generated. -->
+<IcdConfig id="1" type="Krang">
+	<Ports>
+		<Port type="HTTP" id="1000">
+			<Name>HTTP Port 1 for GoogleCalendar</Name>
+			<CombineName>HTTP Port 1 for GoogleCalendar</CombineName>
+			<Description/>
+			<Hide>false</Hide>
+		</Port>
+	</Ports>
+	<Devices>
+		<Device type="GoogleCalendar" id="2000">
+			<Name>Google Calendar</Name>
+			<Port>1000</Port>
+			<ClientEmail>calendar-service@calendaring.iam.gserviceaccount.com</ClientEmail>
+			<PrivateKey>MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCGare3xJ3eTkw89NILbbyAsV/V8OfAcjR4K4GEw9l7ZtrlOf6/OWrJUvjVyHZrS5UkA9+46kU+nVLXeeW6iHydcefs6qeTXIRL6q6TP2kwL7NBbECsMJFAZXn15LXXQTGoch1jcZHK3YxyoWrPWE75kXxTcauyuzp8UW9sWmC0PlVAwRWNwwJ0CZ5iLbdm7aI4t2cgKEuv7mTzIverywrhv5QxzAY7G1hQcwG5tVNTb1jf29Cd6unqp7rL9gdObcvOz6dm2preVXXKFmLfhXCvDnO69ZcdoaxoVuqaA5SNMQVlOulvAZqvvNQSRNZzBjwLfFV1qj8TaZuK8fIRjcOhAgMBAAECggEABNnDCXmp7MTMkYKQNeNe4xIDkFfiNRqp9BA121Gp/n8GtTDzlXj/9oXs/uH+C/8tQaB2KVki6JCK1cXLWYDlZlUe9ni9VV8IUykD5cJrDFccU+cRKmWSSE2hKhN30G3E2fxMPTNy/GwkTlqu3Q6lwvHSF7zJYmjJQoU5zSIxzS9JRm9hjg4o6vIxgUGtCv+XtOW63ksu1/SXyraRLRdWzFyf9HkSkZp1+oFksQlWoqyXE3l5MldOYki1x5j/gnD3YXE2/7EOQeidJ5n5F1aRKSHWOJQbUa36zsy4eANL8Nw7Y88wHvBrzz3ckc+7fvajkZc3Yu60V15u4ETBFShW8QKBgQC8gqianTlT70BRQhMUTa30iDgqorSpghtzmQ0Jo1wgeGyW/BBV5wg7Gy1jTuywmJlhZWyUXcRYxYo+Tc9u3X9qYrd6Jj6t52uz9eUDNs5WYIsqp1LXUeMAEEB9S034ZnFXKosV4luJzwCDyI31Uw9WQrUhVTybcJWHmwb7pwvyRQKBgQC2ikiKze4i3vFNnjCvzG8fL4eYtmIVOoy4DpmRaXk1/71Aa2t5e7Bwj4IbSR3AfvOnJz4gqwrizmaLgWwTywxGiH+cieKdhC/kqRjxijoiPbwvKT/S+nlzpcAgX7qz1w/BRqO14F8xR5qrd0DAJJq5KZKZUeLyifTZhFywtzUPrQKBgFC5IroS2Zm3ujMRuFnZacRtEKAxTGvJ6zd1MsAN1EWTS+zbw6MFa+DjomwEQBbfQc8TP4vJG2toK+rCJzGyZ/2GiEsmVXDiyJwnkAnwTitu7Ck3vaG2zx4X14XP2XOlaqOI9EZKyCgbHH1SRHfpOYgWyLmdZnapn16SZEsfHV6BAoGBAIxEhqnixHMXTeWPAWqVdW5JX7EBtS0K6McmsOsEWZgdBJhT8ypO2a4lGJ1O+gXJiAGSLjN8O8k9QZ9BvIMZLD2m9iib6/+ObB8RsZEp3rIhLlIvKFQ/FMTBQXmfFiDLydeDKJnB6GQ92aSY5rC/cAWI5JXcTsCBMh1TkMZagfOhAoGALmoax1C1mGfjwxfRxY+14orDs/d8FID8luS06Dv3FXCDJDzZ4tGJvhGCUakj4sQiW2F2ptRQI71P+CD5Zsb0CNSCKJLOJK2AAJ3jfzOkU4+uHHFS0pnQyXdAOo298DEUJJxjj76mYIH0BsUAICWay3b/vhMDnww1+h4MtmUdN88=</PrivateKey>
+			<CalendarId>laura.gomez@profound-tech.com</CalendarId>
+		</Device>
+	</Devices>
+	<Rooms />
+	<VolumePoints />
+	<ConferencePoints />
+	<Hide>false</Hide>
+</IcdConfig>
