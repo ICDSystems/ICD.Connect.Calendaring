@@ -12,7 +12,9 @@ namespace ICD.Connect.Calendaring.Google
 	{
 		private const string PORT_ELEMENT = "Port";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
-
+		private const string CLIENT_EMAIL_ELEMENT = "ClientEmail";
+		private const string CALENDAR_ID_ELEMENT = "CalendarId";
+		private const string PRIVATE_KEY_ID_ELEMENT = "PrivateKey";
 		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
 
 		private readonly UriProperties m_UriProperties;
@@ -24,8 +26,11 @@ namespace ICD.Connect.Calendaring.Google
 		/// </summary>
 		[OriginatorIdSettingsProperty(typeof(IWebPort))]
 		public int? Port { get; set; }
-
 		public string CalendarParsingPath { get; set; }
+		public string ClientEmail { get; set; }
+		public string CalendarId { get; set; }
+		public string PrivateKey { get; set; }
+
 
 		#endregion
 
@@ -102,6 +107,9 @@ namespace ICD.Connect.Calendaring.Google
 
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
+			writer.WriteElementString(CLIENT_EMAIL_ELEMENT, ClientEmail);
+			writer.WriteElementString(CALENDAR_ID_ELEMENT, CalendarId);
+			writer.WriteElementString(PRIVATE_KEY_ID_ELEMENT, PrivateKey);
 
 			m_UriProperties.WriteElements(writer);
 		}
@@ -117,6 +125,9 @@ namespace ICD.Connect.Calendaring.Google
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
 			                      DEFAULT_CALENDAR_PARSING_PATH;
+			ClientEmail = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_EMAIL_ELEMENT);
+			CalendarId = XmlUtils.TryReadChildElementContentAsString(xml, CALENDAR_ID_ELEMENT);
+			PrivateKey = XmlUtils.TryReadChildElementContentAsString(xml, PRIVATE_KEY_ID_ELEMENT);
 
 			m_UriProperties.ParseXml(xml);
 
@@ -125,7 +136,7 @@ namespace ICD.Connect.Calendaring.Google
 
 		private void UpdateUriDefaults()
 		{
-			//m_UriProperties.ApplyDefaultValuesFromAddress("https://graph.microsoft.com/v2.0/");
+			m_UriProperties.ApplyDefaultValuesFromAddress("https://www.googleapis.com/calendar/v3/");
 		}
 	}
 }

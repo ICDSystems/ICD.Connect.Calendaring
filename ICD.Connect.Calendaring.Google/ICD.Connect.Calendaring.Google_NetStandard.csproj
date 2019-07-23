@@ -41,6 +41,12 @@
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Protocol\ICD.Connect.Protocol.Network\ICD.Connect.Protocol.Network_NetStandard.csproj" />
     <ProjectReference Include="..\..\ICD.Connect.Settings\ICD.Connect.Settings\ICD.Connect.Settings_NetStandard.csproj" />
+    <ProjectReference Include="..\ICD.Connect.Calendaring.Microsoft\ICD.Connect.Calendaring.Microsoft_NetStandard.csproj" />
     <ProjectReference Include="..\ICD.Connect.Calendaring\ICD.Connect.Calendaring_NetStandard.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ICD.Common.BouncyCastle_NetStandard">
+      <HintPath>..\..\..\..\Users\Laura Gomez\.nuget\packages\icd.common.bouncycastle_netstandard\1.0.0\lib\netstandard1.6\ICD.Common.BouncyCastle_NetStandard.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
