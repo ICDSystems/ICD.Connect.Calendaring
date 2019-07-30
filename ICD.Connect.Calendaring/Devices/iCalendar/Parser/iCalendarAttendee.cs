@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using ICD.Common.Utils;
 
 namespace ICD.Connect.Calendaring.Devices.iCalendar.Parser
