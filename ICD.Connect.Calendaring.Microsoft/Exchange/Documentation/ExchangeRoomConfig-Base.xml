@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IcdConfig id="1" type="Krang">
+	<Devices>
+		<Device type="ExchangeCalendar" id="2000">
+			<Name>Exchange Calendar</Name>
+			<Port>1000</Port>
+			<Username>interns@profoundtech.onmicrosoft.com</Username>
+			<Password>internFTW2019#</Password>
+		</Device>
+	</Devices>
+</IcdConfig>
