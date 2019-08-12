@@ -12,21 +12,18 @@ namespace ICD.Connect.Calendaring.Robin.Components.Users
 		public string Id { get; set; }
 
 		/// <summary>
-		/// Scheduled start time of the meeting
+		/// The name of the user
 		/// </summary>
 		public string UserName { get; set; }
 
 		/// <summary>
-		/// Scheduled end time for the meeting
+		/// The timezone of the user
 		/// </summary>
 		public string TimeZone { get; set; }
 
 		/// <summary>
-		/// Name of the person who created the meeting.
+		/// Email info of the user
 		/// </summary>
-		/// <remarks>
-		/// From Zoom API docs: Typically empty.
-		/// </remarks>
 		public EmailInfo Email { get; set; }
 
 		[JsonConverter(typeof(EmailInfoConverter))]

@@ -54,8 +54,10 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 				Event[] events = GetReservations(Parent.ResourceId, DateTime.Today, DateTime.Today.AddDays(1));
 				foreach (var @event in events)
 				{
+                    User user = null;
 					if (@event.OrganizerId != null)
-						@event.OrganizerName = m_UsersComponent.GetUser(@event.OrganizerId).UserName;
+						user = m_UsersComponent.GetUser(@event.OrganizerId);
+                    @event.OrganizerName = user == null ? null : user.UserName;
 				}
 
 				m_Events.Clear();
