@@ -249,8 +249,8 @@ namespace ICD.Connect.Calendaring.Google
 		{
 			string payload =
 				@"{""iss"": ""calendar-service@calendaring.iam.gserviceaccount.com"", ""iat"": " +
-				(int)DateTime.Now.ToUnixTimestamp() + @", ""exp"": " +
-				(int)(DateTime.Now + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
+				(int)IcdEnvironment.GetLocalTime().ToUnixTimestamp() + @", ""exp"": " +
+				(int)(IcdEnvironment.GetLocalTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
 				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
 
 			// Build the request token
