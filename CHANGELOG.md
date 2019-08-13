@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Added iCalendar calendar device
  - Added Google Calendar device.
  - Added Exchange Calendar device.
+ 
+### Changed
+ - Fixed Robin not returning events if the user endpoint fails.
 
 ## [7.1.0] - 2019-07-03
 ### Added 
