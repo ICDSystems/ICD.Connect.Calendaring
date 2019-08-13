@@ -28,8 +28,7 @@ namespace ICD.Connect.Calendaring.Google
 		private IWebPort m_Port;
 		private string m_Token;
 		private DateTime m_TokenExpireTime;
-		private string m_JWT;
-		
+
 		#region Properties
 
 		public string ClientEmail { get; set; }
@@ -248,15 +247,6 @@ namespace ICD.Connect.Calendaring.Google
 
 		private string RenewToken()
 		{
-			// Assemble the payload
-			/*			string payload = @"{
-				""iss"": " + ClientEmail + @",
-				""iat"": " + DateTime.Now.ToUnixTimestamp() + @",
-				""exp"": " + (DateTime.Now + new TimeSpan(0, 30, 0)).ToUnixTimestamp() + @",
-				""aud"": ""https://www.googleapis.com/oauth2/v4/token"",
-				""scope"": ""https://www.googleapis.com/auth/calendar""
-			}";*/
-
 			string payload =
 				@"{""iss"": ""calendar-service@calendaring.iam.gserviceaccount.com"", ""iat"": " +
 				(int)DateTime.Now.ToUnixTimestamp() + @", ""exp"": " +
