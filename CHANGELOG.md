@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Fixed a bug with Google calendar timezones
  - Office365 creation and modification dates are deserialized to DateTime
+ - Google private key is sanitized to better support keys copied directly from google
 
 ## [7.2.0] - 2019-08-13
 ### Added 

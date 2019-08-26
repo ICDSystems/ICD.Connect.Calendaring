@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
@@ -246,6 +247,18 @@ namespace ICD.Connect.Calendaring.Google
 			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
 		}
 
+		public static string SanitizePrivateKey(string privateKey)
+		{
+			const string privateKeyRegex =
+				@"(?'begin'-*BEGIN PRIVATE KEY-*)?(?'key'[^-]+)(?'end'-*END PRIVATE KEY-*(\\n)?)?";
+
+			Match match = Regex.Match(privateKey, privateKeyRegex);
+			if (!match.Success)
+				throw new FormatException("Private Key does not match expected format");
+
+			return match.Groups["key"].Value.Replace("\n", "");
+		}
+
 		private string RenewToken()
 		{
 			string payload =
@@ -255,7 +268,8 @@ namespace ICD.Connect.Calendaring.Google
 				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
 
 			// Build the request token
-			string jwt = JwtUtils.SignRs256(payload, PrivateKey);
+			string privateKey = SanitizePrivateKey(PrivateKey);
+			string jwt = JwtUtils.SignRs256(payload, privateKey);
 
 			// Request the OAuth token
 			m_Port.Accept = "*/*";
