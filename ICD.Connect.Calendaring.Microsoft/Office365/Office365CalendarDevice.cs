@@ -39,7 +39,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 		public string Secret { get; set; }
 
-		public string UserId { get; set; }
+		public string UserEmail { get; set; }
 
 		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
@@ -185,7 +185,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Tenant = settings.Tenant;
 			Client = settings.Client;
 			Secret = settings.Secret;
-			UserId = settings.UserId;
+			UserEmail = settings.UserEmail;
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
@@ -218,7 +218,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Tenant = null;
 			Client = null;
 			Secret = null;
-			UserId = null;
+			UserEmail = null;
 
 			SetPort(null);
 
@@ -238,7 +238,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			settings.Tenant = Tenant;
 			settings.Client = Client;
 			settings.Secret = Secret;
-			settings.UserId = UserId;
+			settings.UserEmail = UserEmail;
 
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
@@ -318,7 +318,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			};
 
 			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
-			                           UserId,
+			                           UserEmail,
 			                           IcdEnvironment.GetLocalTime().StartOfDay().ToUniversalTime().ToString("o"),
 			                           IcdEnvironment.GetLocalTime().EndOfDay().ToUniversalTime().ToString("o"));
 

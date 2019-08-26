@@ -14,7 +14,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		private const string TENANT_ELEMENT = "Tenant";
 		private const string CLIENT_ELEMENT = "Client";
 		private const string SECRET_ELEMENT = "Secret";
-		private const string USER_ID_ELEMENT = "UserId";
+		private const string USER_EMAIL_ELEMENT = "UserEmail";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
@@ -35,7 +35,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		
 		public string Secret { get; set; }
 
-		public string UserId { get; set; }
+		public string UserEmail { get; set; }
 
 		public string CalendarParsingPath { get; set; }
 
@@ -116,7 +116,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			writer.WriteElementString(TENANT_ELEMENT, Tenant);
 			writer.WriteElementString(CLIENT_ELEMENT, Client);
 			writer.WriteElementString(SECRET_ELEMENT, Secret);
-			writer.WriteElementString(USER_ID_ELEMENT, UserId);
+			writer.WriteElementString(USER_EMAIL_ELEMENT, UserEmail);
 			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
@@ -134,7 +134,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			Tenant = XmlUtils.TryReadChildElementContentAsString(xml, TENANT_ELEMENT);
 			Client = XmlUtils.TryReadChildElementContentAsString(xml, CLIENT_ELEMENT);
 			Secret = XmlUtils.TryReadChildElementContentAsString(xml, SECRET_ELEMENT);
-			UserId = XmlUtils.TryReadChildElementContentAsString(xml, USER_ID_ELEMENT);
+			UserEmail = XmlUtils.TryReadChildElementContentAsString(xml, USER_EMAIL_ELEMENT);
 			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
 			                      DEFAULT_CALENDAR_PARSING_PATH;
 
