@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Office365 creation and modification dates are deserialized to DateTime
+
 ## [7.2.0] - 2019-08-13
 ### Added 
  - Added iCalendar Calendar device

@@ -122,10 +122,10 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 					instance.Id = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_CREATED_DATE_TIME:
-					instance.CreatedDateTime = reader.GetValueAsString();
+					instance.CreatedDateTime = reader.GetValueAsDateTime();
 					break;
 				case ATTRIBUTE_LAST_MODIFIED_DATE_TIME:
-					instance.LastModifiedDateTime = reader.GetValueAsString();
+					instance.LastModifiedDateTime = reader.GetValueAsDateTime();
 					break;
 				case ATTRIBUTE_CHANGE_KEY:
 					instance.ChangeKey = reader.GetValueAsString();

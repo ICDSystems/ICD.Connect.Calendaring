@@ -17,8 +17,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 	{
 		public string ODataEtag { get; set; }
 		public string Id { get; set; }
-		public string CreatedDateTime { get; set; }
-		public string LastModifiedDateTime { get; set; }
+		public DateTime CreatedDateTime { get; set; }
+		public DateTime LastModifiedDateTime { get; set; }
 		public string ChangeKey { get; set; }
 		public string[] Categories { get; set; }
 		public string OriginalStartTimeZone { get; set; }
