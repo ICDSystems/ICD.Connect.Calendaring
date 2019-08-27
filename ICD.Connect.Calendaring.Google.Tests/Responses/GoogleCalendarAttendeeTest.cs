@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Calendaring.Google.Tests
+namespace ICD.Connect.Calendaring.Google.Tests.Responses
 {
 	[TestFixture]
 	public sealed class GoogleCalendarAttendeeTest

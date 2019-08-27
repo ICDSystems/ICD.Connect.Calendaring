@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
 using ICD.Connect.Calendaring.Google.Responses;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace ICD.Connect.Calendaring.Google.Tests
+namespace ICD.Connect.Calendaring.Google.Tests.Responses
 {
 	[TestFixture]
 	public sealed class GoogleCalendarEventTest
@@ -100,7 +99,7 @@ namespace ICD.Connect.Calendaring.Google.Tests
 			Assert.AreEqual(new DateTime(2019, 5, 20, 21, 0, 0), calendarEvent.End.DateTime);
 			Assert.AreEqual("7n8tpj21o1u1n19f4k5pcurhuf@google.com", calendarEvent.ICalUid);
 			Assert.AreEqual("0", calendarEvent.Sequence);
-			Assert.AreEqual(7,calendarEvent.Attendees.Length);
+			Assert.AreEqual(7, calendarEvent.Attendees.Length);
 			Assert.AreEqual(true, calendarEvent.Reminders.UseDefault);
 		}
 	}

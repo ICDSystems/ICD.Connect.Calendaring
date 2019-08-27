@@ -10,7 +10,6 @@ using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Devices.iCalendar.Parser;
-using ICD.Connect.Calendaring.iCalendar.Controls.Calendar;
 using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Devices.iCalendar

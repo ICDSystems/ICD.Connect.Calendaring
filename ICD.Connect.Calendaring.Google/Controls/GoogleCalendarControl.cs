@@ -9,11 +9,10 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Booking;
 using ICD.Connect.Calendaring.Controls;
-using ICD.Connect.Calendaring.Google.Controls;
 using ICD.Connect.Calendaring.Google.Responses;
 using ICD.Connect.Conferencing.DialContexts;
 
-namespace ICD.Connect.Calendaring.Google
+namespace ICD.Connect.Calendaring.Google.Controls
 {
 	public sealed class GoogleCalendarControl : AbstractCalendarControl<GoogleCalendarDevice>
 	{

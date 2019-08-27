@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Booking;
-using ICD.Connect.Calendaring.Devices.iCalendar.Parser;
 using ICD.Connect.Conferencing.DialContexts;
 
-namespace ICD.Connect.Calendaring.iCalendar.Controls.Calendar
+namespace ICD.Connect.Calendaring.Devices.iCalendar.Parser
 {
 // ReSharper disable InconsistentNaming
 	public sealed class iCalendarBooking : AbstractBooking
