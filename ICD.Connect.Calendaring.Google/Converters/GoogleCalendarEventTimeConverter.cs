@@ -14,7 +14,7 @@ namespace ICD.Connect.Calendaring.Google.Converters
 			switch (property)
 			{
 				case ATTRIBUTE_DATE_TIME:
-					instance.DateTime = reader.GetValueAsDateTime();
+					instance.DateTime = reader.GetValueAsDateTime().ToUniversalTime();
 					break;
 				default:
 					base.ReadProperty(property, reader, instance, serializer);

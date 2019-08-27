@@ -48,10 +48,10 @@ namespace ICD.Connect.Calendaring.Google.Converters
 					instance.HtmlLink = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_CREATED:
-					instance.Created = reader.GetValueAsDateTime();
+					instance.Created = reader.GetValueAsDateTime().ToUniversalTime();
 					break;
 				case ATTRIBUTE_UPDATED:
-					instance.Updated = reader.GetValueAsDateTime();
+					instance.Updated = reader.GetValueAsDateTime().ToUniversalTime();
 					break;
 				case ATTRIBUTE_SUMMARY:
 					instance.Summary = reader.GetValueAsString();
