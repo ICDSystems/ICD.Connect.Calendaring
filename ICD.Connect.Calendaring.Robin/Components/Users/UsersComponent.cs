@@ -70,7 +70,9 @@ namespace ICD.Connect.Calendaring.Robin.Components.Users
 		/// <returns></returns>
 		private User GetUserInfo(string userId)
 		{
-			string path = string.Format("users/{0}", userId);
+			string path = string.Format("organizations/{0}/users/{1}",
+			                            Uri.EscapeDataString(Parent.OrganizationId),
+			                            Uri.EscapeDataString(userId));
 
 			string data = Parent.Request(path);
 

@@ -13,6 +13,7 @@ namespace ICD.Connect.Calendaring.Robin
 		private const string PORT_ELEMENT = "Port";
 		private const string TOKEN_ELEMENT = "Token";
 		private const string RESOURCEID_ELEMENT = "ResourceId";
+		private const string ORGANIZATIONID_ELEMENT = "OrganizationId";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
@@ -30,6 +31,8 @@ namespace ICD.Connect.Calendaring.Robin
 		public string Token { get; set; }
 
 		public string ResourceId { get; set; }
+
+		public string OrganizationId { get; set; }
 
 		public string CalendarParsingPath { get; set; }
 
@@ -109,6 +112,7 @@ namespace ICD.Connect.Calendaring.Robin
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(TOKEN_ELEMENT, Token);
 			writer.WriteElementString(RESOURCEID_ELEMENT, ResourceId);
+			writer.WriteElementString(ORGANIZATIONID_ELEMENT, OrganizationId);
 			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
@@ -125,6 +129,7 @@ namespace ICD.Connect.Calendaring.Robin
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			Token = XmlUtils.TryReadChildElementContentAsString(xml, TOKEN_ELEMENT);
 			ResourceId = XmlUtils.TryReadChildElementContentAsString(xml, RESOURCEID_ELEMENT);
+			OrganizationId = XmlUtils.TryReadChildElementContentAsString(xml, ORGANIZATIONID_ELEMENT);
 			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
 			                      DEFAULT_CALENDAR_PARSING_PATH;
 

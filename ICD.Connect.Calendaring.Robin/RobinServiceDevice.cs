@@ -65,6 +65,8 @@ namespace ICD.Connect.Calendaring.Robin
 
 		public string ResourceId { get; set; }
 
+		public string OrganizationId { get; set; }
+
 		public CalendarParserCollection CalendarParserCollection { get { return m_CalendarParserCollection; } }
 
 		#endregion
@@ -248,6 +250,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			Token = settings.Token;
 			ResourceId = settings.ResourceId;
+			OrganizationId = settings.OrganizationId;
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
@@ -279,6 +282,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			Token = null;
 			ResourceId = null;
+			OrganizationId = null;
 			SetPort(null);
 
 			m_UriProperties.Clear();
@@ -296,6 +300,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			settings.Token = Token;
 			settings.ResourceId = ResourceId;
+			settings.OrganizationId = OrganizationId;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
