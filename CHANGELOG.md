@@ -6,13 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Added an Organization ID Attribute to Robin Service Device settings that is now a part of the UserID request
+
 ## [7.3.0] - 2019-09-16
 ### Changed
  - Fixed a bug with Google calendar timezones
  - Office365 creation and modification dates are deserialized to DateTime
  - Google private key is sanitized to better support keys copied directly from google
  - Office365 is configured with a user email address instead of a user ID
- - Added an Organization ID Attribute to Robin Service Device settings that is now a part of the UserID request
 
 ## [7.2.0] - 2019-08-13
 ### Added 
