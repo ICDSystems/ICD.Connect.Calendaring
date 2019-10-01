@@ -214,7 +214,7 @@ namespace ICD.Connect.Calendaring.Google
 			PrivateKey = null;
 			SetPort(null);
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		/// <summary>

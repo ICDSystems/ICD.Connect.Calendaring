@@ -83,9 +83,9 @@ namespace ICD.Connect.Calendaring.Robin
 		/// <summary>
 		/// Clears the configured values.
 		/// </summary>
-		void IUriProperties.Clear()
+		void IUriProperties.ClearUriProperties()
 		{
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		#endregion

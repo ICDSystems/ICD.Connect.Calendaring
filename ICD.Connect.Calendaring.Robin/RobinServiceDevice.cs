@@ -285,7 +285,7 @@ namespace ICD.Connect.Calendaring.Robin
 			OrganizationId = null;
 			SetPort(null);
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		/// <summary>

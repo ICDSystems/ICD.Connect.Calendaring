@@ -222,7 +222,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			SetPort(null);
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		/// <summary>

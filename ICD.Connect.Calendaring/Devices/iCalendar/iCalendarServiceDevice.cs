@@ -208,7 +208,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 
 			SetPort(null);
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		/// <summary>

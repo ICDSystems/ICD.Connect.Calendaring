@@ -76,9 +76,9 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		/// <summary>
 		/// Clears the configured values.
 		/// </summary>
-		void IUriProperties.Clear()
+		void IUriProperties.ClearUriProperties()
 		{
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		#endregion

@@ -513,7 +513,7 @@ namespace ICD.Connect.Calendaring.Asure
 			ResourceId = 0;
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
 
-			m_UriProperties.Clear();
+			m_UriProperties.ClearUriProperties();
 		}
 
 		/// <summary>
