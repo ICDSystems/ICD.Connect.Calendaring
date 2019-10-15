@@ -18,6 +18,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 // ReSharper restore InconsistentNaming
 	{
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
 
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
@@ -36,6 +37,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public iCalendarServiceDevice()
 		{
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
 
 			m_CalendarParserCollection = new CalendarParserCollection();
 
@@ -78,13 +80,11 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public iCalendarCalendar GetCalendar()
 		{
 			string result;
-			if (!m_Port.Get(null, out result))
-			{
-				Log(eSeverity.Error, "Failed to get calendar - {0}", result);
-				return null;
-			}
+			if (m_Port.Get(null, out result))
+				return iCalendarCalendar.Deserialize(result);
 
-			return iCalendarCalendar.Deserialize(result);
+			Log(eSeverity.Error, "Failed to get calendar - {0}", result);
+			return null;
 		}
 
 		/// <summary>
@@ -95,7 +95,10 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		{
 			// URI
 			if (port != null)
+			{
 				port.ApplyDeviceConfiguration(m_UriProperties);
+				port.ApplyDeviceConfiguration(m_WebProxyProperties);
+			}
 		}
 
 		#endregion
@@ -177,6 +180,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			base.ApplySettingsFinal(settings, factory);
 
 			m_UriProperties.Copy(settings);
+			m_WebProxyProperties.Copy(settings);
 
 			SetCalendarParsers(settings.CalendarParsingPath);
 
@@ -209,6 +213,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			SetPort(null);
 
 			m_UriProperties.ClearUriProperties();
+			m_WebProxyProperties.ClearProxyProperties();
 		}
 
 		/// <summary>
@@ -224,6 +229,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
+			settings.Copy(m_WebProxyProperties);
 		}
 
 		#endregion
@@ -236,11 +242,5 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public override string ConsoleHelp { get { return "The iCalendar service device"; } }
 
 		#endregion
-
-
-		//public IEnumerable<iCalendarEvent> GetEvents()
-
 	}
-
-// ReSharper disable InconsistentNaming
 }

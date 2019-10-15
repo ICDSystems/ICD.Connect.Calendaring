@@ -8,17 +8,18 @@ using ICD.Connect.Settings.Attributes.SettingsProperties;
 namespace ICD.Connect.Calendaring.Robin
 {
 	[KrangSettings("RobinServiceDevice", typeof(RobinServiceDevice))]
-	public sealed class RobinServiceDeviceSettings : AbstractDeviceSettings, IUriSettings
+	public sealed class RobinServiceDeviceSettings : AbstractDeviceSettings, IUriSettings, IWebProxySettings
 	{
 		private const string PORT_ELEMENT = "Port";
 		private const string TOKEN_ELEMENT = "Token";
-		private const string RESOURCEID_ELEMENT = "ResourceId";
-		private const string ORGANIZATIONID_ELEMENT = "OrganizationId";
-		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
+		private const string RESOURCE_ID_ELEMENT = "ResourceId";
+		private const string ORGANIZATION_ID_ELEMENT = "OrganizationId";
+		private const string CALENDAR_PARSING_ELEMENT = "CalendarParsing";
 
 		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
 
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
 
 		#region Properties
 
@@ -90,6 +91,52 @@ namespace ICD.Connect.Calendaring.Robin
 
 		#endregion
 
+		#region Proxy
+
+		/// <summary>
+		/// Gets/sets the configurable proxy username.
+		/// </summary>
+		public string ProxyUsername { get { return m_WebProxyProperties.ProxyUsername; } set { m_WebProxyProperties.ProxyUsername = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy password.
+		/// </summary>
+		public string ProxyPassword { get { return m_WebProxyProperties.ProxyPassword; } set { m_WebProxyProperties.ProxyPassword = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy host.
+		/// </summary>
+		public string ProxyHost { get { return m_WebProxyProperties.ProxyHost; } set { m_WebProxyProperties.ProxyHost = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy port.
+		/// </summary>
+		public ushort? ProxyPort { get { return m_WebProxyProperties.ProxyPort; } set { m_WebProxyProperties.ProxyPort = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy scheme.
+		/// </summary>
+		public string ProxyScheme { get { return m_WebProxyProperties.ProxyScheme; } set { m_WebProxyProperties.ProxyScheme = value; } }
+
+		/// <summary>
+		/// Gets/sets the configurable proxy authentication method.
+		/// </summary>
+		public eProxyAuthenticationMethod? ProxyAuthenticationMethod
+		{
+			get { return m_WebProxyProperties.ProxyAuthenticationMethod; }
+			set { m_WebProxyProperties.ProxyAuthenticationMethod = value; }
+		}
+
+		/// <summary>
+		/// Clears the configured values.
+		/// </summary>
+		public void ClearProxyProperties()
+		{
+			m_WebProxyProperties.ClearProxyProperties();
+		}
+
+		#endregion
+
 		/// <summary>
 		/// Constructor.
 		/// </summary>
@@ -98,6 +145,8 @@ namespace ICD.Connect.Calendaring.Robin
 			CalendarParsingPath = DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
+
 			UpdateUriDefaults();
 		}
 
@@ -111,11 +160,12 @@ namespace ICD.Connect.Calendaring.Robin
 
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
 			writer.WriteElementString(TOKEN_ELEMENT, Token);
-			writer.WriteElementString(RESOURCEID_ELEMENT, ResourceId);
-			writer.WriteElementString(ORGANIZATIONID_ELEMENT, OrganizationId);
-			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
+			writer.WriteElementString(RESOURCE_ID_ELEMENT, ResourceId);
+			writer.WriteElementString(ORGANIZATION_ID_ELEMENT, OrganizationId);
+			writer.WriteElementString(CALENDAR_PARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
+			m_WebProxyProperties.WriteElements(writer);
 		}
 
 		/// <summary>
@@ -128,12 +178,13 @@ namespace ICD.Connect.Calendaring.Robin
 
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			Token = XmlUtils.TryReadChildElementContentAsString(xml, TOKEN_ELEMENT);
-			ResourceId = XmlUtils.TryReadChildElementContentAsString(xml, RESOURCEID_ELEMENT);
-			OrganizationId = XmlUtils.TryReadChildElementContentAsString(xml, ORGANIZATIONID_ELEMENT);
-			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
+			ResourceId = XmlUtils.TryReadChildElementContentAsString(xml, RESOURCE_ID_ELEMENT);
+			OrganizationId = XmlUtils.TryReadChildElementContentAsString(xml, ORGANIZATION_ID_ELEMENT);
+			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDAR_PARSING_ELEMENT) ??
 			                      DEFAULT_CALENDAR_PARSING_PATH;
 
 			m_UriProperties.ParseXml(xml);
+			m_WebProxyProperties.ParseXml(xml);
 
 			UpdateUriDefaults();
 		}

@@ -23,6 +23,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 	public sealed class Office365CalendarDevice : AbstractDevice<Office365CalendarDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
+
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
 		private string m_CalendarParsingPath;
@@ -51,6 +53,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		public Office365CalendarDevice()
 		{
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
+
 			m_CalendarParserCollection = new CalendarParserCollection();
 
 			Controls.Add(new Office365CalendarControl(this, Controls.Count));
@@ -99,7 +103,10 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		{
 			// URI
 			if (port != null)
+			{
 				port.ApplyDeviceConfiguration(m_UriProperties);
+				port.ApplyDeviceConfiguration(m_WebProxyProperties);
+			}
 		}
 
 		#endregion
@@ -181,6 +188,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			base.ApplySettingsFinal(settings, factory);
 
 			m_UriProperties.Copy(settings);
+			m_WebProxyProperties.Copy(settings);
 
 			Tenant = settings.Tenant;
 			Client = settings.Client;
@@ -223,6 +231,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			SetPort(null);
 
 			m_UriProperties.ClearUriProperties();
+			m_WebProxyProperties.ClearProxyProperties();
 		}
 
 		/// <summary>
@@ -243,6 +252,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
+			settings.Copy(m_WebProxyProperties);
 		}
 
 		#endregion

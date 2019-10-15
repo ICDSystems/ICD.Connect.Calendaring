@@ -24,6 +24,8 @@ namespace ICD.Connect.Calendaring.Google
 	public sealed class GoogleCalendarDevice : AbstractDevice<GoogleCalendarDeviceSettings>
 	{
 		private readonly UriProperties m_UriProperties;
+		private readonly WebProxyProperties m_WebProxyProperties;
+
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
 		private string m_CalendarParsingPath;
@@ -46,6 +48,7 @@ namespace ICD.Connect.Calendaring.Google
 		public GoogleCalendarDevice()
 		{
 			m_UriProperties = new UriProperties();
+			m_WebProxyProperties = new WebProxyProperties();
 			m_CalendarParserCollection = new CalendarParserCollection();
 
 			Controls.Add(new GoogleCalendarControl(this, Controls.Count));
@@ -94,7 +97,10 @@ namespace ICD.Connect.Calendaring.Google
 		{
 			// URI
 			if (port != null)
+			{
 				port.ApplyDeviceConfiguration(m_UriProperties);
+				port.ApplyDeviceConfiguration(m_WebProxyProperties);
+			}
 		}
 
 		#endregion
@@ -176,6 +182,8 @@ namespace ICD.Connect.Calendaring.Google
 			base.ApplySettingsFinal(settings, factory);
 
 			m_UriProperties.Copy(settings);
+			m_WebProxyProperties.Copy(settings);
+
 			ClientEmail = settings.ClientEmail;
 			CalendarId = settings.CalendarId;
 			PrivateKey = settings.PrivateKey;
@@ -208,13 +216,13 @@ namespace ICD.Connect.Calendaring.Google
 
 			m_CalendarParserCollection.ClearMatchers();
 
-
 			ClientEmail = null;
 			CalendarId = null;
 			PrivateKey = null;
 			SetPort(null);
 
 			m_UriProperties.ClearUriProperties();
+			m_WebProxyProperties.ClearProxyProperties();
 		}
 
 		/// <summary>
@@ -234,10 +242,13 @@ namespace ICD.Connect.Calendaring.Google
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
 
 			settings.Copy(m_UriProperties);
+			settings.Copy(m_WebProxyProperties);
 		}
 
 		#endregion
+
 		#region Console
+
 		public override string ConsoleHelp { get { return "The Google service device"; } }
 
 		public override IEnumerable<IConsoleCommand> GetConsoleCommands()
