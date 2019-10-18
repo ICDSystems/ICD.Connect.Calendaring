@@ -52,6 +52,10 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar.Parser
 			get { return m_Event.Class != "PUBLIC"; }  
 		}
 
+		public override bool CheckedIn { get { return false; } }
+
+		public override bool CheckedOut { get { return false; } }
+
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			return m_DialContexts.ToArray(m_DialContexts.Count);

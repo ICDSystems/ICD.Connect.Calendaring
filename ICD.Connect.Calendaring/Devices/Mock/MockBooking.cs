@@ -5,7 +5,7 @@ using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Devices.Mock
 {
-	public class MockBooking : AbstractBooking
+	public sealed class MockBooking : AbstractBooking
 	{
 		private readonly string m_MeetingName;
         private readonly string m_OrganizerName;
@@ -13,6 +13,8 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		private readonly DateTime m_StartTime;
 		private readonly DateTime m_EndTime;
 		private readonly bool m_IsPrivate;
+		private readonly bool m_CheckedIn;
+		private readonly bool m_CheckedOut;
 
 		public override string MeetingName
 		{
@@ -40,12 +42,22 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 			get { return m_IsPrivate; }
 		}
 
+		public override bool CheckedIn
+		{
+			get { return m_CheckedIn; }
+		}
+
+		public override bool CheckedOut
+		{
+			get { return m_CheckedOut; }
+		}
+
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			return new List<IDialContext>{ new PstnDialContext { DialString = "5555555555" } };
 		}
 
-		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate)
+		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate, bool checkedIn, bool checkedOut)
 		{
 			m_MeetingName = meetingName;
             m_OrganizerName = organizerName;
@@ -53,6 +65,8 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 			m_StartTime = startTime;
 			m_EndTime = endTime;
 			m_IsPrivate = isPrivate;
+			m_CheckedIn = checkedIn;
+			m_CheckedOut = checkedOut;
 		}
 	}
 }

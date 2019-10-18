@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ICD.Connect.Calendaring.Google.Converters;
 using Newtonsoft.Json;
 

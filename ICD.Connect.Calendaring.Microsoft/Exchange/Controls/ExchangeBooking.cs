@@ -52,6 +52,16 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 		/// </summary>
 		public override bool IsPrivate { get { return false; } }
 
+		/// <summary>
+		/// Returns true if the booking is checked in.
+		/// </summary>
+		public override bool CheckedIn { get { return m_CalendarEvent.ResponseStatus == ResponseStatus.Accepted; } }
+
+		/// <summary>
+		/// Returns true if the booking is checked out.
+		/// </summary>
+		public override bool CheckedOut { get { return false; } }
+
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			return m_BookingNumbers.ToArray(m_BookingNumbers.Count);

@@ -55,11 +55,11 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 			DateTime timeNow = IcdEnvironment.GetLocalTime();
 			DateTime defaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
 
-			m_BookingList.Add(new MockBooking("Old Meeting 1", "The Organizer1", "Organizer1@email.biz", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true));
-			m_BookingList.Add(new MockBooking("Old Meeting 2", "The Organizer2", "Organizer2@email.biz", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1), false));
-			m_BookingList.Add(new MockBooking("New Meeting 1", "The Organizer3", "Organizer3@email.biz", defaultMeetingTime, defaultMeetingTime.AddMinutes(30), false));
-			m_BookingList.Add(new MockBooking("New Meeting 2", "The Organizer4", "Organizer4@email.biz", defaultMeetingTime.AddHours(1), defaultMeetingTime.AddHours(1).AddMinutes(30), true));
-			m_BookingList.Add(new MockBooking("New Meeting 3", "The Organizer5", "Organizer5@email.biz", defaultMeetingTime.AddHours(2), defaultMeetingTime.AddHours(2).AddMinutes(30), false));
+			m_BookingList.Add(new MockBooking("Old Meeting 1", "The Organizer1", "Organizer1@email.biz", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true, false, false));
+			m_BookingList.Add(new MockBooking("Old Meeting 2", "The Organizer2", "Organizer2@email.biz", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1), false, false, false));
+			m_BookingList.Add(new MockBooking("New Meeting 1", "The Organizer3", "Organizer3@email.biz", defaultMeetingTime, defaultMeetingTime.AddMinutes(30), false, false, false));
+			m_BookingList.Add(new MockBooking("New Meeting 2", "The Organizer4", "Organizer4@email.biz", defaultMeetingTime.AddHours(1), defaultMeetingTime.AddHours(1).AddMinutes(30), true, false, false));
+			m_BookingList.Add(new MockBooking("New Meeting 3", "The Organizer5", "Organizer5@email.biz", defaultMeetingTime.AddHours(2), defaultMeetingTime.AddHours(2).AddMinutes(30), false, false, false));
 
 			OnBookingsChanged.Raise(this);
 		}
@@ -70,6 +70,38 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		public override IEnumerable<IBooking> GetBookings()
 		{
 			return m_BookingList;
+		}
+
+		public override bool CanCheckIn(IBooking booking)
+		{
+			return true;
+		}
+
+		public override bool CanCheckOut(IBooking booking)
+		{
+			return true;
+		}
+
+		public override void CheckIn(IBooking booking)
+		{
+			int index = m_BookingList.FindIndex(b => b == booking);
+			if (index < 0)
+				throw new ArgumentException();
+
+			m_BookingList[index] =
+				new MockBooking(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail,
+				                booking.StartTime, booking.EndTime, booking.IsPrivate, true, false);
+		}
+
+		public override void CheckOut(IBooking booking)
+		{
+			int index = m_BookingList.FindIndex(b => b == booking);
+			if (index < 0)
+				throw new ArgumentException();
+
+			m_BookingList[index] =
+				new MockBooking(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail,
+				                booking.StartTime, booking.EndTime, booking.IsPrivate, false, true);
 		}
 	}
 }

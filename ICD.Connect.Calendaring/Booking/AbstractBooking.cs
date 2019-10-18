@@ -37,6 +37,16 @@ namespace ICD.Connect.Calendaring.Booking
 		public abstract bool IsPrivate { get; }
 
 		/// <summary>
+		/// Returns true if the booking is checked in.
+		/// </summary>
+		public abstract bool CheckedIn { get; }
+
+		/// <summary>
+		/// Returns true if the booking is checked out.
+		/// </summary>
+		public abstract bool CheckedOut { get; }
+
+		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>
 		public abstract IEnumerable<IDialContext> GetBookingNumbers();

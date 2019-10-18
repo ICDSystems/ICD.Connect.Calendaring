@@ -99,5 +99,25 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		{
 			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
+
+		public override bool CanCheckIn(IBooking booking)
+		{
+			return false;
+		}
+
+		public override bool CanCheckOut(IBooking booking)
+		{
+			return false;
+		}
+
+		public override void CheckIn(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
+
+		public override void CheckOut(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
 	}
 }

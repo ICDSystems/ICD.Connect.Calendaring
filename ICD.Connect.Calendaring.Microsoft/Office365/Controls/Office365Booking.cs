@@ -43,6 +43,9 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		/// </summary>
 		public override bool IsPrivate { get { return false; } }
 
+		public override bool CheckedIn { get { return false; } }
+		public override bool CheckedOut { get { return false; } }
+
 		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>

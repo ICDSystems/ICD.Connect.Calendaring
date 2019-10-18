@@ -94,5 +94,25 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		{
 			return m_BookingSection.Execute(() => m_Bookings.Values.ToArray(m_Bookings.Count));
 		}
+
+		public override bool CanCheckIn(IBooking booking)
+		{
+			return false;
+		}
+
+		public override bool CanCheckOut(IBooking booking)
+		{
+			return false;
+		}
+
+		public override void CheckIn(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
+
+		public override void CheckOut(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
 	}
 }

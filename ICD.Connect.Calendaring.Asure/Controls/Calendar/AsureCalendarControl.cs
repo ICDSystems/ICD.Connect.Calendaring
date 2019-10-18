@@ -80,6 +80,51 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			return m_BookingSection.Execute(() => m_ReservationToBooking.Values.ToArray(m_ReservationToBooking.Count));
 		}
 
+		/// <summary>
+		/// Returns true if the booking argument can be checked in.
+		/// </summary>
+		/// <returns></returns>
+		public override bool CanCheckIn(IBooking booking)
+		{
+			return Parent.CanCheckIn();
+		}
+
+		/// <summary>
+		/// Returns true if the booking argument can be checked out of.
+		/// </summary>
+		/// <param name="booking"></param>
+		/// <returns></returns>
+		public override bool CanCheckOut(IBooking booking)
+		{
+			return Parent.CanCheckOut();
+		}
+
+		/// <summary>
+		/// Checks in to the specified booking.
+		/// </summary>
+		/// <param name="booking"></param>
+		public override void CheckIn(IBooking booking)
+		{
+			if (!CanCheckIn(booking))
+				return;
+
+			var reservationData = m_ReservationToBooking.FirstOrDefault(b => b.Value == booking).Key;
+			Parent.CheckIn(reservationData.ReservationBaseData.Id);
+		}
+
+		/// <summary>
+		/// Checks out of the specified booking.
+		/// </summary>
+		/// <param name="booking"></param>
+		public override void CheckOut(IBooking booking)
+		{
+			if (!CanCheckOut(booking))
+				return;
+
+			var reservationData = m_ReservationToBooking.FirstOrDefault(b => b.Value == booking).Key;
+			Parent.CheckOut(reservationData.ReservationBaseData.Id);
+		}
+
 		#endregion
 
 		private void ParentOnCacheUpdated(object sender, EventArgs eventArgs)

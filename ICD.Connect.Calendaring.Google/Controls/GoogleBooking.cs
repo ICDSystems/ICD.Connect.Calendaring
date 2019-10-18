@@ -44,6 +44,16 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		public override bool IsPrivate { get { return false; } }
 
 		/// <summary>
+		/// Returns true if the booking is checked in.
+		/// </summary>
+		public override bool CheckedIn { get { return false; } }
+
+		/// <summary>
+		/// Returns true if the booking is checked out.
+		/// </summary>
+		public override bool CheckedOut { get { return false; } }
+
+		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>
 		public override IEnumerable<IDialContext> GetBookingNumbers()

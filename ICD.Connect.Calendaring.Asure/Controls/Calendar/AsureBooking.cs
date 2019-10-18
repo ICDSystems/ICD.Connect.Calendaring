@@ -63,6 +63,16 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override bool IsPrivate { get { return false; } }
 
+		/// <summary>
+		/// Returns true if the booking is checked in.
+		/// </summary>
+		public override bool CheckedIn { get { return m_Reservation.CheckedIn; } }
+
+		/// <summary>
+		/// Returns true if the booking is checked out.
+		/// </summary>
+		public override bool CheckedOut { get { return !m_Reservation.CheckedIn && m_Reservation.RequiresCheckInCheckOut; } }
+
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
 			return m_DialContexts.ToArray(m_DialContexts.Count);

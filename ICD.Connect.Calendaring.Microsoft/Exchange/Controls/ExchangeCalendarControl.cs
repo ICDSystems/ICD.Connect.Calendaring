@@ -99,5 +99,33 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 		{
 			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
+
+		/// <summary>
+		/// Returns true if the booking argument can be checked in.
+		/// </summary>
+		/// <returns></returns>
+		public override bool CanCheckIn(IBooking booking)
+		{
+			return false;
+		}
+
+		public override bool CanCheckOut(IBooking booking)
+		{
+			return false;
+		}
+
+		/// <summary>
+		/// Checks in to the specified booking.
+		/// </summary>
+		/// <param name="booking"></param>
+		public override void CheckIn(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
+
+		public override void CheckOut(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
 	}
 }
