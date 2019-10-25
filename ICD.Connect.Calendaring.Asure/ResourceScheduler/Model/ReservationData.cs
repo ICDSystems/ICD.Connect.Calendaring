@@ -16,11 +16,20 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Model
 		[PublicAPI]
 		public int CheckedInBy { get; private set; }
 
+		[PublicAPI]
+		public int CheckedOutBy { get; private set; }
+
 		/// <summary>
 		/// Convenience for determining if the reservation is currently checked in.
 		/// </summary>
 		[PublicAPI]
 		public bool CheckedIn { get { return CheckedInBy != 0; } }
+
+		/// <summary>
+		/// Convenience for determining if the reservation is currently checked out.
+		/// </summary>
+		[PublicAPI]
+		public bool CheckedOut { get { return CheckedOutBy != 0; } }
 
 		[PublicAPI]
 		public bool RequiresCheckInCheckOut { get; private set; }
@@ -40,6 +49,7 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Model
 				ReservationBaseData = ReservationBaseData.FromXml(reservationBaseDataXml),
 				ScheduleData = ScheduleData.FromXml(scheduleDataXml),
 				CheckedInBy = XmlUtils.TryReadChildElementContentAsInt(xml, "CheckedInBy") ?? 0,
+				CheckedOutBy = XmlUtils.TryReadChildElementContentAsInt(xml, "CheckedOutBy") ?? 0,
 				RequiresCheckInCheckOut = XmlUtils.TryReadChildElementContentAsBoolean(xml, "RequiresCheckInCheckOut") ?? false
 			};
 		}
