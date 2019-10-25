@@ -1,0 +1,34 @@
+Here are the links to the Help guides for the SOAP and REST APIs.
+
+ 
+
+SOAP API
+
+----------------
+
+https://rsapi.resourcescheduler.net/ResourceScheduler.WebService/ResourceSchedulerService.asmx
+
+https://rsapi.resourcescheduler.net/ResourceScheduler.Planning.WebService/ResourceSchedulerPlanningService.asmx
+
+
+REST API
+
+---------------
+
+https://rsapi.resourcescheduler.net/NowSpace/Help
+
+ 
+
+You can use the following credentials to login to the web application and create reservations:
+
+ 
+
+Username: drew.tingen@icdsystems.com
+
+Password: M3tL!fe
+
+ 
+
+The end user website for creating reservations is:
+
+https://rsapi.resourcescheduler.net/resourcescheduler
