@@ -71,7 +71,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <summary>
 		/// Returns true if the booking is checked out.
 		/// </summary>
-		public override bool CheckedOut { get { return !m_Reservation.CheckedIn && m_Reservation.RequiresCheckInCheckOut; } }
+		public override bool CheckedOut { get { return m_Reservation.CheckedOut; } }
 
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{

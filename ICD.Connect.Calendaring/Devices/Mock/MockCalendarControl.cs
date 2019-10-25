@@ -86,7 +86,7 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		{
 			int index = m_BookingList.FindIndex(b => b == booking);
 			if (index < 0)
-				throw new ArgumentException();
+				throw new ArgumentException("The specified booking is not in the bookings list", "booking");
 
 			m_BookingList[index] =
 				new MockBooking(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail,
@@ -97,7 +97,7 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		{
 			int index = m_BookingList.FindIndex(b => b == booking);
 			if (index < 0)
-				throw new ArgumentException();
+				throw new ArgumentException("The specified booking is not in the bookings list", "booking");
 
 			m_BookingList[index] =
 				new MockBooking(booking.MeetingName, booking.OrganizerName, booking.OrganizerEmail,

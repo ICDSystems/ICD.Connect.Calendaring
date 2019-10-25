@@ -55,7 +55,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 		/// <summary>
 		/// Returns true if the booking is checked in.
 		/// </summary>
-		public override bool CheckedIn { get { return m_CalendarEvent.ResponseStatus == ResponseStatus.Accepted; } }
+		public override bool CheckedIn { get { return false; } }
 
 		/// <summary>
 		/// Returns true if the booking is checked out.

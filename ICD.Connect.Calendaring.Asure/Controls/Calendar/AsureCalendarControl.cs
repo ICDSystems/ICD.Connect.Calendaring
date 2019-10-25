@@ -106,7 +106,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public override void CheckIn(IBooking booking)
 		{
 			if (!CanCheckIn(booking))
-				return;
+				throw new ArgumentException("The specified booking does not support check ins.", "booking");
 
 			var reservationData = m_ReservationToBooking.FirstOrDefault(b => b.Value == booking).Key;
 			Parent.CheckIn(reservationData.ReservationBaseData.Id);
@@ -119,7 +119,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public override void CheckOut(IBooking booking)
 		{
 			if (!CanCheckOut(booking))
-				return;
+				throw new ArgumentException("The specified booking does not support check outs.", "booking");
 
 			var reservationData = m_ReservationToBooking.FirstOrDefault(b => b.Value == booking).Key;
 			Parent.CheckOut(reservationData.ReservationBaseData.Id);
