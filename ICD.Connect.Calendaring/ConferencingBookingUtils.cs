@@ -141,6 +141,7 @@ namespace ICD.Connect.Calendaring
 			switch (protocol)
 			{
 				case eDialProtocol.Zoom:
+				case eDialProtocol.ZoomContact:
 				case eDialProtocol.Sip:
 					return eMeetingType.VideoConference;
 
@@ -151,7 +152,7 @@ namespace ICD.Connect.Calendaring
 					return eMeetingType.Presentation;
 
 				default:
-					throw new ArgumentOutOfRangeException("extends");
+					throw new ArgumentOutOfRangeException("protocol");
 			}
 		}
 	}
