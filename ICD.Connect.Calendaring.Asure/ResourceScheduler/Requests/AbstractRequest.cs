@@ -60,12 +60,11 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 
 			string content = string.Format(TEMPLATE, XLMNS_NS, headerXml, bodyXml);
 
-			bool success;
-			string response;
+			WebPortResponse output;
 
 			try
 			{
-				success = port.DispatchSoap(action, content, out response);
+				output = port.DispatchSoap(action, content);
 			}
 			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
@@ -74,19 +73,19 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!success)
+			if (!output.Success)
 			{
 				string message = string.Format("{0} failed to dispatch", GetType().Name);
 				throw new InvalidOperationException(message);
 			}
 
-			if (string.IsNullOrEmpty(response))
+			if (string.IsNullOrEmpty(output.DataAsString))
 			{
 				string message = string.Format("{0} failed to dispatch - received empty response", GetType().Name);
 				throw new InvalidOperationException(message);
 			}
 
-			return ParseResponse(response);
+			return ParseResponse(output.DataAsString);
 		}
 
 		#region Private Methods

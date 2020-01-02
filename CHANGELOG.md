@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Fixed web requests to use new web port response.
+
 ## [7.5.0] - 2019-11-18
 ### Added
  - Calendar Check In/Check Out support

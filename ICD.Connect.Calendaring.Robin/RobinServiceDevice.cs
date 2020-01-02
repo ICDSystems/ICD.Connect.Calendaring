@@ -144,12 +144,11 @@ namespace ICD.Connect.Calendaring.Robin
 			if (m_Port == null)
 				throw new InvalidOperationException("Failed to make request - Port is null");
 
-			bool success;
-			string response;
+			WebPortResponse output;
 
 			try
 			{
-				success = m_Port.Get(path, m_Headers, out response);
+				output = m_Port.Get(path, m_Headers);
 			}
 			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
@@ -158,19 +157,19 @@ namespace ICD.Connect.Calendaring.Robin
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!success)
+			if (!output.Success)
 			{
 				string message = string.Format("Request did not succeed");
 				throw new InvalidOperationException(message);
 			}
 
-			if (string.IsNullOrEmpty(response))
+			if (string.IsNullOrEmpty(output.DataAsString))
 			{
 				string message = string.Format("Failed to make request - Received empty response");
 				throw new InvalidOperationException(message);
 			}
 
-			return JsonConvert.DeserializeObject<Dictionary<string, object>>(response)["data"].ToString();
+			return JsonConvert.DeserializeObject<Dictionary<string, object>>(output.DataAsString)["data"].ToString();
 		}
 
 		#endregion

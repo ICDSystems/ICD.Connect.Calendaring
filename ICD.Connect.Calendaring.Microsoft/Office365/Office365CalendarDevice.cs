@@ -299,16 +299,16 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			string url = string.Format("https://login.microsoftonline.com/{0}/oauth2/v2.0/token?scope={1}", Tenant, scope);
 
 			// Dispatch!
-			string result;
-			if (!m_Port.Post(url, headers, bodyData, out result))
+			WebPortResponse output = m_Port.Post(url, headers, bodyData);
+			if (!output.Success)
 			{
-				Log(eSeverity.Error, "Failed to get token - {0}", result);
+				Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
 				m_Token = null;
 				return null;
 			}
 
 			// Get the token string value out of the JSON
-			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(result);
+			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(output.DataAsString);
 
 			m_Token = response.AccessToken;
 			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
@@ -332,14 +332,14 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			                           IcdEnvironment.GetLocalTime().StartOfDay().ToUniversalTime().ToString("o"),
 			                           IcdEnvironment.GetLocalTime().EndOfDay().ToUniversalTime().ToString("o"));
 
-			string result;
-			bool success = m_Port.Get(url, headers, out result);
+			
+			WebPortResponse getResponse = m_Port.Get(url, headers);
 
 			CalendarViewResponse response = null;
-			if (!string.IsNullOrEmpty(result))
-				response = JsonConvert.DeserializeObject<CalendarViewResponse>(result);
+			if (!string.IsNullOrEmpty(getResponse.DataAsString))
+				response = JsonConvert.DeserializeObject<CalendarViewResponse>(getResponse.DataAsString);
 
-			if (!success)
+			if (!getResponse.Success)
 			{
 				if (response != null && response.Error != null)
 					throw new InvalidOperationException(response.Error.Message);
