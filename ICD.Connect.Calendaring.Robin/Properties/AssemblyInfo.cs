@@ -3,5 +3,5 @@ using System.Reflection;
 [assembly: AssemblyTitle("ICD.Connect.Calendaring.Robin")]
 [assembly: AssemblyCompany("ICD Systems")]
 [assembly: AssemblyProduct("ICD.Connect.Calendaring.Robin")]
-[assembly: AssemblyCopyright("Copyright © ICD Systems 2019")]
+[assembly: AssemblyCopyright("Copyright © ICD Systems 2020")]
 [assembly: AssemblyVersion("7.5.0.0")]
