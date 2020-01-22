@@ -74,12 +74,12 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 
 		public override bool CanCheckIn(IBooking booking)
 		{
-			return true;
+			return m_BookingList.Contains(booking);
 		}
 
 		public override bool CanCheckOut(IBooking booking)
 		{
-			return true;
+			return m_BookingList.Contains(booking);
 		}
 
 		public override void CheckIn(IBooking booking)
