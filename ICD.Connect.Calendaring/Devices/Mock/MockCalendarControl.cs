@@ -52,7 +52,7 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		{
 			m_BookingList.Clear();
 
-			DateTime timeNow = IcdEnvironment.GetLocalTime();
+			DateTime timeNow = IcdEnvironment.GetUtcTime();
 			DateTime defaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
 
 			m_BookingList.Add(new MockBooking("Old Meeting 1", "The Organizer1", "Organizer1@email.biz", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true, false, false));

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
  - Fixed web requests to use new web port response.
  - Fixed MockCalendarControl check-in/-out
+ - Calendar dates are tracked in UTC
 
 ## [7.5.0] - 2019-11-18
 ### Added

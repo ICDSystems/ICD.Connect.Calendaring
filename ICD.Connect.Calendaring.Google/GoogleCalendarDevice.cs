@@ -274,8 +274,8 @@ namespace ICD.Connect.Calendaring.Google
 		{
 			string payload =
 				@"{""iss"": ""calendar-service@calendaring.iam.gserviceaccount.com"", ""iat"": " +
-				(int)IcdEnvironment.GetLocalTime().ToUnixTimestamp() + @", ""exp"": " +
-				(int)(IcdEnvironment.GetLocalTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
+				(int)IcdEnvironment.GetUtcTime().ToUnixTimestamp() + @", ""exp"": " +
+				(int)(IcdEnvironment.GetUtcTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
 				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
 
 			// Build the request token
@@ -312,14 +312,14 @@ namespace ICD.Connect.Calendaring.Google
 			//Get the token string value out of the JSON
 			GoogleTokenResponse response = JsonConvert.DeserializeObject<GoogleTokenResponse>(output.DataAsString);
 			m_Token = response.AccessToken;
-			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
 			return m_Token;
 			//throw new NotImplementedException();
 		}
 
 		public IEnumerable<GoogleCalendarEvent> GetEvents()
 		{
-			if (m_Token == null || IcdEnvironment.GetLocalTime() >= m_TokenExpireTime)
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
 				RenewToken();
 
 			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}",

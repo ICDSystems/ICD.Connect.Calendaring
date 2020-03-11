@@ -83,7 +83,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Converters
 			switch (property)
 			{
 				case ATTR_DATE_TIME:
-					instance.DateTimeInfo = reader.GetValueAsDateTime();
+					instance.DateTimeInfo = reader.GetValueAsDateTime().ToUniversalTime();
 					break;
 
 				case ATTR_TIME_ZONE:

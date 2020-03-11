@@ -282,7 +282,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			m_Port.Accept = "*/*";
 
 			// Build request header
-			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>> { };
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>();
 			
 			// Build request body
 			Dictionary<string, string> body = new Dictionary<string, string>
@@ -311,14 +311,14 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(output.DataAsString);
 
 			m_Token = response.AccessToken;
-			m_TokenExpireTime = IcdEnvironment.GetLocalTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
 
 			return m_Token;
 		}
 
 		public IEnumerable<CalendarEvent> GetEvents()
 		{
-			if (m_Token == null || IcdEnvironment.GetLocalTime() >= m_TokenExpireTime)
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
 				RenewToken();
 
 			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>

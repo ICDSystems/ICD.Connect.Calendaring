@@ -133,7 +133,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 			ReservationData[] reservations =
 				Parent.GetReservations()
-				      .Where(r => r.ScheduleData.End > IcdEnvironment.GetLocalTime())
+				      .Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
 				      .Distinct()
 				      .ToArray();
 

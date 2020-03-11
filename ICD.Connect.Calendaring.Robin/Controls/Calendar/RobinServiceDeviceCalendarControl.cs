@@ -144,7 +144,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			Event[] events =
 				m_EventsComponent.GetEvents()
-				                 .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetLocalTime())
+				                 .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetUtcTime())
 				                 .Distinct()
 				                 .ToArray();
 

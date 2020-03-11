@@ -166,7 +166,7 @@ namespace ICD.Connect.Calendaring.Asure
 			try
 			{
 				return m_Cache.Values
-				              .Where(r => r.ScheduleData.End > IcdEnvironment.GetLocalTime())
+				              .Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
 				              .OrderBy(r => r.ScheduleData.Start)
 				              .ToArray();
 			}
@@ -211,7 +211,7 @@ namespace ICD.Connect.Calendaring.Asure
 			// This probably needs to move into metlife specific logic eventually.
 			double delta = MathUtils.MapRange((DateTime)reservation.ScheduleData.Start,
 			                                  (DateTime)reservation.ScheduleData.End,
-			                                  IcdEnvironment.GetLocalTime());
+			                                  IcdEnvironment.GetUtcTime());
 			return delta >= 0.0f && delta <= 0.5f;
 		}
 
@@ -271,7 +271,7 @@ namespace ICD.Connect.Calendaring.Asure
 		[PublicAPI]
 		public static bool IsReservationCurrent(ReservationData reservation)
 		{
-			DateTime now = IcdEnvironment.GetLocalTime();
+			DateTime now = IcdEnvironment.GetUtcTime();
 			return reservation.ScheduleData.Start <= now && reservation.ScheduleData.End > now;
 		}
 
@@ -381,7 +381,7 @@ namespace ICD.Connect.Calendaring.Asure
 
 			ReservationData[] data = result
 				.ReservationData
-				.Where(r => r.ScheduleData.End > IcdEnvironment.GetLocalTime())
+				.Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
 				.ToArray();
 
 			m_CacheSection.Enter();

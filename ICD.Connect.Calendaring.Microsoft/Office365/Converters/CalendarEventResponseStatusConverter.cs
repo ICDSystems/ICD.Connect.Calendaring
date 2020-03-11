@@ -19,7 +19,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 					instance.Response = reader.GetValueAsString();
 					break;
 				case ATTRIBUTE_TIME:
-					instance.Time = reader.GetValueAsDateTime();
+					instance.Time = reader.GetValueAsDateTime().ToUniversalTime();
 					break;
 				default:
 					base.ReadProperty(property, reader, instance, serializer);
