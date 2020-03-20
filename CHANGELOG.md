@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [8.0.0] - 2020-03-20
 ### Changed
  - Fixed web requests to use new web port response.
  - Fixed MockCalendarControl check-in/-out
