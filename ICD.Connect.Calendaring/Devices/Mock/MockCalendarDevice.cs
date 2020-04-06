@@ -1,8 +1,8 @@
-﻿using ICD.Connect.Devices;
+﻿using ICD.Connect.Devices.Mock;
 
 namespace ICD.Connect.Calendaring.Devices.Mock
 {
-	public sealed class MockCalendarDevice : AbstractDevice<MockCalendarDeviceSettings>
+	public sealed class MockCalendarDevice : AbstractMockDevice<MockCalendarDeviceSettings>
 	{
 		/// <summary>
 		/// Constructor.
@@ -11,15 +11,6 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		{
 			MockCalendarControl control = new MockCalendarControl(this, 1);
 			Controls.Add(control);
-		}
-
-		/// <summary>
-		/// Gets the current online status of the device.
-		/// </summary>
-		/// <returns></returns>
-		protected override bool GetIsOnlineStatus()
-		{
-			return true;
 		}
 	}
 }
