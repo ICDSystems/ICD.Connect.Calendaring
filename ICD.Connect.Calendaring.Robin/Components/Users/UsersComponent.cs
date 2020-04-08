@@ -49,7 +49,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Users
 			}
 			catch (Exception e)
 			{
-				Parent.Log(eSeverity.Error, "Failed to get user - {0}", e.Message);
+				Parent.Logger.Log(eSeverity.Error, "Failed to get user - {0}", e.Message);
 			}
 
 			m_Users.Add(userId, user);

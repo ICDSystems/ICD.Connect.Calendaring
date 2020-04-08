@@ -83,7 +83,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			if (respose.Success)
 				return iCalendarCalendar.Deserialize(respose.DataAsString);
 
-			Log(eSeverity.Error, "Failed to get calendar - {0}", respose.DataAsString);
+			Logger.Log(eSeverity.Error, "Failed to get calendar - {0}", respose.DataAsString);
 			return null;
 		}
 
@@ -162,7 +162,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
 		}
 
@@ -194,7 +194,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+					Logger.Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 				}
 			}
 

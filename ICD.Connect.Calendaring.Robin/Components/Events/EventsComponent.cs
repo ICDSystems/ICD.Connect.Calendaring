@@ -65,7 +65,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 	        }
 	        catch (Exception e)
 	        {
-		        Parent.Log(eSeverity.Error, "Failed to get reservations - {0}", e.Message);
+		        Parent.Logger.Log(eSeverity.Error, "Failed to get reservations - {0}", e.Message);
 	        }
 
             OnEventsUpdated.Raise(this);

@@ -124,7 +124,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			}
 			catch (Exception ex)
 			{
-				Log(eSeverity.Error, "Failed to get response - {0}", ex.Message);
+				Logger.Log(eSeverity.Error, "Failed to get response - {0}", ex.Message);
 				return Enumerable.Empty<Appointment>();
 			}
 		}
@@ -156,7 +156,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
 		}
 

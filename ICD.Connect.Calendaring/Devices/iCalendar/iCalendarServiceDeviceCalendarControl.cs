@@ -69,7 +69,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to get events - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to get events - {0}", e.Message);
 			}
 			finally
 			{

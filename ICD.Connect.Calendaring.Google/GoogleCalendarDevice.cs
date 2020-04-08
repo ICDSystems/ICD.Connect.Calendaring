@@ -164,7 +164,7 @@ namespace ICD.Connect.Calendaring.Google
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace ICD.Connect.Calendaring.Google
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+					Logger.Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 				}
 			}
 
@@ -304,7 +304,7 @@ namespace ICD.Connect.Calendaring.Google
 
 			if (!output.Success)
 			{
-				Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
+				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
 				m_Token = null;
 				return null;
 			}

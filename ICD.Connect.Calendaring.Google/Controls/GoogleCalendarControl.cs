@@ -72,7 +72,7 @@ namespace ICD.Connect.Calendaring.Google.Controls
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to get events - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to get events - {0}", e.Message);
 			}
 			finally
 			{

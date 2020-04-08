@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Logging.LoggingContexts;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
@@ -372,7 +373,7 @@ namespace ICD.Connect.Calendaring.Asure
 			// Request failed to dispatch
 			catch (InvalidOperationException e)
 			{
-				Log(eSeverity.Error, "Failed to refresh cache - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to refresh cache - {0}", e.Message);
 				return;
 			}
 
@@ -412,7 +413,7 @@ namespace ICD.Connect.Calendaring.Asure
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
+				Logger.Log(eSeverity.Error, e, "Failed to refresh Asure cache - {0}", e.Message);
 			}
 		}
 
@@ -459,7 +460,7 @@ namespace ICD.Connect.Calendaring.Asure
 			}
 			catch (Exception e)
 			{
-				Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
+				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
 		}
 
@@ -571,7 +572,7 @@ namespace ICD.Connect.Calendaring.Asure
 				}
 				catch (KeyNotFoundException)
 				{
-					Log(eSeverity.Error, "No web port with id {0}", settings.Port);
+					Logger.Log(eSeverity.Error, "No web port with id {0}", settings.Port);
 				}
 			}
 
