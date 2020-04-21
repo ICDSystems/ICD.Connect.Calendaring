@@ -10,7 +10,7 @@ using ICD.Connect.Devices.Controls;
 namespace ICD.Connect.Calendaring.Controls
 {
     public abstract class AbstractCalendarControl<T> : AbstractDeviceControl<T>, ICalendarControl
-	    where T : IDeviceBase
+	    where T : IDevice
     {
 	    /// <summary>
 	    /// Raised when bookings are added/removed.
