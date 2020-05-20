@@ -75,6 +75,12 @@
     <Compile Include="Bookings\Booking.cs" />
     <Compile Include="Bookings\eMeetingType.cs" />
     <Compile Include="Bookings\IBooking.cs" />
+    <Compile Include="CalendarPoints\AbstractCalendarPoint.cs" />
+    <Compile Include="CalendarPoints\AbstractCalendarPointSettings.cs" />
+    <Compile Include="CalendarPoints\CalendarPoint.cs" />
+    <Compile Include="CalendarPoints\CalendarPointSettings.cs" />
+    <Compile Include="CalendarPoints\ICalendarPoint.cs" />
+    <Compile Include="CalendarPoints\ICalendarPointSettings.cs" />
     <Compile Include="Controls\AbstractCalendarControl.cs" />
     <Compile Include="Controls\CalendarControlConsole.cs" />
     <Compile Include="Controls\ICalendarControl.cs" />
