@@ -54,6 +54,7 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 
 			DateTime timeNow = IcdEnvironment.GetUtcTime();
 			DateTime defaultMeetingTime = new DateTime(timeNow.Year, timeNow.Month, timeNow.Day, timeNow.Hour, 0, 0);
+			defaultMeetingTime = DateTime.SpecifyKind(defaultMeetingTime, DateTimeKind.Utc);
 
 			m_BookingList.Add(new MockBooking("Old Meeting 1", "The Organizer1", "Organizer1@email.biz", defaultMeetingTime.AddHours(-3), defaultMeetingTime.AddHours(-3).AddMinutes(30), true, false, false));
 			m_BookingList.Add(new MockBooking("Old Meeting 2", "The Organizer2", "Organizer2@email.biz", defaultMeetingTime.AddHours(-2).AddMinutes(30), defaultMeetingTime.AddHours(-1), false, false, false));
