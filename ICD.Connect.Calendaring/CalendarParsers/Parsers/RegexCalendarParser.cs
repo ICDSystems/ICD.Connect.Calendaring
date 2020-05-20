@@ -63,7 +63,7 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				PasswordGroup = XmlUtils.TryReadChildElementContentAsString(xml, "PasswordGroup"),
 				SubstitutionPattern = XmlUtils.TryReadChildElementContentAsString(xml, "ReplacePattern"),
 				SubstitutionReplacement = XmlUtils.TryReadChildElementContentAsString(xml, "ReplaceReplacement"),
-				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.None
+				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.Unknown
 			};
 		}
 	}

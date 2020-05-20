@@ -148,7 +148,7 @@ namespace ICD.Connect.Calendaring
 				case eDialProtocol.Pstn:
 					return eMeetingType.AudioConference;
 
-				case eDialProtocol.None:
+				case eDialProtocol.Unknown:
 					return eMeetingType.Presentation;
 
 				default:
