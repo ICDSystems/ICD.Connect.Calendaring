@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Common.Utils;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Bookings;
 
 namespace ICD.Connect.Calendaring.Controls
 {

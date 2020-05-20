@@ -7,7 +7,7 @@ using ICD.Common.Utils.Comparers;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
-using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Calendaring.Devices.iCalendar.Parser;
 using ICD.Connect.Conferencing.DialContexts;

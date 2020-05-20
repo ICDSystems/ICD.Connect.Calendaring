@@ -1,4 +1,4 @@
-﻿namespace ICD.Connect.Calendaring.Booking
+﻿namespace ICD.Connect.Calendaring.Bookings
 {
     public enum eMeetingType
     {

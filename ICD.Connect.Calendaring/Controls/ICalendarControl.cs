@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Devices.Controls;
 
 namespace ICD.Connect.Calendaring.Controls

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
-using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 

@@ -2,53 +2,53 @@
 using System.Collections.Generic;
 using ICD.Connect.Conferencing.DialContexts;
 
-namespace ICD.Connect.Calendaring.Booking
+namespace ICD.Connect.Calendaring.Bookings
 {
-	public abstract class AbstractBooking : IBooking
+	public interface IBooking
 	{
 		/// <summary>
 		/// Returns the name of the meeting.
 		/// </summary>
-		public abstract string MeetingName { get; }
+		string MeetingName { get; }
 
-		/// <summary>
-		/// Returns the organizer's name.
-		/// </summary>
-		public abstract string OrganizerName { get; }
+        /// <summary>
+        /// Returns the organizer's name.
+        /// </summary>
+        string OrganizerName { get; }
 
 		/// <summary>
 		/// Returns the organizer's email.
 		/// </summary>
-		public abstract string OrganizerEmail { get; }
+		string OrganizerEmail { get; }
 
 		/// <summary>
 		/// Returns the meeting start time.
 		/// </summary>
-		public abstract DateTime StartTime { get; }
+		DateTime StartTime { get; }
 
 		/// <summary>
 		/// Returns the meeting end time.
 		/// </summary>
-		public abstract DateTime EndTime { get; }
+		DateTime EndTime { get; }
 
 		/// <summary>
 		/// Returns true if meeting is private.
 		/// </summary>
-		public abstract bool IsPrivate { get; }
+		bool IsPrivate { get; }
 
 		/// <summary>
 		/// Returns true if the booking is checked in.
 		/// </summary>
-		public abstract bool CheckedIn { get; }
+		bool CheckedIn { get; }
 
 		/// <summary>
 		/// Returns true if the booking is checked out.
 		/// </summary>
-		public abstract bool CheckedOut { get; }
+		bool CheckedOut { get; }
 
 		/// <summary>
 		/// Returns Booking Numbers.
 		/// </summary>
-		public abstract IEnumerable<IDialContext> GetBookingNumbers();
+		IEnumerable<IDialContext> GetBookingNumbers();
 	}
 }

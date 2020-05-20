@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Timers;
-using ICD.Connect.Calendaring.Booking;
+using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.Controls;
 
 namespace ICD.Connect.Calendaring.Devices.Mock
