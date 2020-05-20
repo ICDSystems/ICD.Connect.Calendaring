@@ -46,8 +46,9 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 					? meetingNumber
 					: Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
 
-				yield return new ThinDialContext(Protocol)
+				yield return new DialContext
 				{
+					Protocol = Protocol,
 					DialString = meetingNumber,
 					Password = meetingPassword
 				};

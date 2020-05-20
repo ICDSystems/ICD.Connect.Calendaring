@@ -54,7 +54,7 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 
 		public override IEnumerable<IDialContext> GetBookingNumbers()
 		{
-			return new List<IDialContext>{ new PstnDialContext { DialString = "5555555555" } };
+			return new List<IDialContext> {new DialContext {Protocol = eDialProtocol.Pstn, DialString = "5555555555"}};
 		}
 
 		public MockBooking(string meetingName, string organizerName, string organizerEmail, DateTime startTime, DateTime endTime, bool isPrivate, bool checkedIn, bool checkedOut)
