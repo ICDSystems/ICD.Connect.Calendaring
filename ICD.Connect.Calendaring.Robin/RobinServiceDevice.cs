@@ -9,6 +9,7 @@ using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Robin.Components;
 using ICD.Connect.Calendaring.Robin.Controls.Calendar;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
@@ -83,8 +84,6 @@ namespace ICD.Connect.Calendaring.Robin
 			m_CalendarParserCollection = new CalendarParserCollection();
 
 			Components = new RobinServiceDeviceComponentFactory(this);
-
-			Controls.Add(new RobinServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
 		/// <summary>
@@ -311,6 +310,19 @@ namespace ICD.Connect.Calendaring.Robin
 
 			settings.Copy(m_UriProperties);
 			settings.Copy(m_WebProxyProperties);
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(RobinServiceDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new RobinServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
 		#endregion

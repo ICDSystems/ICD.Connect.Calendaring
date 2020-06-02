@@ -14,6 +14,7 @@ using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
 using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
@@ -92,8 +93,6 @@ namespace ICD.Connect.Calendaring.Asure
 
 			m_UpdateTimer = new SafeTimer(RefreshCacheHeartbeat, DEFAULT_REFRESH_INTERVAL, DEFAULT_REFRESH_INTERVAL);
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
-
-			Controls.Add(new AsureCalendarControl(this, 0));
 		}
 
 		#region Methods
@@ -577,6 +576,19 @@ namespace ICD.Connect.Calendaring.Asure
 			}
 
 			SetPort(port);
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(AsureDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new AsureCalendarControl(this, 0));
 		}
 
 		#endregion

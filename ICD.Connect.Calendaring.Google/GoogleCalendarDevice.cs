@@ -11,6 +11,7 @@ using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Google.Controls;
 using ICD.Connect.Calendaring.Google.Responses;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
@@ -50,8 +51,6 @@ namespace ICD.Connect.Calendaring.Google
 			m_UriProperties = new UriProperties();
 			m_WebProxyProperties = new WebProxyProperties();
 			m_CalendarParserCollection = new CalendarParserCollection();
-
-			Controls.Add(new GoogleCalendarControl(this, Controls.Count));
 		}
 
 		/// <summary>
@@ -243,6 +242,19 @@ namespace ICD.Connect.Calendaring.Google
 
 			settings.Copy(m_UriProperties);
 			settings.Copy(m_WebProxyProperties);
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(GoogleCalendarDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new GoogleCalendarControl(this, Controls.Count));
 		}
 
 		#endregion

@@ -8,6 +8,7 @@ using ICD.Connect.API.Commands;
 using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Microsoft.Exchange.Controls;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings;
 using Independentsoft.Exchange;
@@ -82,8 +83,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			m_WebProxyProperties = new WebProxyProperties();
 
 			m_CalendarParserCollection = new CalendarParserCollection();
-
-			Controls.Add(new ExchangeCalendarControl(this, Controls.Count));
 		}
 
 		#region Methods
@@ -213,6 +212,19 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			settings.Copy(m_WebProxyProperties);
 
 			settings.CalendarParsingPath = m_CalendarParsingPath;
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(ExchangeCalendarDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new ExchangeCalendarControl(this, Controls.Count));
 		}
 
 		#endregion

@@ -5,6 +5,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Calendaring.CalendarParsers;
 using ICD.Connect.Calendaring.Devices.iCalendar.Parser;
 using ICD.Connect.Devices;
+using ICD.Connect.Devices.Controls;
 using ICD.Connect.Devices.EventArguments;
 using ICD.Connect.Protocol.Extensions;
 using ICD.Connect.Protocol.Network.Ports.Web;
@@ -40,8 +41,6 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			m_WebProxyProperties = new WebProxyProperties();
 
 			m_CalendarParserCollection = new CalendarParserCollection();
-
-			Controls.Add(new iCalendarServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
 		/// <summary>
@@ -230,6 +229,19 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 
 			settings.Copy(m_UriProperties);
 			settings.Copy(m_WebProxyProperties);
+		}
+
+		/// <summary>
+		/// Override to add controls to the device.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <param name="factory"></param>
+		/// <param name="addControl"></param>
+		protected override void AddControls(iCalendarServiceDeviceSettings settings, IDeviceFactory factory, Action<IDeviceControl> addControl)
+		{
+			base.AddControls(settings, factory, addControl);
+
+			addControl(new iCalendarServiceDeviceCalendarControl(this, Controls.Count));
 		}
 
 		#endregion
