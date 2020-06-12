@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ICD.Common.Utils;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
@@ -55,17 +56,43 @@ namespace ICD.Connect.Calendaring.Controls
 
 		private static string PrintBookings(ICalendarControl instance)
 		{
-			TableBuilder builder = new TableBuilder("Meeting Name", "Organizer Name", "Organizer Email", "Start Time",
-			                                        "End Time", "IsPrivate");
+			TableBuilder builder =
+				new TableBuilder("Meeting Name",
+				                 "Organizer Name",
+				                 "Organizer Email",
+				                 "Start Time",
+				                 "End Time",
+				                 "IsPrivate",
+				                 "Protocol",
+				                 "Call Type",
+				                 "Number");
 
 			foreach (IBooking booking in instance.GetBookings())
 			{
+				string protocol = string.Join(IcdEnvironment.NewLine,
+				                              booking.GetBookingNumbers()
+				                                     .Select(c => StringUtils.NiceName(c.Protocol))
+				                                     .ToArray());
+
+				string callType = string.Join(IcdEnvironment.NewLine,
+				                              booking.GetBookingNumbers()
+				                                     .Select(c => c.CallType.ToString())
+				                                     .ToArray());
+
+				string number = string.Join(IcdEnvironment.NewLine,
+				                            booking.GetBookingNumbers()
+				                                   .Select(c => c.DialString)
+				                                   .ToArray());
+
 				builder.AddRow(booking.MeetingName,
 				               booking.OrganizerName,
 				               booking.OrganizerEmail,
 				               booking.StartTime,
 				               booking.EndTime,
-				               booking.IsPrivate);
+				               booking.IsPrivate,
+				               protocol,
+				               callType,
+				               number);
 			}
 
 			return builder.ToString();
