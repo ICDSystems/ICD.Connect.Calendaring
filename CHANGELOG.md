@@ -6,9 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [9.0.0] - 2020-06-18
+### Added
+ - PrintBookings console command will also print dial context info
+ - Added CalendarPoint for tracking calendar features in a room
+
 ### Changed
  - MockCalendarDevice now inherits from AbstractMockDevice
  - Using new logging context
+ - Mock bookings use UTC
 
 ## [8.0.0] - 2020-03-20
 ### Changed
