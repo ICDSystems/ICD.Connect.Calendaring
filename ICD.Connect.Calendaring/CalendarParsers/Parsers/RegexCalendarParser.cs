@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Conferencing.DialContexts;
@@ -32,26 +33,35 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 			if (string.IsNullOrEmpty(text))
 				yield break;
 
-			var matchCollection = Regex.Matches(text, Pattern);
+			IEnumerable<string> lines = text.Split();
 
-			foreach (Match match in matchCollection)
+			foreach (string line in lines)
 			{
-				string meetingNumber = string.IsNullOrEmpty(GroupName) ? match.Value 
-					                       : match.Groups[GroupName].Value;
 
-				string meetingPassword = string.IsNullOrEmpty(PasswordGroup) ? null 
-					                         : match.Groups[PasswordGroup].Value;
+				var matchCollection = Regex.Matches(line, Pattern);
 
-				meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
-					? meetingNumber
-					: Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
-
-				yield return new DialContext
+				foreach (Match match in matchCollection)
 				{
-					Protocol = Protocol,
-					DialString = meetingNumber,
-					Password = meetingPassword
-				};
+					string meetingNumber = string.IsNullOrEmpty(GroupName)
+						                       ? match.Value
+						                       : match.Groups[GroupName].Value;
+
+					string meetingPassword = string.IsNullOrEmpty(PasswordGroup)
+						                         ? null
+						                         : match.Groups[PasswordGroup].Value;
+
+					meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
+						                ? meetingNumber
+						                : Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
+
+					yield return new DialContext
+					{
+						Protocol = Protocol,
+						DialString = meetingNumber,
+						Password = meetingPassword
+					};
+					break;
+				}
 			}
 		}
 
