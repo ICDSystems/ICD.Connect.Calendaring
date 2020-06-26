@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 #if SIMPLSHARP
 using Crestron.SimplSharp.CrestronIO;
 #else
@@ -89,7 +90,12 @@ namespace ICD.Connect.Calendaring.CalendarParsers
 
 		public IEnumerable<IDialContext> ParseText(string text)
 		{
-			return GetParsers().SelectMany(p => p.ParseText(text)).Distinct();
+			return Regex.Split(text, @"\r\n|\r|\n|<p>|<\/p>|<br>")
+			            .Where(l => !string.IsNullOrEmpty(l))
+			            .Select(line => m_Parsers.Select(p => p.ParseLine(line))
+			                                     .FirstOrDefault(c => c != null))
+			            .Where(context => context != null)
+			            .Distinct(DialContextEqualityComparer.Instance);
 		}
 
 		#endregion

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Conferencing.DialContexts;
 
@@ -28,41 +29,36 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public override IEnumerable<IDialContext> ParseText(string text)
+		[CanBeNull]
+		public override IDialContext ParseLine(string text)
 		{
 			if (string.IsNullOrEmpty(text))
-				yield break;
+				return null;
 
-			IEnumerable<string> lines = text.Split();
+			Match match = Regex.Match(text, Pattern);
 
-			foreach (string line in lines)
+			if (!match.Success)
+				return null;
+			
+			string meetingNumber = string.IsNullOrEmpty(GroupName)
+					                       ? match.Value
+					                       : match.Groups[GroupName].Value;
+
+			string meetingPassword = string.IsNullOrEmpty(PasswordGroup)
+					                         ? null
+					                         : match.Groups[PasswordGroup].Value;
+
+			meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
+					                ? meetingNumber
+					                : Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
+
+			return new DialContext
 			{
-
-				var matchCollection = Regex.Matches(line, Pattern);
-
-				foreach (Match match in matchCollection)
-				{
-					string meetingNumber = string.IsNullOrEmpty(GroupName)
-						                       ? match.Value
-						                       : match.Groups[GroupName].Value;
-
-					string meetingPassword = string.IsNullOrEmpty(PasswordGroup)
-						                         ? null
-						                         : match.Groups[PasswordGroup].Value;
-
-					meetingNumber = string.IsNullOrEmpty(SubstitutionPattern)
-						                ? meetingNumber
-						                : Regex.Replace(meetingNumber, SubstitutionPattern, SubstitutionReplacement);
-
-					yield return new DialContext
-					{
-						Protocol = Protocol,
-						DialString = meetingNumber,
-						Password = meetingPassword
-					};
-					break;
-				}
-			}
+				Protocol = Protocol,
+				DialString = meetingNumber,
+				Password = meetingPassword
+			};
+			
 		}
 
 		public static RegexCalendarParser FromXml(string xml)

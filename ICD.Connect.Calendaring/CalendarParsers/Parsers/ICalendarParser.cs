@@ -10,6 +10,6 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		IEnumerable<IDialContext> ParseText(string text);
+		IDialContext ParseLine(string text);
 	}
 }
