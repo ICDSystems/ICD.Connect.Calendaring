@@ -80,7 +80,6 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public override void Refresh()
 		{
 			m_EventsComponent.UpdateBookings();
-
 		}
 
 		/// <summary>
@@ -142,11 +141,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		{
 			bool change = false;
 
-			Event[] events =
-				m_EventsComponent.GetEvents()
-				                 .Where(b => b.MeetingEnd.DateTimeInfo > IcdEnvironment.GetUtcTime())
-				                 .Distinct()
-				                 .ToArray();
+			Event[] events = m_EventsComponent.GetEvents().ToArray();
 
 			m_BookingSection.Enter();
 

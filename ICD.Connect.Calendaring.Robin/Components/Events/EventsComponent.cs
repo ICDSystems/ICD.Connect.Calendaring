@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.Calendaring.Robin.Components.Users;
@@ -9,11 +10,11 @@ using Newtonsoft.Json;
 namespace ICD.Connect.Calendaring.Robin.Components.Events
 {
 	public sealed class EventsComponent : AbstractRobinServiceDeviceComponent
-    {
+	{
 		public event EventHandler OnEventsUpdated;
 
 		private readonly List<Event> m_Events;
-	    private readonly UsersComponent m_UsersComponent;
+		private readonly UsersComponent m_UsersComponent;
 
 		/// <summary>
 		/// Constructor.
@@ -44,14 +45,19 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 			return m_Events.ToList();
 		}
 
-        /// <summary>
-        /// Updates the bookings on the room.
-        /// </summary>
-        public void UpdateBookings()
-        {
-	        try
-	        {
-				Event[] events = GetReservations(Parent.ResourceId, DateTime.Today, DateTime.Today.AddDays(1));
+		/// <summary>
+		/// Updates the bookings on the room.
+		/// </summary>
+		public void UpdateBookings()
+		{
+			try
+			{
+				DateTime utcNow = IcdEnvironment.GetUtcTime();
+
+				Event[] events = GetReservations(Parent.ResourceId, utcNow.StartOfDay(), utcNow.EndOfDay());
+				if (events.Length == 0 && m_Events.Count == 0)
+					return;
+
 				foreach (var @event in events)
 				{
 					User user = null;
@@ -62,19 +68,18 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 
 				m_Events.Clear();
 				m_Events.AddRange(events);
-	        }
-	        catch (Exception e)
-	        {
-		        Parent.Logger.Log(eSeverity.Error, "Failed to get reservations - {0}", e.Message);
-	        }
+			}
+			catch (Exception e)
+			{
+				Parent.Logger.Log(eSeverity.Error, "Failed to get reservations - {0}", e.Message);
+			}
 
-            OnEventsUpdated.Raise(this);
-        }
+			OnEventsUpdated.Raise(this);
+		}
 
 		#endregion
 
 		#region Private Methods
-
 
 		/// <summary>
 		/// Gets all of the reservations between the start and end date with the given resource.

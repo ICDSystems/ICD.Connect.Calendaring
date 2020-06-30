@@ -341,8 +341,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
 			                           UserEmail,
-			                           IcdEnvironment.GetLocalTime().StartOfDay().ToUniversalTime().ToString("o"),
-			                           IcdEnvironment.GetLocalTime().EndOfDay().ToUniversalTime().ToString("o"));
+			                           IcdEnvironment.GetUtcTime().StartOfDay().ToString("o"),
+			                           IcdEnvironment.GetUtcTime().EndOfDay().ToString("o"));
 
 			
 			WebPortResponse getResponse = m_Port.Get(url, headers);
