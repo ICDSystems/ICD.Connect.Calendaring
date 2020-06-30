@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
  - Calendar controls return the bookings for the full day
+ - Fixed a bug in calendar parsing where numbers would sometimes match against multiple protocols
 
 ## [9.0.0] - 2020-06-18
 ### Added
