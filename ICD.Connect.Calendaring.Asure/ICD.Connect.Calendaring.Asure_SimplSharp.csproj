@@ -73,7 +73,7 @@
     <Compile Include="AsureDevice.cs" />
     <Compile Include="AsureDeviceSettings.cs" />
     <Compile Include="AsureUtils.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Controls\Calendar\AsureBooking.cs" />
     <Compile Include="Controls\Calendar\AsureCalendarControl.cs" />
     <Compile Include="KrangPlugin.cs" />

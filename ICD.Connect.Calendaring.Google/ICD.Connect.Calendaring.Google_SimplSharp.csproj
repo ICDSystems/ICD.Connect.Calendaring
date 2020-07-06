@@ -85,7 +85,7 @@
     <Compile Include="Converters\GoogleTokenResponseConverter.cs" />
     <Compile Include="Converters\InnerErrorConverter.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="GoogleCalendarDevice.cs" />
     <Compile Include="GoogleCalendarDeviceSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -102,7 +102,7 @@
     <Compile Include="Devices\Mock\MockCalendarDevice.cs" />
     <Compile Include="Devices\Mock\MockCalendarDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\ControlSystem.cfg" />
   </ItemGroup>

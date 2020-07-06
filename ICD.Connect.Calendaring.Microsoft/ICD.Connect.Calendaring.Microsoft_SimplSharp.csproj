@@ -100,7 +100,7 @@
     <Compile Include="Office365\Office365CalendarDevice.cs" />
     <Compile Include="Office365\Office365CalendarDeviceSettings.cs" />
     <Compile Include="KrangPlugin.cs" />
-    <None Include="ObfuscationSettings.cs" />
+    <Compile Include="ObfuscationSettings.cs" />
     <Compile Include="Office365\Responses\AbstractResponse.cs" />
     <Compile Include="Office365\Responses\CalendarViewResponse.cs" />
     <Compile Include="Office365\Converters\InnerErrorConverter.cs" />
