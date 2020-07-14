@@ -4,4 +4,4 @@
 [assembly: AssemblyCompany("ICD Systems")]
 [assembly: AssemblyProduct("ICD.Connect.Calendaring.Microsoft")]
 [assembly: AssemblyCopyright("Copyright © ICD Systems 2020")]
-[assembly: AssemblyVersion("9.0.0.0")]
+[assembly: AssemblyVersion("9.1.0.0")]
