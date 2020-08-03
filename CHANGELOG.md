@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Using new logging context
  - Mock bookings use UTC
 
+## [8.0.1] - 2020-08-03
+### Changed
+ - Printed bookings in the CalendarControlConsole are now localized
+
 ## [8.0.0] - 2020-03-20
 ### Changed
  - Fixed web requests to use new web port response.
