@@ -63,8 +63,8 @@ namespace ICD.Connect.Calendaring.Controls
 				builder.AddRow(booking.MeetingName,
 				               booking.OrganizerName,
 				               booking.OrganizerEmail,
-				               booking.StartTime,
-				               booking.EndTime,
+				               booking.StartTime.ToLocalTime(),
+				               booking.EndTime.ToLocalTime(),
 				               booking.IsPrivate);
 			}
 
