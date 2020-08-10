@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;
@@ -47,7 +47,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 				Service service = new Service(endpoint, credential);
 #endif
 
-				ConfigureProxy(service.Proxy);
+				//ConfigureProxy(service.Proxy);
 
 				return service;
 			}
@@ -66,7 +66,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 				AutodiscoverService service = new AutodiscoverService(uri, credential);
 #endif
 
-				ConfigureProxy(service.Proxy);
+				//ConfigureProxy(service.Proxy);
 
 				return service;
 			}
@@ -159,6 +159,12 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			}
 		}
 
+		/**
+		 * 
+		 * Configure proxy uses System.Net WebProxy, which isn't in the S# Sandbox
+		 * This is commented out until Crestron gives us a way to conigure proxys
+		 * in a sandbox friendly way.
+		 * 
 		private void ConfigureProxy(WebProxy proxy)
 		{
 			if (proxy == null)
@@ -167,6 +173,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			proxy.Address = m_WebProxyProperties.GetUri();
 			proxy.Credentials = new NetworkCredential(m_WebProxyProperties.ProxyUsername, m_WebProxyProperties.ProxyPassword);
 		}
+		**/
 
 		#endregion
 

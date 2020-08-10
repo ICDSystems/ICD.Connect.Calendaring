@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Fixed MockCalendarControl check-in/-out
  - Calendar dates are tracked in UTC
 
+## [7.5.1] - 2020-08-10
+### Changed
+ - Removed proxy configuraton from MS Exchange calendar to resolve sandbox violations
+
 ## [7.5.0] - 2019-11-18
 ### Added
  - Calendar Check In/Check Out support
