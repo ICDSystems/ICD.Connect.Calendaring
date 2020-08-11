@@ -166,7 +166,9 @@ namespace ICD.Connect.Calendaring.Asure
 			try
 			{
 				return m_Cache.Values
-				              .Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
+				              .Where(r => r.ScheduleData.End != null &&
+				                          GetScheduleDataDateTimeUtc(r.ScheduleData.End.Value, r.ScheduleData.TimeZoneId) >
+				                          IcdEnvironment.GetUtcTime())
 				              .OrderBy(r => r.ScheduleData.Start)
 				              .ToArray();
 			}
@@ -276,6 +278,18 @@ namespace ICD.Connect.Calendaring.Asure
 		}
 
 		/// <summary>
+		/// Given a DateTime and a TimeZoneID manually converts to UTC by subtracting the TimeZoneID offset from the DateTime.
+		/// (GetUtcOffset takes DST observance into account)
+		/// </summary>
+		/// <param name="time"></param>
+		/// <param name="timeZoneId"></param>
+		/// <returns></returns>
+		public DateTime GetScheduleDataDateTimeUtc(DateTime time, string timeZoneId)
+		{
+			return time - TimeZoneInfo.FindSystemTimeZoneById(timeZoneId).GetUtcOffset(time);
+		}
+
+		/// <summary>
 		/// Check in to the reservation with the given id.
 		/// </summary>
 		/// <param name="reservationId"></param>
@@ -380,9 +394,12 @@ namespace ICD.Connect.Calendaring.Asure
 				throw new InvalidOperationException(result.AllChildBrokenBusinessRules.First().Description);
 
 			ReservationData[] data = result
-				.ReservationData
-				.Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
-				.ToArray();
+			                         .ReservationData
+			                         .Where(r => r.ScheduleData.End != null &&
+			                                     GetScheduleDataDateTimeUtc(r.ScheduleData.End.Value,
+			                                                         r.ScheduleData.TimeZoneId) >
+			                                     IcdEnvironment.GetUtcTime())
+			                         .ToArray();
 
 			m_CacheSection.Enter();
 			try

@@ -127,13 +127,18 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 
 		#endregion
 
+		#region Parent Callbacks
+
 		private void ParentOnCacheUpdated(object sender, EventArgs eventArgs)
 		{
 			bool change = false;
 
 			ReservationData[] reservations =
 				Parent.GetReservations()
-				      .Where(r => r.ScheduleData.End > IcdEnvironment.GetUtcTime())
+				      .Where(r => r.ScheduleData.End != null &&
+				                  Parent.GetScheduleDataDateTimeUtc(r.ScheduleData.End.Value,
+				                                                    r.ScheduleData.TimeZoneId) >
+				                  IcdEnvironment.GetUtcTime())
 				      .Distinct()
 				      .ToArray();
 
@@ -158,6 +163,8 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			if (change)
 				OnBookingsChanged.Raise(this);
 		}
+
+		#endregion
 
 		#region Private Methods
 
