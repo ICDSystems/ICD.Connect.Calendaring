@@ -65,18 +65,6 @@ namespace ICD.Connect.Calendaring.Asure
 		[PublicAPI]
 		public long UpdateInterval { get; set; }
 
-		/// <summary>
-		/// Gets/sets the username for communication with the service.
-		/// </summary>
-		[PublicAPI]
-		public string Username { get; set; }
-
-		/// <summary>
-		/// Gets/sets the password for communication with the service.
-		/// </summary>
-		[PublicAPI]
-		public string Password { get; set; }
-
 		#endregion
 
 		/// <summary>
@@ -299,7 +287,7 @@ namespace ICD.Connect.Calendaring.Asure
 		[PublicAPI]
 		public void CheckIn(int reservationId)
 		{
-			CheckInResult result = ResourceSchedulerService.CheckIn(m_Port, Username, Password, reservationId);
+			CheckInResult result = ResourceSchedulerService.CheckIn(m_Port, reservationId);
 			if (result.IsValid)
 				InsertReservation(result.ReservationData);
 			else
@@ -314,7 +302,7 @@ namespace ICD.Connect.Calendaring.Asure
 		[PublicAPI]
 		public void CheckOut(int reservationId)
 		{
-			CheckOutResult result = ResourceSchedulerService.CheckOut(m_Port, Username, Password, reservationId);
+			CheckOutResult result = ResourceSchedulerService.CheckOut(m_Port, reservationId);
 			if (result.IsValid)
 				InsertReservation(result.ReservationData);
 			else
@@ -333,7 +321,7 @@ namespace ICD.Connect.Calendaring.Asure
 		public void SubmitReservation(string description, string notes, DateTime start, DateTime end)
 		{
 			SubmitReservationResult result =
-				ResourceSchedulerService.SubmitReservation(m_Port, Username, Password, description, notes,
+				ResourceSchedulerService.SubmitReservation(m_Port, description, notes,
 				                                           new[] {ResourceId}, start, end);
 
 			if (result.IsValid)
@@ -383,7 +371,7 @@ namespace ICD.Connect.Calendaring.Asure
 
 			try
 			{
-				result = ResourceSchedulerService.GetReservationsByResource(port, Username, Password, start, end, ResourceId);
+				result = ResourceSchedulerService.GetReservationsByResource(port, start, end, ResourceId);
 			}
 			// Request failed to dispatch
 			catch (InvalidOperationException e)
@@ -532,8 +520,6 @@ namespace ICD.Connect.Calendaring.Asure
 			base.ClearSettingsFinal();
 
 			m_CalendarParserCollection.ClearMatchers();
-			Username = null;
-			Password = null;
 			SetPort(null);
 			ResourceId = 0;
 			UpdateInterval = DEFAULT_REFRESH_INTERVAL;
@@ -551,8 +537,6 @@ namespace ICD.Connect.Calendaring.Asure
 			base.CopySettingsFinal(settings);
 
 			settings.CalendarParsingPath = m_CalendarParsingPath;
-			settings.Username = Username;
-			settings.Password = Password;
 			settings.ResourceId = ResourceId;
 			settings.UpdateInterval = UpdateInterval;
 			settings.Port = m_Port == null ? (int?)null : m_Port.Id;
@@ -573,8 +557,6 @@ namespace ICD.Connect.Calendaring.Asure
 			m_UriProperties.Copy(settings);
 			m_WebProxyProperties.Copy(settings);
 
-			Username = settings.Username;
-			Password = settings.Password;
 			ResourceId = settings.ResourceId;
 			UpdateInterval = settings.UpdateInterval ?? DEFAULT_REFRESH_INTERVAL;
 
@@ -665,8 +647,8 @@ namespace ICD.Connect.Calendaring.Asure
 			{
 				builder.AddRow(reservation.ReservationBaseData.Id,
 				               reservation.ReservationBaseData.Description,
-				               StringUtils.ArrayFormat(reservation.ReservationBaseData.ReservationAttendees),
-				               StringUtils.ArrayFormat(reservation.ReservationBaseData.ReservationResources),
+				               StringUtils.ArrayFormat(reservation.ReservationBaseData.ReservationAttendees.Select(r => r.FullName)),
+				               StringUtils.ArrayFormat(reservation.ReservationBaseData.ReservationResources.Select(r => r.Description)),
 				               reservation.ScheduleData.Start,
 				               reservation.ScheduleData.End,
 				               reservation.CheckedIn);

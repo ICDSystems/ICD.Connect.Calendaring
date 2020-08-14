@@ -1,4 +1,5 @@
 ﻿using System;
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Results;
@@ -45,18 +46,22 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 		/// Dispatches the request and parses the response.
 		/// </summary>
 		/// <param name="port"></param>
-		/// <param name="username"></param>
-		/// <param name="password"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException">Web port failed to dispatch</exception>
-		public T Dispatch(IWebPort port, string username, string password)
+		public T Dispatch(IWebPort port)
 		{
 			if (port == null)
 				throw new ArgumentNullException("port");
 
+			if (port.Uri == null)
+			{
+				string message = string.Format("{0} failed to dispatch - Port URI is NULL", GetType().Name);
+				throw new InvalidOperationException(message);
+			}
+
 			string action = string.Format("{0}/{1}", XLMNS_NS, SoapAction);
 			string bodyXml = GetBody();
-			string headerXml = GetHeader(username, password);
+			string headerXml = GetHeader(port.Uri.GetUserName(), port.Uri.GetPassword());
 
 			string content = string.Format(TEMPLATE, XLMNS_NS, headerXml, bodyXml);
 

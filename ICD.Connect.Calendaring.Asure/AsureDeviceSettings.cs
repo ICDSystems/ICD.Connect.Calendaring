@@ -13,8 +13,6 @@ namespace ICD.Connect.Calendaring.Asure
 		private const string RESOURCE_ID_ELEMENT = "ResourceId";
 		private const string UPDATE_INTERVAL_ELEMENT = "UpdateInterval";
 		private const string PORT_ELEMENT = "Port";
-		private const string USERNAME_ELEMENT = "Username";
-		private const string PASSWORD_ELEMENT = "Password";
 		private const string CALENDARPARSING_ELEMENT = "CalendarParsing";
 
 		private const string DEFAULT_CALENDAR_PARSING_PATH = "CalendarParsing.xml";
@@ -30,16 +28,6 @@ namespace ICD.Connect.Calendaring.Asure
 		public int ResourceId { get; set; }
 
 		public long? UpdateInterval { get; set; }
-
-		/// <summary>
-		/// Gets/sets the configurable service username.
-		/// </summary>
-		public string Username { get; set; }
-
-		/// <summary>
-		/// Gets/sets the configurable service password.
-		/// </summary>
-		public string Password { get; set; }
 
 		public string CalendarParsingPath { get; set; }
 
@@ -167,8 +155,6 @@ namespace ICD.Connect.Calendaring.Asure
 			writer.WriteElementString(RESOURCE_ID_ELEMENT, IcdXmlConvert.ToString(ResourceId));
 			writer.WriteElementString(UPDATE_INTERVAL_ELEMENT, IcdXmlConvert.ToString(UpdateInterval));
 			writer.WriteElementString(PORT_ELEMENT, IcdXmlConvert.ToString(Port));
-			writer.WriteElementString(USERNAME_ELEMENT, Username);
-			writer.WriteElementString(PASSWORD_ELEMENT, Password);
 			writer.WriteElementString(CALENDARPARSING_ELEMENT, CalendarParsingPath);
 
 			m_UriProperties.WriteElements(writer);
@@ -186,8 +172,6 @@ namespace ICD.Connect.Calendaring.Asure
 			Port = XmlUtils.TryReadChildElementContentAsInt(xml, PORT_ELEMENT);
 			ResourceId = XmlUtils.TryReadChildElementContentAsInt(xml, RESOURCE_ID_ELEMENT) ?? 0;
 			UpdateInterval = XmlUtils.TryReadChildElementContentAsLong(xml, UPDATE_INTERVAL_ELEMENT);
-			Username = XmlUtils.TryReadChildElementContentAsString(xml, USERNAME_ELEMENT);
-			Password = XmlUtils.TryReadChildElementContentAsString(xml, PASSWORD_ELEMENT);
 			CalendarParsingPath = XmlUtils.TryReadChildElementContentAsString(xml, CALENDARPARSING_ELEMENT) ??
 			                      DEFAULT_CALENDAR_PARSING_PATH;
 
