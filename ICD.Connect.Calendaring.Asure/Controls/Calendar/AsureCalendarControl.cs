@@ -136,7 +136,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			ReservationData[] reservations =
 				Parent.GetReservations()
 				      .Where(r => r.ScheduleData.End != null &&
-				                  Parent.GetScheduleDataDateTimeUtc(r.ScheduleData.End.Value,
+				                  AsureDevice.GetScheduleDataDateTimeUtc(r.ScheduleData.End.Value,
 				                                                    r.ScheduleData.TimeZoneId) >
 				                  IcdEnvironment.GetUtcTime())
 				      .Distinct()

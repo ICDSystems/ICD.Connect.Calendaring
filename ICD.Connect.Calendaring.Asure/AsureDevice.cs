@@ -7,6 +7,7 @@ using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
+using ICD.Common.Utils.TimeZoneInfo;
 using ICD.Connect.API.Commands;
 using ICD.Connect.Calendaring.Asure.Controls.Calendar;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler;
@@ -284,9 +285,10 @@ namespace ICD.Connect.Calendaring.Asure
 		/// <param name="time"></param>
 		/// <param name="timeZoneId"></param>
 		/// <returns></returns>
-		public DateTime GetScheduleDataDateTimeUtc(DateTime time, string timeZoneId)
+		public static DateTime GetScheduleDataDateTimeUtc(DateTime time, string timeZoneId)
 		{
-			return time - TimeZoneInfo.FindSystemTimeZoneById(timeZoneId).GetUtcOffset(time);
+			return IcdTimeZoneInfo.FindSystemTimeZoneById(timeZoneId)
+			                      .ConvertToUtc(time);
 		}
 
 		/// <summary>
