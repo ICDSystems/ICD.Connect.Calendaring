@@ -1,4 +1,9 @@
 ﻿using System;
+#if SIMPLSHARP
+using Crestron.SimplSharp.Net;
+#else
+using System.Web;
+#endif
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Protocol.Network.Ports.Web;
@@ -61,7 +66,8 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 
 			string action = string.Format("{0}/{1}", XLMNS_NS, SoapAction);
 			string bodyXml = GetBody();
-			string headerXml = GetHeader(port.Uri.GetUserName(), port.Uri.GetPassword());
+			string headerXml = GetHeader(HttpUtility.UrlDecode(port.Uri.GetUserName()),
+			                             HttpUtility.UrlDecode(port.Uri.GetPassword()));
 
 			string content = string.Format(TEMPLATE, XLMNS_NS, headerXml, bodyXml);
 
