@@ -263,7 +263,11 @@ namespace ICD.Connect.Calendaring.Asure
 		public static bool IsReservationCurrent(ReservationData reservation)
 		{
 			DateTime now = IcdEnvironment.GetUtcTime();
-			return reservation.ScheduleData.Start <= now && reservation.ScheduleData.End > now;
+
+			return reservation.ScheduleData.End != null &&
+			       reservation.ScheduleData.Start != null &&
+			       GetScheduleDataDateTimeUtc(reservation.ScheduleData.Start.Value, reservation.ScheduleData.TimeZoneId) <= now &&
+			       GetScheduleDataDateTimeUtc(reservation.ScheduleData.End.Value, reservation.ScheduleData.TimeZoneId) > now;
 		}
 
 		/// <summary>

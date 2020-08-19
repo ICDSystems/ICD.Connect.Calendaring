@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.TimeZoneInfo;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Conferencing.DialContexts;
@@ -51,12 +52,27 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <summary>
 		/// Returns the meeting start time.
 		/// </summary>
-		public override DateTime StartTime { get { return m_Reservation.ScheduleData.Start ?? DateTime.MinValue; } }
+		public override DateTime StartTime
+		{
+			get
+			{
+				return m_Reservation.ScheduleData.Start != null
+					       ? IcdTimeZoneInfo.FindSystemTimeZoneById(m_Reservation.ScheduleData.TimeZoneId)
+					                        .ConvertToUtc(m_Reservation.ScheduleData.Start.Value)
+					       : DateTime.MinValue;
+			}
+		}
 
 		/// <summary>
 		/// Returns the meeting end time.
 		/// </summary>
-		public override DateTime EndTime { get { return m_Reservation.ScheduleData.End ?? DateTime.MinValue; } }
+		public override DateTime EndTime { get
+		{
+			return m_Reservation.ScheduleData.End != null
+				       ? IcdTimeZoneInfo.FindSystemTimeZoneById(m_Reservation.ScheduleData.TimeZoneId)
+				                        .ConvertToUtc(m_Reservation.ScheduleData.End.Value)
+				       : DateTime.MinValue;
+		} }
 
 		/// <summary>
 		/// Returns true if meeting is private.
