@@ -46,6 +46,8 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 			m_Bookings = new IcdOrderedDictionary<iCalendarEvent, iCalendarBooking>(s_CalendarEventComparer);
 			m_BookingSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
+
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
 		}
 
 		/// <summary>

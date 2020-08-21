@@ -46,6 +46,12 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			m_ReservationToBooking = new IcdOrderedDictionary<ReservationData, AsureBooking>(s_ReservationComparer);
 			m_BookingSection = new SafeCriticalSection();
 
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings |
+			                            eCalendarFeatures.CreateBookings |
+			                            eCalendarFeatures.EditBookings |
+			                            eCalendarFeatures.CheckIn |
+			                            eCalendarFeatures.CheckOut;
+
 			parent.OnCacheUpdated += ParentOnCacheUpdated;
 		}
 
@@ -78,6 +84,13 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public override IEnumerable<IBooking> GetBookings()
 		{
 			return m_BookingSection.Execute(() => m_ReservationToBooking.Values.ToArray(m_ReservationToBooking.Count));
+		}
+
+		public override void PushBooking(IBooking booking)
+		{
+			base.PushBooking(booking);
+
+			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
 		}
 
 		/// <summary>

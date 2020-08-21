@@ -55,6 +55,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			Subscribe(m_EventsComponent);
 
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
+
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
 		}
 
 		/// <summary>

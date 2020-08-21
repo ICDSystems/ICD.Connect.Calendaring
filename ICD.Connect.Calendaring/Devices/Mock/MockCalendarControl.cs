@@ -30,6 +30,12 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 		{
 			m_BookingList = new List<IBooking>();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
+
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings |
+			                            eCalendarFeatures.CreateBookings |
+			                            eCalendarFeatures.EditBookings |
+			                            eCalendarFeatures.CheckIn |
+			                            eCalendarFeatures.ListBookings;
 		}
 
 		/// <summary>

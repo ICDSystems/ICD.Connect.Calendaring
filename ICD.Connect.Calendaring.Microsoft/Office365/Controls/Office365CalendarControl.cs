@@ -48,6 +48,8 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 			m_Bookings = new IcdOrderedDictionary<CalendarEvent, Office365Booking>(s_CalendarEventComparer);
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
+
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
 		}
 
 		/// <summary>

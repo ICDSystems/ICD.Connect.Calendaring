@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Properties;
+using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils.Extensions;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
 using ICD.Connect.Calendaring.Bookings;
@@ -12,10 +14,34 @@ namespace ICD.Connect.Calendaring.Controls
     public abstract class AbstractCalendarControl<T> : AbstractDeviceControl<T>, ICalendarControl
 	    where T : IDevice
     {
+	    #region Events
+
 	    /// <summary>
 	    /// Raised when bookings are added/removed.
 	    /// </summary>
 	    public abstract event EventHandler OnBookingsChanged;
+
+	    public event EventHandler<GenericEventArgs<eCalendarFeatures>> OnSupportedCalendarFeaturesChagned;
+
+	    #endregion
+
+	    private eCalendarFeatures m_SupportedCalendarFeatures;
+
+	    public eCalendarFeatures SupportedCalendarFeatures
+	    {
+		    get { return m_SupportedCalendarFeatures; }
+		    protected set
+		    {
+				if (value == m_SupportedCalendarFeatures)
+					return;
+
+				m_SupportedCalendarFeatures = value;
+
+				OnSupportedCalendarFeaturesChagned.Raise(this, value);
+		    }
+	    }
+
+	    #region Constructor
 
 	    /// <summary>
 	    /// Constructor.
@@ -26,6 +52,8 @@ namespace ICD.Connect.Calendaring.Controls
 		    : base(parent, id)
 	    {
 	    }
+
+	    #endregion
 
 	    #region Methods
 
@@ -40,6 +68,16 @@ namespace ICD.Connect.Calendaring.Controls
 	    /// </summary>
 	    [PublicAPI]
 	    public abstract IEnumerable<IBooking> GetBookings();
+
+	    /// <summary>
+	    /// Pushes the booking to the calendar service.
+	    /// </summary>
+	    /// <param name="booking"></param>
+	    public virtual void PushBooking(IBooking booking)
+	    {
+		    if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.CreateBookings))
+				throw new InvalidOperationException("This control does not support creating new bookings");
+	    }
 
 	    /// <summary>
 	    /// Returns true if the booking argument can be checked in.

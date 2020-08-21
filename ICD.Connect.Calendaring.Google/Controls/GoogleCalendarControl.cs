@@ -43,6 +43,8 @@ namespace ICD.Connect.Calendaring.Google.Controls
 			m_Bookings = new IcdOrderedDictionary<GoogleCalendarEvent, GoogleBooking>(s_CalendarEventComparer);
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
+
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
 		}
 
 		/// <summary>
@@ -80,7 +82,6 @@ namespace ICD.Connect.Calendaring.Google.Controls
 			}
 
 			OnBookingsChanged.Raise(this);
-			//throw new NotImplementedException();
 		}
 
 		private GoogleBooking GetBooking(GoogleCalendarEvent calendarEvent)
