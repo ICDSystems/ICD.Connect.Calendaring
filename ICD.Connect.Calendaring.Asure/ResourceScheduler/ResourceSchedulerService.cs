@@ -208,7 +208,7 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler
 		}
 
 		/// <summary>
-		/// Creates a new reservation.
+		/// Creates a new reservation. DateTimes should be in UTC.
 		/// </summary>
 		/// <param name="port"></param>
 		/// <param name="description"></param>

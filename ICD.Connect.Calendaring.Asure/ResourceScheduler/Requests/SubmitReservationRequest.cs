@@ -22,6 +22,7 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
                 <ns:ScheduleData>
                     <ns:Start>{3}</ns:Start>
                     <ns:Duration>{4}</ns:Duration>
+                    <ns:TimeZoneId>Coordinated Universal Time</ns:TimeZoneId>
                 </ns:ScheduleData>
             </ns:data>
         </ns:SubmitReservation>
