@@ -11,5 +11,10 @@ namespace ICD.Connect.Calendaring.CalendarPoints
 		/// </summary>
 		[CanBeNull]
 		new ICalendarControl Control { get; }
+
+		/// <summary>
+		/// Gets/Sets the features for this point.
+		/// </summary>
+		eCalendarFeatures Features { get; set; }
 	}
 }
