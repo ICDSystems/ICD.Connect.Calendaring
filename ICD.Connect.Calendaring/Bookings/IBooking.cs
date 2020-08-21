@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ICD.Common.Properties;
+using ICD.Common.Utils;
 using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Bookings
@@ -50,5 +52,15 @@ namespace ICD.Connect.Calendaring.Bookings
 		/// Returns Booking Numbers.
 		/// </summary>
 		IEnumerable<IDialContext> GetBookingNumbers();
+	}
+
+	public static class BookingExtensions
+	{
+		public static bool IsBookingCurrent([NotNull] this IBooking extends)
+		{
+			var now = IcdEnvironment.GetUtcTime();
+
+			return extends.StartTime <= now && extends.EndTime > now;
+		}
 	}
 }
