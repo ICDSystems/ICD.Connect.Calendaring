@@ -101,6 +101,16 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
 
+		public override void PushBooking(IBooking booking)
+		{
+			throw new NotSupportedException();
+		}
+
+		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
+		{
+			throw new NotSupportedException();
+		}
+
 		/// <summary>
 		/// Returns true if the booking argument can be checked in.
 		/// </summary>

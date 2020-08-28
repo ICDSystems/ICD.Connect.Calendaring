@@ -79,6 +79,17 @@ namespace ICD.Connect.Calendaring.Devices.Mock
 			return m_BookingList;
 		}
 
+		public override void PushBooking(IBooking booking)
+		{
+			m_BookingList.Add(booking);
+		}
+
+		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
+		{
+			m_BookingList.Remove(oldBooking);
+			m_BookingList.Add(newBooking);
+		}
+
 		public override bool CanCheckIn(IBooking booking)
 		{
 			return m_BookingList.Contains(booking);
