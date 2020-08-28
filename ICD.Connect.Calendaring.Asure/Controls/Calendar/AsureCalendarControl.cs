@@ -92,9 +92,6 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <param name="booking"></param>
 		public override void PushBooking(IBooking booking)
 		{
-			if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.CreateBookings))
-				throw new NotSupportedException("This instance of AsureCalendarControl does not support creating bookings");
-
 			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
 		}
 
@@ -105,9 +102,6 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <param name="newBooking"></param>
 		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
 		{
-			if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.EditBookings))
-				throw new NotSupportedException("This instance of AsureCalendarControl does not support editing bookings");
-
 			ReservationData res = m_ReservationToBooking.FirstOrDefault(kvp => kvp.Value == oldBooking).Key;
 			if (res == null)
 				throw new InvalidOperationException("No reservation data associated with the specified booking");

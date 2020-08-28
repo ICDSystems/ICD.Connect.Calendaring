@@ -88,6 +88,13 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 			UpdateBookings();
 		}
 
+		public void EditEvent(Event editedEvent)
+		{
+			string data = JsonConvert.SerializeObject(editedEvent, Formatting.None, RobinJsonSerializerSettings);
+			PatchEvent(editedEvent.Id, data);
+			UpdateBookings();
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -114,6 +121,12 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 		{
 			string path = string.Format("spaces/{0}/events", Uri.EscapeDataString(resourceId));
 			Parent.PostRequest(path, Encoding.UTF8.GetBytes(eventData));
+		}
+
+		private void PatchEvent(string editedEventId, string eventData)
+		{
+			string path = string.Format("events/{0}", editedEventId);
+			Parent.PatchRequest(path, Encoding.UTF8.GetBytes(eventData));
 		}
 
 		/// <summary>

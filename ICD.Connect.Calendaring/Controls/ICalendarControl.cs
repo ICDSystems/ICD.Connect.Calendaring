@@ -15,7 +15,7 @@ namespace ICD.Connect.Calendaring.Controls
 		/// </summary>
 		event EventHandler OnBookingsChanged;
 
-		event EventHandler<GenericEventArgs<eCalendarFeatures>> OnSupportedCalendarFeaturesChagned;
+		event EventHandler<GenericEventArgs<eCalendarFeatures>> OnSupportedCalendarFeaturesChanged;
 
 		#endregion
 

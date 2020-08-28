@@ -17,6 +17,8 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 	{
 		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
+		private const string UTC_IANA_IDENTIFIER = "UTC";
+
 		/// <summary>
 		/// Raised when events are added/removed.
 		/// </summary>
@@ -56,7 +58,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			SupportedCalendarFeatures = eCalendarFeatures.ListBookings | eCalendarFeatures.CreateBookings;
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings | eCalendarFeatures.EditBookings | eCalendarFeatures.CreateBookings;
 		}
 
 		/// <summary>
@@ -94,20 +96,18 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		public override void PushBooking(IBooking booking)
 		{
-			base.PushBooking(booking);
-
 			Event bookingEvent = new Event
 			{
 				MeetingName = booking.MeetingName,
 				MeetingStart = new Event.DateInfo
 				{
 					DateTimeInfo = booking.StartTime,
-					TimeZoneInfo = "UTC"
+					TimeZoneInfo = UTC_IANA_IDENTIFIER
 				},
 				MeetingEnd = new Event.DateInfo
 				{
 					DateTimeInfo = booking.EndTime,
-					TimeZoneInfo = "UTC"
+					TimeZoneInfo = UTC_IANA_IDENTIFIER
 				},
 				Invitees = new[] {new Event.EventInvitee
 				{
@@ -117,6 +117,37 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 			};
 
 			m_EventsComponent.CreateEvent(bookingEvent);
+		}
+
+		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
+		{
+			Event oldEvent = m_EventToBooking.FirstOrDefault(kvp => kvp.Value == oldBooking).Key;
+
+			Event editedEvent = new Event
+			{
+				Id = oldEvent.Id,
+				MeetingName = newBooking.MeetingName,
+				MeetingStart = new Event.DateInfo
+				{
+					DateTimeInfo = newBooking.StartTime,
+					TimeZoneInfo = UTC_IANA_IDENTIFIER
+				},
+				MeetingEnd = new Event.DateInfo
+				{
+					DateTimeInfo = newBooking.EndTime,
+					TimeZoneInfo = UTC_IANA_IDENTIFIER
+				},
+				Invitees = new[]
+				{
+					new Event.EventInvitee
+					{
+						DisplayName = newBooking.OrganizerName,
+						Email = newBooking.OrganizerEmail
+					},
+				}
+			};
+
+			m_EventsComponent.EditEvent(editedEvent);
 		}
 
 		public override bool CanCheckIn(IBooking booking)

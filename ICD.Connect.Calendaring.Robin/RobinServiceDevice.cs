@@ -213,6 +213,31 @@ namespace ICD.Connect.Calendaring.Robin
 			}
 		}
 
+		public void PatchRequest(string path, byte[] data)
+		{
+			if (m_Port == null)
+				throw new InvalidOperationException("Failed to make request - Port is null");
+
+			WebPortResponse output;
+
+			try
+			{
+				output = m_Port.Patch(path, (Dictionary<string, List<string>>)m_PostHeaders, data);
+			}
+			// Catch HTTP or HTTPS exception, without dependency on Crestron
+			catch (Exception e)
+			{
+				string message = string.Format("Failed to make request - {0}", e.Message);
+				throw new InvalidOperationException(message, e);
+			}
+
+			if (!output.Success)
+			{
+				string message = string.Format("Request did not succeed");
+				throw new InvalidOperationException(message);
+			}
+		}
+
 		#endregion
 
 		#region Private Methods

@@ -21,7 +21,7 @@ namespace ICD.Connect.Calendaring.Controls
 	    /// </summary>
 	    public abstract event EventHandler OnBookingsChanged;
 
-	    public event EventHandler<GenericEventArgs<eCalendarFeatures>> OnSupportedCalendarFeaturesChagned;
+	    public event EventHandler<GenericEventArgs<eCalendarFeatures>> OnSupportedCalendarFeaturesChanged;
 
 	    #endregion
 
@@ -37,7 +37,7 @@ namespace ICD.Connect.Calendaring.Controls
 
 				m_SupportedCalendarFeatures = value;
 
-				OnSupportedCalendarFeaturesChagned.Raise(this, value);
+				OnSupportedCalendarFeaturesChanged.Raise(this, value);
 		    }
 	    }
 
