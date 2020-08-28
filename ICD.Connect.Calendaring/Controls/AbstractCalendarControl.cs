@@ -73,21 +73,14 @@ namespace ICD.Connect.Calendaring.Controls
 	    /// Pushes the booking to the calendar service.
 	    /// </summary>
 	    /// <param name="booking"></param>
-	    public virtual void PushBooking(IBooking booking)
-	    {
-		    if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.CreateBookings))
-				throw new InvalidOperationException("This control does not support creating new bookings");
-	    }
+	    public abstract void PushBooking(IBooking booking);
 
 	    /// <summary>
 	    /// Edits the selected booking with the calendar service.
 	    /// </summary>
-	    /// <param name="booking"></param>
-	    public virtual void EditBooking(IBooking booking)
-	    {
-			if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.EditBookings))
-				throw new InvalidOperationException("This control does not support editing bookings");
-		}
+	    /// <param name="oldBooking"></param>
+	    /// <param name="newBooking"></param>
+	    public abstract void EditBooking(IBooking oldBooking, IBooking newBooking);
 
 	    /// <summary>
 	    /// Returns true if the booking argument can be checked in.

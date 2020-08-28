@@ -44,10 +44,11 @@ namespace ICD.Connect.Calendaring.Controls
 		void PushBooking(IBooking booking);
 
 		/// <summary>
-		/// Edits the selected booking with the calendar service.
+		/// Edits the selected oldBooking with information from the newBooking on the calendar service.
 		/// </summary>
-		/// <param name="booking"></param>
-		void EditBooking(IBooking booking);
+		/// <param name="oldBooking"></param>
+		/// <param name="newBooking"></param>
+		void EditBooking(IBooking oldBooking, IBooking newBooking);
 
 		/// <summary>
 		/// Returns true if the booking argument can be checked in.

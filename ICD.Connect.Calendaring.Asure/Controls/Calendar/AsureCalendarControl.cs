@@ -92,7 +92,8 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <param name="booking"></param>
 		public override void PushBooking(IBooking booking)
 		{
-			base.PushBooking(booking);
+			if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.CreateBookings))
+				throw new NotSupportedException("This instance of AsureCalendarControl does not support creating bookings");
 
 			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
 		}
@@ -100,16 +101,18 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// <summary>
 		/// Edits the selected booking with the calendar service.
 		/// </summary>
-		/// <param name="booking"></param>
-		public override void EditBooking(IBooking booking)
+		/// <param name="oldBooking"></param>
+		/// <param name="newBooking"></param>
+		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
 		{
-			base.EditBooking(booking);
+			if (!SupportedCalendarFeatures.HasFlag(eCalendarFeatures.EditBookings))
+				throw new NotSupportedException("This instance of AsureCalendarControl does not support editing bookings");
 
-			ReservationData res = m_ReservationToBooking.FirstOrDefault(kvp => kvp.Value == booking).Key;
+			ReservationData res = m_ReservationToBooking.FirstOrDefault(kvp => kvp.Value == oldBooking).Key;
 			if (res == null)
 				throw new InvalidOperationException("No reservation data associated with the specified booking");
 
-			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
+			Parent.SubmitReservation(newBooking.MeetingName, "", newBooking.StartTime, newBooking.EndTime);
 		}
 
 		/// <summary>
