@@ -86,9 +86,28 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 			return m_BookingSection.Execute(() => m_ReservationToBooking.Values.ToArray(m_ReservationToBooking.Count));
 		}
 
+		/// <summary>
+		/// Pushes the booking to the calendar service.
+		/// </summary>
+		/// <param name="booking"></param>
 		public override void PushBooking(IBooking booking)
 		{
 			base.PushBooking(booking);
+
+			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
+		}
+
+		/// <summary>
+		/// Edits the selected booking with the calendar service.
+		/// </summary>
+		/// <param name="booking"></param>
+		public override void EditBooking(IBooking booking)
+		{
+			base.EditBooking(booking);
+
+			ReservationData res = m_ReservationToBooking.FirstOrDefault(kvp => kvp.Value == booking).Key;
+			if (res == null)
+				throw new InvalidOperationException("No reservation data associated with the specified booking");
 
 			Parent.SubmitReservation(booking.MeetingName, "", booking.StartTime, booking.EndTime);
 		}

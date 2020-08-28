@@ -44,6 +44,12 @@ namespace ICD.Connect.Calendaring.Controls
 		void PushBooking(IBooking booking);
 
 		/// <summary>
+		/// Edits the selected booking with the calendar service.
+		/// </summary>
+		/// <param name="booking"></param>
+		void EditBooking(IBooking booking);
+
+		/// <summary>
 		/// Returns true if the booking argument can be checked in.
 		/// </summary>
 		/// <returns></returns>
