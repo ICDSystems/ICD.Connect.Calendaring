@@ -56,7 +56,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings | eCalendarFeatures.CreateBookings;
 		}
 
 		/// <summary>
@@ -90,6 +90,33 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public override IEnumerable<IBooking> GetBookings()
 		{
 			return m_BookingSection.Execute(() => m_EventToBooking.Values.ToArray(m_EventToBooking.Count));
+		}
+
+		public override void PushBooking(IBooking booking)
+		{
+			base.PushBooking(booking);
+
+			Event bookingEvent = new Event
+			{
+				MeetingName = booking.MeetingName,
+				MeetingStart = new Event.DateInfo
+				{
+					DateTimeInfo = booking.StartTime,
+					TimeZoneInfo = "UTC"
+				},
+				MeetingEnd = new Event.DateInfo
+				{
+					DateTimeInfo = booking.EndTime,
+					TimeZoneInfo = "UTC"
+				},
+				Invitees = new[] {new Event.EventInvitee
+				{
+					DisplayName = booking.OrganizerName,
+					Email = booking.OrganizerEmail
+				} }
+			};
+
+			m_EventsComponent.CreateEvent(bookingEvent);
 		}
 
 		public override bool CanCheckIn(IBooking booking)

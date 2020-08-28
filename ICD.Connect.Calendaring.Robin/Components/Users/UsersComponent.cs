@@ -74,7 +74,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Users
 			                            Uri.EscapeDataString(Parent.OrganizationId),
 			                            Uri.EscapeDataString(userId));
 
-			string data = Parent.Request(path);
+			string data = Parent.GetRequest(path);
 
 			return JsonConvert.DeserializeObject<User>(data);
 		}

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICD.Common.Utils.EventArguments;
+using ICD.Common.Utils.Json;
 using ICD.Connect.API.Commands;
 using ICD.Connect.API.Nodes;
+using ICD.Connect.Calendaring.Robin.Components.Converters;
 using ICD.Connect.Protocol.Network.Ports.Web;
+using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Robin.Components
 {
@@ -25,6 +28,30 @@ namespace ICD.Connect.Calendaring.Robin.Components
 		/// Gets the help information for the node.
 		/// </summary>
 		public virtual string ConsoleHelp { get { return string.Empty; } }
+
+		private static JsonSerializerSettings s_RobinJsonSerializerSettings;
+
+		public static JsonSerializerSettings RobinJsonSerializerSettings
+		{
+			get
+			{
+				if (s_RobinJsonSerializerSettings == null)
+				{
+					s_RobinJsonSerializerSettings = new JsonSerializerSettings
+					{
+#if !SIMPLSHARP
+						// Turn off the ridiculous new behaviour of DateTiming anything vaguely resembling a date
+						DateParseHandling = DateParseHandling.None,
+#endif
+					};
+
+					// Serialize DateTimes to ISO without ms
+					s_RobinJsonSerializerSettings.Converters.Add(new DateInfoDateTimeConverter());
+				}
+
+				return s_RobinJsonSerializerSettings;
+			}
+		}
 
 		#endregion
 

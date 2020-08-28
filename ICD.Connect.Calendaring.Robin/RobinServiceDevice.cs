@@ -31,10 +31,17 @@ namespace ICD.Connect.Calendaring.Robin
 
 		private readonly CalendarParserCollection m_CalendarParserCollection;
 
-		private readonly IDictionary<string, List<string>> m_Headers =
+		private readonly IDictionary<string, List<string>> m_GetHeaders =
 			new Dictionary<string, List<string>>
 			{
 				{"Connection", new List<string> {"keep-alive"}}
+			};
+
+		private readonly IDictionary<string, List<string>> m_PostHeaders =
+			new Dictionary<string, List<string>>
+			{
+				{"Connection", new List<string> {"keep-alive"}},
+				{"Content-Type", new List<string>{"application/json"} }
 			};
 
 		private string m_CalendarParsingPath;
@@ -49,19 +56,29 @@ namespace ICD.Connect.Calendaring.Robin
 			get
 			{
 				List<string> values;
-				return m_Headers.TryGetValue("Authorization", out values) ? values.FirstOrDefault() : null;
+				return m_GetHeaders.TryGetValue("Authorization", out values) ? values.FirstOrDefault() : null;
 			}
 			set
 			{
-				List<string> values;
-				if (!m_Headers.TryGetValue("Authorization", out values))
+				List<string> getValues;
+				if (!m_GetHeaders.TryGetValue("Authorization", out getValues))
 				{
-					values = new List<string>();
-					m_Headers.Add("Authorization", values);
+					getValues = new List<string>();
+					m_GetHeaders.Add("Authorization", getValues);
 				}
 
-				values.Clear();
-				values.Add(value);
+				getValues.Clear();
+				getValues.Add(value);
+
+				List<string> postValues;
+				if (!m_PostHeaders.TryGetValue("Authorization", out postValues))
+				{
+					postValues = new List<string>();
+					m_PostHeaders.Add("Authorization", postValues);
+				}
+
+				postValues.Clear();
+				postValues.Add(value);
 			}
 		}
 
@@ -138,7 +155,7 @@ namespace ICD.Connect.Calendaring.Robin
 			}
 		}
 
-		public string Request(string path)
+		public string GetRequest(string path)
 		{
 			if (m_Port == null)
 				throw new InvalidOperationException("Failed to make request - Port is null");
@@ -147,7 +164,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			try
 			{
-				output = m_Port.Get(path, m_Headers);
+				output = m_Port.Get(path, m_GetHeaders);
 			}
 			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)
@@ -169,6 +186,31 @@ namespace ICD.Connect.Calendaring.Robin
 			}
 
 			return JsonConvert.DeserializeObject<Dictionary<string, object>>(output.DataAsString)["data"].ToString();
+		}
+
+		public void PostRequest(string path, byte[] data)
+		{
+			if (m_Port == null)
+				throw new InvalidOperationException("Failed to make request - Port is null");
+
+			WebPortResponse output;
+
+			try
+			{
+				output = m_Port.Post(path, (Dictionary<string, List<string>>)m_PostHeaders, data);
+			}
+			// Catch HTTP or HTTPS exception, without dependency on Crestron
+			catch (Exception e)
+			{
+				string message = string.Format("Failed to make request - {0}", e.Message);
+				throw new InvalidOperationException(message, e);
+			}
+
+			if (!output.Success)
+			{
+				string message = string.Format("Request did not succeed");
+				throw new InvalidOperationException(message);
+			}
 		}
 
 		#endregion

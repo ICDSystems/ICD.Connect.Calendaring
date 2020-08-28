@@ -55,11 +55,41 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 		/// </summary>
 		public string IsPrivate { get; set; }
 
+		/// <summary>
+		/// People/Resources invited to the event
+		/// </summary>
+		public EventInvitee[] Invitees { get; set; }
+
 		[JsonConverter(typeof(DateInfoConverter))]
 		public sealed class DateInfo
 		{
 			public DateTime DateTimeInfo { get; set; }
+
 			public string TimeZoneInfo { get; set; }
+		}
+
+		[JsonConverter(typeof(EventInviteeConverter))]
+		public sealed class EventInvitee
+		{
+			public string Id { get; set; }
+
+			public string EventId { get; set; }
+
+			public string UserId { get; set; }
+
+			public string Email { get; set; }
+
+			public string DisplayName { get; set; }
+
+			public string ResponseStatus { get; set; }
+
+			public bool IsOrganizer { get; set; }
+
+			public bool IsResource { get; set; }
+
+			public DateTime UpdatedAt { get; set; }
+
+			public DateTime CreatedAt { get; set; }
 		}
 	}
 }

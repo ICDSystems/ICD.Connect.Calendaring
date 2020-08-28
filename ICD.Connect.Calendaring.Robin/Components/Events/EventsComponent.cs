@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Services.Logging;
@@ -77,6 +78,16 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 			OnEventsUpdated.Raise(this);
 		}
 
+		/// <summary>
+		/// Creates a booking on the room.
+		/// </summary>
+		public void CreateEvent(Event booking)
+		{
+			string data = JsonConvert.SerializeObject(booking, Formatting.None, RobinJsonSerializerSettings);
+			PostEvent(Parent.ResourceId, data);
+			UpdateBookings();
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -94,9 +105,15 @@ namespace ICD.Connect.Calendaring.Robin.Components.Events
 				string.Format("spaces/{0}/events?after={1:yyyy-MM-ddTHH:mm:sszzz}&before={2:yyyy-MM-ddTHH:mm:sszzz}&per_page=300",
 				              Uri.EscapeDataString(resourceId), startTime, endTime);
 
-			string data = Parent.Request(path);
+			string data = Parent.GetRequest(path);
 
 			return JsonConvert.DeserializeObject<Event[]>(data);
+		}
+
+		private void PostEvent(string resourceId, string eventData)
+		{
+			string path = string.Format("spaces/{0}/events", Uri.EscapeDataString(resourceId));
+			Parent.PostRequest(path, Encoding.UTF8.GetBytes(eventData));
 		}
 
 		/// <summary>
