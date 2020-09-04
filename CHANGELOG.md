@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+ - Added calendar features enum to track what each ICalendarControl supports (Edit booking, check-in/-out, create booking, etc...)
+ - Added booking creation and editing features to ICalendarControl
+ - Added CalendarManager which tracks a collection of ICalendarControls
+ - Implemented booking creation and editing for Asure
+ - Implemented booking creation and editing for Robin
+
+### Changed
+ - Fixed Asure implementation to use UTC conversions properly
+ - Asure settings no longer have Username & Password. The URI or Proxy Username & Password is now used for requests.
 
 ## [9.1.0] - 2020-07-14
 ### Changed
