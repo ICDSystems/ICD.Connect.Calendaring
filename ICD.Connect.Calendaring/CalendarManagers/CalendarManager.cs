@@ -7,6 +7,7 @@ using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
+using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Calendaring.Controls;
 
 namespace ICD.Connect.Calendaring.CalendarManagers
@@ -180,9 +181,8 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		private static IEnumerable<IBooking> DeduplicateBookings(IEnumerable<IBooking> bookings)
 		{
 			return bookings.GroupBy(x => x,
-			                        (b, bs) =>
-				                        new BookingGroup(bs),
-			                        BookingEqualityComparer.Instance)
+			                        (b, bs) => new BookingGroup(bs),
+			                        BookingDeduplicationEqualityComparer.Instance)
 			               .ToArray();
 		}
 
@@ -205,7 +205,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 
 				newBookings = DeduplicateBookings(newBookings).ToArray();
 
-				if (newBookings.SequenceEqual(m_Bookings, BookingEqualityComparer.Instance))
+				if (newBookings.SequenceEqual(m_Bookings, BookingDeduplicationEqualityComparer.Instance))
 					return;
 
 				m_Bookings.Clear();
