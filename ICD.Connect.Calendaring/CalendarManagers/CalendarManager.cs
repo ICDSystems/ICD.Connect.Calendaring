@@ -16,17 +16,22 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 	{
 		#region Events
 
+		/// <summary>
+		/// Raised when bookings are added/removed.
+		/// </summary>
 		public event EventHandler OnBookingsChanged;
 
 		#endregion
 
 		private readonly SafeCriticalSection m_CalendarSection;
-
 		private readonly List<IBooking> m_Bookings;
 		private readonly BiDictionary<ICalendarPoint, ICalendarControl> m_CalendarPointsToControls;
 
 		#region Constructor
 
+		/// <summary>
+		/// Constructor.
+		/// </summary>
 		public CalendarManager()
 		{
 			m_CalendarSection = new SafeCriticalSection();
@@ -57,56 +62,72 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		}
 
 		/// <summary>
-		/// Pushes the specified booking to the most appropriate provider.
+		/// Pushes the specified booking to the providers.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void PushBooking(IBooking booking)
+		public void PushBooking([NotNull] IBooking booking)
 		{
-			var provider = FindBestProviderForNewBooking();
+			if (booking == null)
+				throw new ArgumentNullException("booking");
 
-			if (provider == null)
-				throw new InvalidOperationException("No provider found to push booking to");
-
-			provider.PushBooking(booking);
+			foreach (ICalendarControl control in GetProviders(eCalendarFeatures.CreateBookings))
+				control.PushBooking(booking);
 		}
 
 		/// <summary>
 		/// Checks into the specified booking.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void CheckIn(IBooking booking)
+		public void CheckIn([NotNull] IBooking booking)
 		{
-			var provider = FindBestProviderForExistingBooking(booking);
+			if (booking == null)
+				throw new ArgumentNullException("booking");
 
-			if (provider == null)
-				throw new InvalidOperationException("No provider found to check in booking");
+			BookingGroup bg = booking as BookingGroup;
+			if (bg != null)
+			{
+				bg.ForEach(CheckIn);
+				return;
+			}
 
-			var bg = booking as BookingGroup;
-			provider.CheckIn(bg == null ? booking : bg.Key);
+			foreach (ICalendarControl control in GetProviders(eCalendarFeatures.CheckIn).Where(c => c.CanCheckIn(booking)))
+				control.CheckIn(booking);
 		}
 
 		/// <summary>
 		/// Checks out of the specified booking.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void CheckOut(IBooking booking)
+		public void CheckOut([NotNull] IBooking booking)
 		{
-			var provider = FindBestProviderForExistingBooking(booking);
+			if (booking == null)
+				throw new ArgumentNullException("booking");
 
-			if (provider == null)
-				throw new InvalidOperationException("No provider found to check out booking");
+			BookingGroup bg = booking as BookingGroup;
+			if (bg != null)
+			{
+				bg.ForEach(CheckOut);
+				return;
+			}
 
-			var bg = booking as BookingGroup;
-			provider.CheckOut(bg == null ? booking : bg.Key);
+			foreach (ICalendarControl control in GetProviders(eCalendarFeatures.CheckOut).Where(c => c.CanCheckOut(booking)))
+				control.CheckOut(booking);
 		}
 
 		/// <summary>
 		/// Determines if the specified booking can be checked into.
 		/// </summary>
 		/// <param name="booking"></param>
-		public bool CanCheckIn(IBooking booking)
+		public bool CanCheckIn([NotNull] IBooking booking)
 		{
-			return m_CalendarSection.Execute(() => m_CalendarPointsToControls.Values.Any(c => c.CanCheckIn(booking)));
+			if (booking == null)
+				throw new ArgumentNullException("booking");
+
+			BookingGroup bg = booking as BookingGroup;
+			if (bg != null)
+				return bg.Any(CanCheckIn);
+
+			return GetProviders(eCalendarFeatures.CheckIn).Any(c => c.CanCheckIn(booking));
 		}
 
 		/// <summary>
@@ -114,9 +135,16 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// </summary>
 		/// <param name="booking"></param>
 		/// <returns></returns>
-		public bool CanCheckOut(IBooking booking)
+		public bool CanCheckOut([NotNull] IBooking booking)
 		{
-			return m_CalendarSection.Execute(() => m_CalendarPointsToControls.Values.Any(c => c.CanCheckOut(booking)));
+			if (booking == null)
+				throw new ArgumentNullException("booking");
+
+			BookingGroup bg = booking as BookingGroup;
+			if (bg != null)
+				return bg.Any(CanCheckOut);
+
+			return GetProviders(eCalendarFeatures.CheckOut).Any(c => c.CanCheckOut(booking));
 		}
 
 		/// <summary>
@@ -131,7 +159,24 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			if (calendarPoint.Control == null)
 				throw new ArgumentNullException("calendarPoint", "Calendar Point has no calendar control");
 
-			RegisterCalendarProvider(calendarPoint, calendarPoint.Control);
+			m_CalendarSection.Enter();
+
+			try
+			{
+				ICalendarControl control;
+				if (m_CalendarPointsToControls.TryGetValue(calendarPoint, out control) && control == calendarPoint.Control)
+					return;
+
+				Unsubscribe(control);
+				m_CalendarPointsToControls.Add(calendarPoint, control);
+				Subscribe(control);
+			}
+			finally
+			{
+				m_CalendarSection.Leave();
+			}
+
+			UpdateBookings();
 		}
 
 		/// <summary>
@@ -146,7 +191,23 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			if (calendarPoint.Control == null)
 				throw new ArgumentNullException("calendarPoint", "Calendar Point has no calendar control");
 
-			DeregisterCalendarProvider(calendarPoint, calendarPoint.Control);
+			m_CalendarSection.Enter();
+
+			try
+			{
+				ICalendarControl control;
+				if (!m_CalendarPointsToControls.TryGetValue(calendarPoint, out control))
+					return;
+
+				Unsubscribe(control);
+				m_CalendarPointsToControls.RemoveKey(calendarPoint);
+			}
+			finally
+			{
+				m_CalendarSection.Leave();
+			}
+
+			UpdateBookings();
 		}
 
 		/// <summary>
@@ -195,13 +256,10 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 
 			try
 			{
-				IEnumerable<IBooking> newBookings =
-					m_CalendarPointsToControls
-						.Where(c => c.Value.SupportedCalendarFeatures.HasFlag(eCalendarFeatures.ListBookings))
-						.OrderBy(kvp => kvp.Key.Order)
-						.SelectMany(c => c.Value.GetBookings())
-						.OrderBy(b => b.StartTime)
-						.ToArray();
+				IEnumerable<IBooking> newBookings = GetProviders(eCalendarFeatures.ListBookings)
+					.SelectMany(c => c.GetBookings())
+					.OrderBy(b => b.StartTime)
+					.ToArray();
 
 				newBookings = DeduplicateBookings(newBookings).ToArray();
 
@@ -220,97 +278,68 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		}
 
 		/// <summary>
-		/// Finds the calendar control associated with the specified booking.
+		/// Gets calendar providers where both the control and the point intersect the given features mask.
 		/// </summary>
-		/// <param name="booking"></param>
+		/// <param name="features"></param>
 		/// <returns></returns>
-		[CanBeNull]
-		private ICalendarControl FindBestProviderForExistingBooking([NotNull] IBooking booking)
+		[NotNull]
+		private IEnumerable<ICalendarControl> GetProviders(eCalendarFeatures features)
 		{
 			m_CalendarSection.Enter();
 
 			try
 			{
-				var bg = booking as BookingGroup;
-				return bg != null
-					       ? m_CalendarPointsToControls.Values.FirstOrDefault(c => c.GetBookings().Contains(bg.Key))
-					       : m_CalendarPointsToControls.Values.FirstOrDefault(c => c.GetBookings().Contains(booking));
+				return m_CalendarPointsToControls
+					.Where(kvp =>
+					       kvp.Key
+					          .Features
+					          .HasFlags(features) &&
+					       kvp.Value
+					          .SupportedCalendarFeatures
+					          .HasFlags(features))
+					.OrderBy(kvp => kvp.Key.Order)
+					.Select(kvp => kvp.Value)
+					.ToArray();
 			}
 			finally
 			{
 				m_CalendarSection.Leave();
 			}
-		}
-
-		[CanBeNull]
-		private ICalendarControl FindBestProviderForNewBooking()
-		{
-			return m_CalendarSection.Execute(() => m_CalendarPointsToControls
-			                                       .Where(kvp => 
-				                                              kvp.Value
-				                                                 .SupportedCalendarFeatures
-				                                                 .HasFlag(eCalendarFeatures.CreateBookings))
-			                                       .OrderBy(kvp => kvp.Key.Order)
-												   .Select(kvp => kvp.Value)
-			                                       .FirstOrDefault());
-		}
-
-		private void RegisterCalendarProvider([NotNull] ICalendarPoint point, [NotNull] ICalendarControl control)
-		{
-			m_CalendarSection.Enter();
-
-			try
-			{
-				ICalendarControl oldControl;
-				if (m_CalendarPointsToControls.TryGetValue(point, out oldControl) && oldControl == control)
-					return;
-
-				Unsubscribe(control);
-				m_CalendarPointsToControls.Add(point, control);
-				Subscribe(control);
-			}
-			finally
-			{
-				m_CalendarSection.Leave();
-			}
-
-			UpdateBookings();
-		}
-
-		private void DeregisterCalendarProvider([NotNull] ICalendarPoint point, [NotNull] ICalendarControl control)
-		{
-			m_CalendarSection.Enter();
-
-			try
-			{
-				if (!m_CalendarPointsToControls.ContainsKey(point))
-					return;
-
-				Unsubscribe(control);
-				m_CalendarPointsToControls.RemoveKey(point);
-			}
-			finally
-			{
-				m_CalendarSection.Leave();
-			}
-
-			UpdateBookings();
 		}
 
 		#endregion
 
 		#region Calendar Control Callbacks
 
-		private void Subscribe(ICalendarControl control)
+		/// <summary>
+		/// Subscribe to the control events.
+		/// </summary>
+		/// <param name="control"></param>
+		private void Subscribe([CanBeNull] ICalendarControl control)
 		{
+			if (control == null)
+				return;
+
 			control.OnBookingsChanged += ControlOnBookingsChanged;
 		}
 
-		private void Unsubscribe(ICalendarControl control)
+		/// <summary>
+		/// Unsubscribe from the control events.
+		/// </summary>
+		/// <param name="control"></param>
+		private void Unsubscribe([CanBeNull] ICalendarControl control)
 		{
+			if (control == null)
+				return;
+
 			control.OnBookingsChanged -= ControlOnBookingsChanged;
 		}
 
+		/// <summary>
+		/// Called when a calendar control raises new bookings.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ControlOnBookingsChanged(object sender, EventArgs e)
 		{
 			UpdateBookings();

@@ -86,6 +86,9 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		[CanBeNull]
 		public static IBooking GetCurrentBooking([NotNull] this ICalendarManager extends)
 		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
 			return extends.GetBookings().FirstOrDefault(BookingExtensions.IsBookingCurrent);
 		}
 
@@ -97,6 +100,9 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		[CanBeNull]
 		public static IBooking GetNextBooking([NotNull] this ICalendarManager extends)
 		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
 			return extends.GetBookings()
 			              .Where(b => !b.IsBookingCurrent() && b.StartTime > IcdEnvironment.GetUtcTime())
 			              .OrderBy(b => b.StartTime)
