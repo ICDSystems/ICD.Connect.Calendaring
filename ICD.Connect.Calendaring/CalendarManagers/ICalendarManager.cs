@@ -5,6 +5,7 @@ using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
+using ICD.Connect.Calendaring.Controls;
 
 namespace ICD.Connect.Calendaring.CalendarManagers
 {
@@ -14,6 +15,21 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Raised when bookings are added/removed.
 		/// </summary>
 		event EventHandler OnBookingsChanged;
+
+		/// <summary>
+		/// Gets the registered calendar providers.
+		/// </summary>
+		/// <returns></returns>
+		[NotNull]
+		IEnumerable<ICalendarControl> GetProviders();
+
+		/// <summary>
+		/// Gets the registered calendar providers where both the calendar point and calendar control
+		/// instersect with the given features mask.
+		/// </summary>
+		/// <returns></returns>
+		[NotNull]
+		IEnumerable<ICalendarControl> GetProviders(eCalendarFeatures features);
 
 		/// <summary>
 		/// Refreshes the collection of bookings on the manager.

@@ -45,6 +45,58 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		#region Methods
 
 		/// <summary>
+		/// Gets the registered calendar providers.
+		/// </summary>
+		/// <returns></returns>
+		[NotNull]
+		public IEnumerable<ICalendarControl> GetProviders()
+		{
+			m_CalendarSection.Enter();
+
+			try
+			{
+				return m_CalendarPointsToControls
+					.OrderBy(kvp => kvp.Key.Order)
+					.Select(kvp => kvp.Value)
+					.ToArray();
+			}
+			finally
+			{
+				m_CalendarSection.Leave();
+			}
+		}
+
+		/// <summary>
+		/// Gets the registered calendar providers where both the calendar point and calendar control
+		/// instersect with the given features mask.
+		/// </summary>
+		/// <returns></returns>
+		[NotNull]
+		public IEnumerable<ICalendarControl> GetProviders(eCalendarFeatures features)
+		{
+			m_CalendarSection.Enter();
+
+			try
+			{
+				return m_CalendarPointsToControls
+					.Where(kvp =>
+					       kvp.Key
+					          .Features
+					          .HasFlags(features) &&
+					       kvp.Value
+					          .SupportedCalendarFeatures
+					          .HasFlags(features))
+					.OrderBy(kvp => kvp.Key.Order)
+					.Select(kvp => kvp.Value)
+					.ToArray();
+			}
+			finally
+			{
+				m_CalendarSection.Leave();
+			}
+		}
+
+		/// <summary>
 		/// Gets the available bookings.
 		/// </summary>
 		/// <returns></returns>
@@ -275,36 +327,6 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			}
 
 			OnBookingsChanged.Raise(this);
-		}
-
-		/// <summary>
-		/// Gets calendar providers where both the control and the point intersect the given features mask.
-		/// </summary>
-		/// <param name="features"></param>
-		/// <returns></returns>
-		[NotNull]
-		private IEnumerable<ICalendarControl> GetProviders(eCalendarFeatures features)
-		{
-			m_CalendarSection.Enter();
-
-			try
-			{
-				return m_CalendarPointsToControls
-					.Where(kvp =>
-					       kvp.Key
-					          .Features
-					          .HasFlags(features) &&
-					       kvp.Value
-					          .SupportedCalendarFeatures
-					          .HasFlags(features))
-					.OrderBy(kvp => kvp.Key.Order)
-					.Select(kvp => kvp.Value)
-					.ToArray();
-			}
-			finally
-			{
-				m_CalendarSection.Leave();
-			}
 		}
 
 		#endregion
