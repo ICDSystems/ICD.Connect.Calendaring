@@ -124,5 +124,18 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			              .OrderBy(b => b.StartTime)
 			              .FirstOrDefault();
 		}
+
+		/// <summary>
+		/// Gets the amount of time until the next booking starts.
+		/// </summary>
+		/// <returns></returns>
+		public static TimeSpan GetTimeToNextBooking([NotNull] this ICalendarManager extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			IBooking next = extends.GetNextBooking();
+			return next == null ? TimeSpan.MaxValue : next.StartTime - IcdEnvironment.GetUtcTime();
+		}
 	}
 }
