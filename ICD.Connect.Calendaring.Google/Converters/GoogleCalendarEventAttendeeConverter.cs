@@ -15,6 +15,53 @@ namespace ICD.Connect.Calendaring.Google.Converters
 		private const string ATTRIBUTE_ORGANIZER = "organizer";
 		private const string ATTRIBUTE_RESPONSE_STATUS = "responseStatus";
 
+		protected override void WriteProperties(JsonWriter writer, GoogleCalendarEventAttendee value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.Email != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_EMAIL);
+				serializer.Serialize(writer, value.Email);
+			}
+
+			if (value.Self)
+			{
+				writer.WritePropertyName(ATTRIBUTE_SELF);
+				serializer.Serialize(writer, value.Self);
+			}
+
+			if (value.Optional)
+			{
+				writer.WritePropertyName(ATTRIBUTE_OPTIONAL);
+				serializer.Serialize(writer, value.Optional);
+			}
+
+			if (value.DisplayName != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_DISPLAY_NAME);
+				serializer.Serialize(writer, value.DisplayName);
+			}
+
+			if (value.Resource != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RESOURCE);
+				serializer.Serialize(writer, value.Resource);
+			}
+
+			if (value.Organizer)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RESOURCE);
+				serializer.Serialize(writer, value.Organizer);
+			}
+
+			if (value.ResponseStatus != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RESPONSE_STATUS);
+				serializer.Serialize(writer, value.ResponseStatus);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, GoogleCalendarEventAttendee instance,JsonSerializer serializer)
 		{
 			switch (property)

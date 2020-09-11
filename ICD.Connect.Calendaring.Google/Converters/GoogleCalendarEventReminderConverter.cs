@@ -9,6 +9,17 @@ namespace ICD.Connect.Calendaring.Google.Converters
 	{
 		private const string ATTRIBUTE_USE_DEFAULT = "useDefault";
 
+		protected override void WriteProperties(JsonWriter writer, GoogleCalendarEventReminder value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.UseDefault)
+			{
+				writer.WritePropertyName(ATTRIBUTE_USE_DEFAULT);
+				serializer.Serialize(writer, value.UseDefault);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, GoogleCalendarEventReminder instance, JsonSerializer serializer)
 		{
 			switch (property)

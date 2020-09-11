@@ -16,17 +16,28 @@ namespace ICD.Connect.Calendaring.Google.Controls
 {
 	public sealed class GoogleCalendarControl : AbstractCalendarControl<GoogleCalendarDevice>
 	{
-		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
+		#region Events
+
 		/// <summary>
 		/// Raised when bookings are added/removed.
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
+
+		#endregion
+
+		#region Members
+
+		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
 		private readonly IcdOrderedDictionary<GoogleCalendarEvent, GoogleBooking> m_Bookings;
 		private readonly SafeCriticalSection m_BookingsSection;
 		private readonly SafeTimer m_RefreshTimer;
 
 		private static readonly PredicateComparer<GoogleCalendarEvent, DateTime> s_CalendarEventComparer;
+
+		#endregion
+
+		#region Constructors
 
 		static GoogleCalendarControl()
 		{
@@ -44,7 +55,9 @@ namespace ICD.Connect.Calendaring.Google.Controls
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings |
+			                            eCalendarFeatures.CreateBookings |
+			                            eCalendarFeatures.EditBookings;
 		}
 
 		/// <summary>
@@ -58,6 +71,10 @@ namespace ICD.Connect.Calendaring.Google.Controls
 
 			base.DisposeFinal(disposing);
 		}
+
+		#endregion
+
+		#region Methods
 
 		/// <summary>
 		/// Updates the collection of bookings.
@@ -104,12 +121,46 @@ namespace ICD.Connect.Calendaring.Google.Controls
 
 		public override void PushBooking(IBooking booking)
 		{
-			throw new NotSupportedException();
+			GoogleCalendarEvent newEvent = new GoogleCalendarEvent
+			{
+				Start = new GoogleCalendarEventTime
+				{
+					DateTime = booking.StartTime
+				},
+				End = new GoogleCalendarEventTime
+				{
+					DateTime = booking.EndTime
+				},
+				Summary = booking.MeetingName,
+				Organizer = new GoogleCalendarEventEmail
+				{
+					Email = booking.OrganizerEmail
+				}
+			};
+
+			Parent.CreateEvent(newEvent);
+			Refresh();
 		}
 
 		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
 		{
-			throw new NotSupportedException();
+			if (!(oldBooking is GoogleBooking))
+				throw new InvalidOperationException(string.Format("Cannot convert booking to GoogleBooking. Booking - {0}", oldBooking));
+
+			GoogleCalendarEvent oldEvent = m_Bookings.GetKey(oldBooking as GoogleBooking);
+			string eventId = oldEvent.Id;
+
+			int seq = int.Parse(oldEvent.Sequence);
+			seq++;
+
+			oldEvent.Sequence = seq.ToString();
+			oldEvent.Start.DateTime = newBooking.StartTime;
+			oldEvent.End.DateTime = newBooking.EndTime;
+			oldEvent.Summary = newBooking.MeetingName;
+			oldEvent.Organizer.Email = newBooking.OrganizerEmail;
+
+			Parent.EditEvent(oldEvent, eventId);
+			Refresh();
 		}
 
 		public override bool CanCheckIn(IBooking booking)
@@ -131,5 +182,7 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		{
 			throw new NotSupportedException();
 		}
+
+		#endregion
 	}
 }

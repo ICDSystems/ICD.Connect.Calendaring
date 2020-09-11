@@ -9,6 +9,14 @@ namespace ICD.Connect.Calendaring.Google.Converters
 	{
 		private const string ATTRIBUTE_DATE_TIME = "dateTime";
 
+		protected override void WriteProperties(JsonWriter writer, GoogleCalendarEventTime value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			writer.WritePropertyName(ATTRIBUTE_DATE_TIME);
+			serializer.Serialize(writer, value.DateTime);
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, GoogleCalendarEventTime instance,JsonSerializer serializer)
 		{
 			switch (property)

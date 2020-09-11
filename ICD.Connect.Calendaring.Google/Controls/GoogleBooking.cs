@@ -31,12 +31,12 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		/// <summary>
 		/// Returns the meeting start time.
 		/// </summary>
-		public override DateTime StartTime { get { return m_CalendarEvent.Start.DateTime.ToLocalTime(); } }
+		public override DateTime StartTime { get { return m_CalendarEvent.Start.DateTime; } }
 
 		/// <summary>
 		/// Returns the meeting end time.
 		/// </summary>
-		public override DateTime EndTime { get { return m_CalendarEvent.End.DateTime.ToLocalTime(); } }
+		public override DateTime EndTime { get { return m_CalendarEvent.End.DateTime; } }
 
 		/// <summary>
 		/// Returns true if meeting is private.

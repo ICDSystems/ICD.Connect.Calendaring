@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+#if SIMPLSHARP
+using Crestron.SimplSharp.CrestronXml;
+#else
 using System.Xml;
+#endif
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
@@ -20,6 +25,7 @@ using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.Utils;
 using ICD.Connect.Settings;
 using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace ICD.Connect.Calendaring.Google
 {
@@ -133,6 +139,54 @@ namespace ICD.Connect.Calendaring.Google
 
 		}
 
+		public void CreateEvent(GoogleCalendarEvent newEvent)
+		{
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}",
+			                           CalendarId, m_Token);
+
+			string eventData = JsonConvert.SerializeObject(newEvent, Formatting.None);
+
+			WebPortResponse postResponse =
+				m_Port.Post(url, Encoding.UTF8.GetBytes(eventData));
+
+			GoogleCalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(postResponse.DataAsString))
+				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(postResponse.DataAsString);
+			if (!postResponse.Success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+		}
+
+		public void EditEvent(GoogleCalendarEvent oldEvent, string eventId)
+		{
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			string url =
+				string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events/{1}?access_token={2}",
+				              CalendarId, eventId, m_Token);
+
+			string eventData = JsonConvert.SerializeObject(oldEvent, Formatting.None);
+
+			WebPortResponse putResponse = m_Port.Put(url, Encoding.UTF8.GetBytes(eventData));
+
+			GoogleCalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(putResponse.DataAsString))
+				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(putResponse.DataAsString);
+			if (!putResponse.Success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -204,7 +258,7 @@ namespace ICD.Connect.Calendaring.Google
 				@"{""iss"": " + ClientEmail + @", ""iat"": " +
 				(int)IcdEnvironment.GetUtcTime().ToUnixTimestamp() + @", ""exp"": " +
 				(int)(IcdEnvironment.GetUtcTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
-				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
+				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar"", ""sub"": " + CalendarId + @"}";
 
 			// Build the request token
 			string privateKey = SanitizePrivateKey(PrivateKey);
