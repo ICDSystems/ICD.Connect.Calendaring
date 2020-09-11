@@ -60,7 +60,7 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		}
 
 		/// <summary>
-		/// Updates the view.
+		/// Updates the collection of bookings.
 		/// </summary>
 		public override void Refresh()
 		{
@@ -86,9 +86,10 @@ namespace ICD.Connect.Calendaring.Google.Controls
 
 		private GoogleBooking GetBooking(GoogleCalendarEvent calendarEvent)
 		{
-			IEnumerable<IDialContext> dialContexts =
-				Parent.CalendarParserCollection
-				      .ParseText(calendarEvent.Description);
+			IEnumerable<IDialContext> dialContexts = calendarEvent.Description == null
+				                                         ? Enumerable.Empty<IDialContext>()
+				                                         : Parent.CalendarParserCollection
+				                                                 .ParseText(calendarEvent.Description);
 
 			return new GoogleBooking(calendarEvent, dialContexts);
 		}

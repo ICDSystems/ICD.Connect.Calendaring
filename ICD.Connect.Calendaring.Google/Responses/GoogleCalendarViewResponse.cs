@@ -21,7 +21,6 @@ namespace ICD.Connect.Calendaring.Google.Responses
 	[JsonConverter(typeof(GoogleDefaultReminderConverter))]
 	public sealed class GoogleDefaultReminder
 	{
-
 	}
 
 	[JsonConverter(typeof(GoogleCalendarEventConverter))]
@@ -47,8 +46,6 @@ namespace ICD.Connect.Calendaring.Google.Responses
 	
 		public bool GuestCanModify { get; set; }
 		public GoogleCalendarEventReminder Reminders { get; set; }
-
-
 	}
 
 	[JsonConverter(typeof(GoogleCalendarEventEmailConverter))]

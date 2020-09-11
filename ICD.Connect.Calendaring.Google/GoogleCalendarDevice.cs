@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
@@ -102,6 +103,36 @@ namespace ICD.Connect.Calendaring.Google
 			}
 		}
 
+		public IEnumerable<GoogleCalendarEvent> GetEvents()
+		{
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			// We want the events to be in UTC at this level.
+			const string responseTimeZone = "UTC";
+
+			// Format the URL with query parameters requesting the current days events.
+			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}&singleEvents=true&timeMax={2}&timeMin={3}&timeZone={4}",
+			                           CalendarId, m_Token, Rfc3339EndOfDayTimeStamp(), Rfc3339StartOfDayTimeStamp(), responseTimeZone);
+
+			WebPortResponse getResponse = m_Port.Get(url);
+
+			GoogleCalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(getResponse.DataAsString))
+				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(getResponse.DataAsString);
+			if (!getResponse.Success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+
+			return response == null
+				       ? Enumerable.Empty<GoogleCalendarEvent>()
+				       : response.Items;
+
+		}
+
 		#endregion
 
 		#region Private Methods
@@ -165,6 +196,86 @@ namespace ICD.Connect.Calendaring.Google
 			{
 				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
 			}
+		}
+
+		private string RenewToken()
+		{
+			string payload =
+				@"{""iss"": " + ClientEmail + @", ""iat"": " +
+				(int)IcdEnvironment.GetUtcTime().ToUnixTimestamp() + @", ""exp"": " +
+				(int)(IcdEnvironment.GetUtcTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
+				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
+
+			// Build the request token
+			string privateKey = SanitizePrivateKey(PrivateKey);
+			string jwt = JwtUtils.SignRs256(payload, privateKey);
+
+			// Request the OAuth token
+			m_Port.Accept = "*/*";
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{ "Content-Type", new List<string>{"application/x-www-form-urlencoded"} }
+			};
+
+			Dictionary<string, string> body = new Dictionary<string, string>
+			{
+				{"grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"},
+				{"assertion", jwt}
+			};
+
+			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
+
+			const string url = "https://www.googleapis.com/oauth2/v4/token";
+
+			//Dispatch!
+			WebPortResponse output = m_Port.Post(url, headers, bodyData);
+
+			if (!output.Success)
+			{
+				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
+				m_Token = null;
+				return null;
+			}
+
+			//Get the token string value out of the JSON
+			GoogleTokenResponse response = JsonConvert.DeserializeObject<GoogleTokenResponse>(output.DataAsString);
+			m_Token = response.AccessToken;
+			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+			return m_Token;
+		}
+
+		public static string SanitizePrivateKey(string privateKey)
+		{
+			const string privateKeyRegex =
+				@"(?'begin'-*BEGIN PRIVATE KEY-*)?(?'key'[^-]+)(?'end'-*END PRIVATE KEY-*(\\n)?)?";
+
+			Match match = Regex.Match(privateKey, privateKeyRegex);
+			if (!match.Success)
+				throw new FormatException("Private Key does not match expected format");
+
+			return match.Groups["key"].Value.Replace("\n", "");
+		}
+
+		/// <summary>
+		/// Creates a timestamp string that represents the start of the current day in local time in a format Google accepts.
+		/// </summary>
+		/// <returns></returns>
+		private static string Rfc3339StartOfDayTimeStamp()
+		{
+			var localTime = IcdEnvironment.GetLocalTime();
+			var endOfDay = new DateTime(localTime.Year, localTime.Month, localTime.Day, 0, 0, 0, DateTimeKind.Local);
+			return XmlConvert.ToString(endOfDay, XmlDateTimeSerializationMode.Local);
+		}
+
+		/// <summary>
+		/// Creates a timestamp string that represents the end of the current day in local time in a format Google accepts.
+		/// </summary>
+		/// <returns></returns>
+		private static string Rfc3339EndOfDayTimeStamp()
+		{
+			var localTime = IcdEnvironment.GetLocalTime();
+			var endOfDay = new DateTime(localTime.Year, localTime.Month, localTime.Day, 23, 59, 59, DateTimeKind.Local);
+			return XmlConvert.ToString(endOfDay, XmlDateTimeSerializationMode.Local);
 		}
 
 		#endregion
@@ -270,90 +381,6 @@ namespace ICD.Connect.Calendaring.Google
 			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
 		}
 
-		public static string SanitizePrivateKey(string privateKey)
-		{
-			const string privateKeyRegex =
-				@"(?'begin'-*BEGIN PRIVATE KEY-*)?(?'key'[^-]+)(?'end'-*END PRIVATE KEY-*(\\n)?)?";
-
-			Match match = Regex.Match(privateKey, privateKeyRegex);
-			if (!match.Success)
-				throw new FormatException("Private Key does not match expected format");
-
-			return match.Groups["key"].Value.Replace("\n", "");
-		}
-
-		private string RenewToken()
-		{
-			string payload =
-				@"{""iss"": ""calendar-service@calendaring.iam.gserviceaccount.com"", ""iat"": " +
-				(int)IcdEnvironment.GetUtcTime().ToUnixTimestamp() + @", ""exp"": " +
-				(int)(IcdEnvironment.GetUtcTime() + new TimeSpan(0, 30, 0)).ToUnixTimestamp() +
-				@", ""aud"": ""https://www.googleapis.com/oauth2/v4/token"", ""scope"": ""https://www.googleapis.com/auth/calendar""}";
-
-			// Build the request token
-			string privateKey = SanitizePrivateKey(PrivateKey);
-			string jwt = JwtUtils.SignRs256(payload, privateKey);
-
-			// Request the OAuth token
-			m_Port.Accept = "*/*";
-			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
-			{
-				{ "Content-Type", new List<string>{"application/x-www-form-urlencoded"} }
-			};
-
-			Dictionary<string, string> body = new Dictionary<string, string>
-			{
-				{"grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"},
-				{"assertion", jwt}
-			};
-
-			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
-
-			const string url = "https://www.googleapis.com/oauth2/v4/token";
-
-			//Dispatch!
-			WebPortResponse output = m_Port.Post(url, headers, bodyData);
-
-			if (!output.Success)
-			{
-				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
-				m_Token = null;
-				return null;
-			}
-
-			//Get the token string value out of the JSON
-			GoogleTokenResponse response = JsonConvert.DeserializeObject<GoogleTokenResponse>(output.DataAsString);
-			m_Token = response.AccessToken;
-			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
-			return m_Token;
-			//throw new NotImplementedException();
-		}
-
-		public IEnumerable<GoogleCalendarEvent> GetEvents()
-		{
-			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
-				RenewToken();
-
-			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}",
-			                           CalendarId, m_Token);
-			
-			WebPortResponse getResponse = m_Port.Get(url);
-
-			GoogleCalendarViewResponse response = null;
-			if (!string.IsNullOrEmpty(getResponse.DataAsString))
-				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(getResponse.DataAsString);
-			if (!getResponse.Success)
-			{
-				if (response != null && response.Error != null)
-					throw new InvalidOperationException(response.Error.Message);
-				throw new InvalidOperationException("Request failed");
-			}
-
-			return response == null
-				       ? Enumerable.Empty<GoogleCalendarEvent>()
-				       : response.Items;
-
-		}
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()
 		{
 			return base.GetConsoleCommands();
