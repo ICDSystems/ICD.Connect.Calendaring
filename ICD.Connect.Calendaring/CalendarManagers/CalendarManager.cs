@@ -220,9 +220,10 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 					return;
 
 				Unsubscribe(control);
-				m_CalendarPointsToControls.Add(calendarPoint, control);
-				Subscribe(control);
+				m_CalendarPointsToControls.Add(calendarPoint, calendarPoint.Control);
+				Subscribe(calendarPoint.Control);
 			}
+
 			finally
 			{
 				m_CalendarSection.Leave();
