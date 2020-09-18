@@ -84,7 +84,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// </summary>
 		/// <returns></returns>
 		[NotNull]
-		IEnumerable<IBooking> GetBookings();
+		IEnumerable<BookingGroup> GetBookings();
 
 		/// <summary>
 		/// Sets the calendar manager back to it's initial state.
@@ -100,7 +100,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// <param name="extends"></param>
 		/// <returns></returns>
 		[CanBeNull]
-		public static IBooking GetCurrentBooking([NotNull] this ICalendarManager extends)
+		public static BookingGroup GetCurrentBooking([NotNull] this ICalendarManager extends)
 		{
 			if (extends == null)
 				throw new ArgumentNullException("extends");
@@ -114,7 +114,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// <param name="extends"></param>
 		/// <returns></returns>
 		[CanBeNull]
-		public static IBooking GetNextBooking([NotNull] this ICalendarManager extends)
+		public static BookingGroup GetNextBooking([NotNull] this ICalendarManager extends)
 		{
 			if (extends == null)
 				throw new ArgumentNullException("extends");

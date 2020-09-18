@@ -24,7 +24,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		#endregion
 
 		private readonly SafeCriticalSection m_CalendarSection;
-		private readonly List<IBooking> m_Bookings;
+		private readonly List<BookingGroup> m_Bookings;
 		private readonly BiDictionary<ICalendarPoint, ICalendarControl> m_CalendarPointsToControls;
 
 		#region Constructor
@@ -36,7 +36,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		{
 			m_CalendarSection = new SafeCriticalSection();
 
-			m_Bookings = new List<IBooking>();
+			m_Bookings = new List<BookingGroup>();
 			m_CalendarPointsToControls = new BiDictionary<ICalendarPoint, ICalendarControl>();
 		}
 
@@ -100,7 +100,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Gets the available bookings.
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<IBooking> GetBookings()
+		public IEnumerable<BookingGroup> GetBookings()
 		{
 			return m_CalendarSection.Execute(() => m_Bookings.ToArray());
 		}
@@ -292,7 +292,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// De-Duplicates the booking collection.
 		/// </summary>
 		/// <returns></returns>
-		private static IEnumerable<IBooking> DeduplicateBookings(IEnumerable<IBooking> bookings)
+		private static IEnumerable<BookingGroup> DeduplicateBookings(IEnumerable<IBooking> bookings)
 		{
 			return bookings.GroupBy(x => x,
 			                        (b, bs) => new BookingGroup(bs),
@@ -311,16 +311,14 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			{
 				IEnumerable<IBooking> newBookings = GetProviders(eCalendarFeatures.ListBookings)
 					.SelectMany(c => c.GetBookings())
-					.OrderBy(b => b.StartTime)
-					.ToArray();
+					.OrderBy(b => b.StartTime);
 
-				newBookings = DeduplicateBookings(newBookings).ToArray();
-
-				if (newBookings.SequenceEqual(m_Bookings, BookingDeduplicationEqualityComparer.Instance))
+				BookingGroup[] deduplicatedBookings = DeduplicateBookings(newBookings).ToArray();
+				if (deduplicatedBookings.SequenceEqual(m_Bookings, BookingDeduplicationEqualityComparer.Instance.Equals))
 					return;
 
 				m_Bookings.Clear();
-				m_Bookings.AddRange(newBookings);
+				m_Bookings.AddRange(deduplicatedBookings);
 			}
 			finally
 			{
