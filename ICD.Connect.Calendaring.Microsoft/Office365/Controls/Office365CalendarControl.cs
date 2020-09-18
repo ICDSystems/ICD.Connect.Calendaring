@@ -109,14 +109,73 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
 
+		/// <summary>
+		/// Pushes the booking to the calendar service.
+		/// </summary>
+		/// <param name="booking"></param>
 		public override void PushBooking(IBooking booking)
 		{
-			throw new NotSupportedException();
+			CalendarEvent newEvent = new CalendarEvent
+			{
+				Subject = booking.MeetingName,
+				Organizer = new CalendarEventOrganizer
+				{
+					EmailAddress = new CalendarEventEmailAddress
+					{
+						Address = booking.OrganizerEmail,
+						Name = booking.OrganizerName
+					}
+				},
+				Start = new CalendarEventTime
+				{
+					DateTime = booking.StartTime
+				},
+				End = new CalendarEventTime
+				{
+					DateTime = booking.EndTime
+				}
+			};
+
+			Parent.CreateEvent(newEvent);
+			Refresh();
 		}
 
+		/// <summary>
+		/// Edits the selected booking with the calendar service.
+		/// </summary>
+		/// <param name="oldBooking"></param>
+		/// <param name="newBooking"></param>
 		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
 		{
-			throw new NotSupportedException();
+			if (!(oldBooking is Office365Booking))
+				throw new InvalidOperationException("Specified booking does not match control");
+
+			CalendarEvent oldEvent = m_Bookings.GetKey(oldBooking as Office365Booking);
+
+			CalendarEvent newEvent = new CalendarEvent
+			{
+				Subject = newBooking.MeetingName,
+				Organizer = new CalendarEventOrganizer
+				{
+					EmailAddress = new CalendarEventEmailAddress
+					{
+						Address = newBooking.OrganizerEmail,
+						Name = newBooking.OrganizerName
+					}
+				},
+				Start = new CalendarEventTime
+				{
+					DateTime = newBooking.StartTime
+				},
+				End = new CalendarEventTime
+				{
+					DateTime = newBooking.EndTime
+				},
+				Id = oldEvent.Id
+			};
+
+			Parent.EditEvent(newEvent);
+			Refresh();
 		}
 
 		public override bool CanCheckIn(IBooking booking)

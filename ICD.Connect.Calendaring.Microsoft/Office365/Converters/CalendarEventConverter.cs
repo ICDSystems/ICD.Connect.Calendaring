@@ -111,6 +111,209 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBITES_ATTENDEES = "attendees";
 		private const string ATTRIBUTE_ORGANIZER = "organizer";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEvent value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.ODataEtag != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_DATA_ETAG);
+				serializer.Serialize(writer, value.ODataEtag);
+			}
+
+			if (value.Id != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ID);
+				serializer.Serialize(writer, value.Id);
+			}
+
+			writer.WritePropertyName(ATTRIBUTE_CREATED_DATE_TIME);
+			serializer.Serialize(writer, value.CreatedDateTime);
+
+			writer.WritePropertyName(ATTRIBUTE_LAST_MODIFIED_DATE_TIME);
+			serializer.Serialize(writer, value.LastModifiedDateTime);
+
+			if (value.ChangeKey != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_CHANGE_KEY);
+				serializer.Serialize(writer, value.ChangeKey);
+			}
+
+			if (value.Categories != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_CATEGORIES);
+				serializer.SerializeArray(writer, value.Categories);
+			}
+
+			if (value.OriginalStartTimeZone != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ORIGINAL_START_TIME_ZONE);
+				serializer.Serialize(writer, value.OriginalStartTimeZone);
+			}
+
+			if (value.OriginalEndTimeZone != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ORIGINAL_END_TIME_ZONE);
+				serializer.Serialize(writer, value.OriginalEndTimeZone);
+			}
+
+			if (value.ICalUId != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_I_CAL_U_ID);
+				serializer.Serialize(writer, value.ICalUId);
+			}
+
+			if (value.ReminderMinutesBeforeStart != 0)
+			{
+				writer.WritePropertyName(ATTRIBUTE_REMINDER_MINUTES_BEFORE_START);
+				serializer.Serialize(writer, value.ReminderMinutesBeforeStart);
+			}
+
+			if (value.IsReminderOn)
+			{
+				writer.WritePropertyName(ATTRIBUTE_IS_REMINDER_ON);
+				serializer.Serialize(writer, value.IsReminderOn);
+			}
+
+			if (value.HasAttachments)
+			{
+				writer.WritePropertyName(ATTRIBUTE_HAS_ATTACHMENTS);
+				serializer.Serialize(writer, value.HasAttachments);
+			}
+
+			if (value.Subject != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_SUBJECT);
+				serializer.Serialize(writer, value.Subject);
+			}
+
+			if (value.BodyPreview != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_BODY_PREVIEW);
+				serializer.Serialize(writer, value.BodyPreview);
+			}
+
+			if (value.Importance != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_IMPORTANCE);
+				serializer.Serialize(writer, value.Importance);
+			}
+
+			if (value.Sensitivity != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_SENSITIVITY);
+				serializer.Serialize(writer, value.Sensitivity);
+			}
+
+			if (value.IsAllDay)
+			{
+				writer.WritePropertyName(ATTRIBUTE_IS_ALL_DAY);
+				serializer.Serialize(writer, value.IsAllDay);
+			}
+
+			if (value.IsCancelled)
+			{
+				writer.WritePropertyName(ATTRIBUTE_IS_CANCELED);
+				serializer.Serialize(writer, value.IsCancelled);
+			}
+
+			if (value.IsOrganizer)
+			{
+				writer.WritePropertyName(ATTRIBUTE_IS_ORGANIZER);
+				serializer.Serialize(writer, value.IsOrganizer);
+			}
+
+			if (value.ResponseRequested)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RESPONSE_REQUESTED);
+				serializer.Serialize(writer, value.ResponseRequested);
+			}
+
+			if (value.SeriesMasterId != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_SERIES_MASTER_ID);
+				serializer.Serialize(writer, value.SeriesMasterId);
+			}
+
+			if (value.ShowAs != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_SHOW_AS);
+				serializer.Serialize(writer, value.ShowAs);
+			}
+
+			if (value.Type != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_TYPE);
+				serializer.Serialize(writer, value.Type);
+			}
+
+			if (value.WebLink != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_WEBLINK);
+				serializer.Serialize(writer, value.WebLink);
+			}
+
+			if (value.OnlineMeetingUrl != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ONLINE_MEETING_URL);
+				serializer.Serialize(writer, value.OnlineMeetingUrl);
+			}
+
+			if (value.Recurence != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RECURRENCE);
+				serializer.Serialize(writer, value.Recurence);
+			}
+
+			if (value.ResponseStatus != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_RESPONSE_STATUS);
+				serializer.Serialize(writer, value.ResponseStatus);
+			}
+
+			if (value.Body != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_BODY);
+				serializer.Serialize(writer, value.Body);
+			}
+
+			if (value.Start != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_START);
+				serializer.Serialize(writer, value.Start);
+			}
+
+			if (value.End != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_END);
+				serializer.Serialize(writer, value.End);
+			}
+
+			if (value.Location != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LOCATION);
+				serializer.Serialize(writer, value.Location);
+			}
+
+			if (value.Locations != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LOCATIONS);
+				serializer.SerializeArray(writer, value.Locations);
+			}
+
+			if (value.Attendees != null)
+			{
+				writer.WritePropertyName(ATTRIBITES_ATTENDEES);
+				serializer.SerializeArray(writer, value.Attendees);
+			}
+
+			if (value.Organizer != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ORGANIZER);
+				serializer.Serialize(writer, value.Organizer);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEvent instance, JsonSerializer serializer)
 		{
 			switch (property)

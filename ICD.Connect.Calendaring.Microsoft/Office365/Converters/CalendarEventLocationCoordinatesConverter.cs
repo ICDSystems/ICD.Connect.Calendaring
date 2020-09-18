@@ -11,6 +11,23 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBUTE_LATITUDE = "latitude";
 		private const string ATTRIBUTE_LONGITUDE = "longitude";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventLocationCoordinates value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.Latitude != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LATITUDE);
+				serializer.Serialize(writer, value.Latitude);
+			}
+
+			if (value.Longitude != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LONGITUDE);
+				serializer.Serialize(writer, value.Longitude);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventLocationCoordinates instance,
 		                                     JsonSerializer serializer)
 		{

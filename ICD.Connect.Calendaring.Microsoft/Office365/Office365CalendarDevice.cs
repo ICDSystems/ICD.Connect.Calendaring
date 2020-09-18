@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Extensions;
@@ -71,41 +72,83 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 		#region Methods
 
-		/// <summary>
-		/// Sets the port for communication with the service.
-		/// </summary>
-		/// <param name="port"></param>
-		[PublicAPI]
-		public void SetPort(IWebPort port)
+		public IEnumerable<CalendarEvent> GetEvents()
 		{
-			if (port == m_Port)
-				return;
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
 
-			ConfigurePort(port);
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{"Authorization", new List<string>{"Bearer " + m_Token}},
+				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
+			};
 
-			Unsubscribe(m_Port);
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
+			                           UserEmail,
+			                           IcdEnvironment.GetUtcTime().StartOfDay().ToString("o"),
+			                           IcdEnvironment.GetUtcTime().EndOfDay().ToString("o"));
 
-			if (port != null)
-				port.Accept = "application/json";
+			WebPortResponse getResponse = m_Port.Get(url, headers);
 
-			m_Port = port;
-			Subscribe(m_Port);
+			CalendarViewResponse response = null;
+			if (!string.IsNullOrEmpty(getResponse.DataAsString))
+				response = JsonConvert.DeserializeObject<CalendarViewResponse>(getResponse.DataAsString);
 
-			UpdateCachedOnlineStatus();
+			if (!getResponse.Success)
+			{
+				if (response != null && response.Error != null)
+					throw new InvalidOperationException(response.Error.Message);
+				throw new InvalidOperationException("Request failed");
+			}
+
+			return response == null
+				       ? Enumerable.Empty<CalendarEvent>()
+				       : response.Value;
 		}
 
-		/// <summary>
-		/// Configures the given port for communication with the device.
-		/// </summary>
-		/// <param name="port"></param>
-		private void ConfigurePort(IWebPort port)
+		public void CreateEvent(CalendarEvent calendarEvent)
 		{
-			// URI
-			if (port != null)
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
 			{
-				port.ApplyDeviceConfiguration(m_UriProperties);
-				port.ApplyDeviceConfiguration(m_WebProxyProperties);
-			}
+				{"Authorization", new List<string>{"Bearer " + m_Token}},
+				{"Content-Type", new List<string>{"application/json"}},
+				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
+			};
+
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendar/events", UserEmail);
+
+			string data = JsonConvert.SerializeObject(calendarEvent);
+
+			WebPortResponse postResponse = m_Port.Post(url, headers, Encoding.UTF8.GetBytes(data));
+
+			if (!postResponse.Success)
+				throw new InvalidOperationException("Request failed");
+		}
+
+		public void EditEvent(CalendarEvent calendarEvent)
+		{
+			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
+				RenewToken();
+
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
+			{
+				{"Authorization", new List<string>{"Bearer " + m_Token}},
+				{"Content-Type", new List<string>{"application/json"}},
+				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
+			};
+
+			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendar/events/{1}", UserEmail,
+			                           calendarEvent.Id);
+
+			string data = JsonConvert.SerializeObject(calendarEvent);
+
+			WebPortResponse patchResponse = m_Port.Patch(url, headers, Encoding.UTF8.GetBytes(data));
+
+			if (!patchResponse.Success)
+				throw new InvalidOperationException("Request failed");
 		}
 
 		#endregion
@@ -120,6 +163,68 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		{
 			return m_Port != null && m_Port.IsOnline;
 		}
+
+		/// <summary>
+		/// Sets the Calendar Parsing from the settings.
+		/// </summary>
+		/// <param name="configPath"></param>
+		private void SetCalendarParsers(string configPath)
+		{
+			m_CalendarParsingPath = configPath;
+
+			try
+			{
+				m_CalendarParserCollection.LoadParsers(configPath);
+			}
+			catch (Exception e)
+			{
+				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
+			}
+		}
+
+		private string RenewToken()
+		{
+			// Set port accept type
+			m_Port.Accept = "*/*";
+
+			// Build request header
+			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>();
+
+			// Build request body
+			Dictionary<string, string> body = new Dictionary<string, string>
+			{
+				{"client_id", Client},
+				{"grant_type", "client_credentials"},
+				{"client_secret", Secret},
+				{"scope", "https://graph.microsoft.com/.default"}
+			};
+
+			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
+
+			string scope = Uri.EscapeDataString("https://graph.microsoft.com/.default");
+			string url = string.Format("https://login.microsoftonline.com/{0}/oauth2/v2.0/token?scope={1}", Tenant, scope);
+
+			// Dispatch!
+			WebPortResponse output = m_Port.Post(url, headers, bodyData);
+			if (!output.Success)
+			{
+				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
+				m_Token = null;
+				return null;
+			}
+
+			// Get the token string value out of the JSON
+			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(output.DataAsString);
+
+			m_Token = response.AccessToken;
+			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
+
+			return m_Token;
+		}
+
+		#endregion
+
+		#region Port Callbacks
 
 		/// <summary>
 		/// Subscribe to the port events.
@@ -153,24 +258,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 		private void PortOnIsOnlineStateChanged(object sender, DeviceBaseOnlineStateApiEventArgs eventArgs)
 		{
 			UpdateCachedOnlineStatus();
-		}
-
-		/// <summary>
-		/// Sets the Calendar Parsing from the settings.
-		/// </summary>
-		/// <param name="configPath"></param>
-		private void SetCalendarParsers(string configPath)
-		{
-			m_CalendarParsingPath = configPath;
-
-			try
-			{
-				m_CalendarParserCollection.LoadParsers(configPath);
-			}
-			catch (Exception e)
-			{
-				Logger.Log(eSeverity.Error, "Failed to load Calendar Parsers - {0}", e.Message);
-			}
 		}
 
 		#endregion
@@ -267,6 +354,43 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			addControl(new Office365CalendarControl(this, Controls.Count));
 		}
 
+		/// <summary>
+		/// Sets the port for communication with the service.
+		/// </summary>
+		/// <param name="port"></param>
+		[PublicAPI]
+		public void SetPort(IWebPort port)
+		{
+			if (port == m_Port)
+				return;
+
+			ConfigurePort(port);
+
+			Unsubscribe(m_Port);
+
+			if (port != null)
+				port.Accept = "application/json";
+
+			m_Port = port;
+			Subscribe(m_Port);
+
+			UpdateCachedOnlineStatus();
+		}
+
+		/// <summary>
+		/// Configures the given port for communication with the device.
+		/// </summary>
+		/// <param name="port"></param>
+		private void ConfigurePort(IWebPort port)
+		{
+			// URI
+			if (port != null)
+			{
+				port.ApplyDeviceConfiguration(m_UriProperties);
+				port.ApplyDeviceConfiguration(m_WebProxyProperties);
+			}
+		}
+
 		#endregion
 
 		#region Console
@@ -286,81 +410,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 				yield return command;
 
 			yield return new ConsoleCommand("RenewToken", "", () => RenewToken());
-		}
-
-		private string RenewToken()
-		{
-			// Set port accept type
-			m_Port.Accept = "*/*";
-
-			// Build request header
-			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>();
-			
-			// Build request body
-			Dictionary<string, string> body = new Dictionary<string, string>
-			{
-				{"client_id", Client},
-				{"grant_type", "client_credentials"},
-				{"client_secret", Secret},
-				{"scope", "https://graph.microsoft.com/.default"}
-			};
-
-			byte[] bodyData = HttpUtils.GetFormUrlEncodedContentBytes(body);
-
-			string scope = Uri.EscapeDataString("https://graph.microsoft.com/.default");
-			string url = string.Format("https://login.microsoftonline.com/{0}/oauth2/v2.0/token?scope={1}", Tenant, scope);
-
-			// Dispatch!
-			WebPortResponse output = m_Port.Post(url, headers, bodyData);
-			if (!output.Success)
-			{
-				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
-				m_Token = null;
-				return null;
-			}
-
-			// Get the token string value out of the JSON
-			TokenResponse response = JsonConvert.DeserializeObject<TokenResponse>(output.DataAsString);
-
-			m_Token = response.AccessToken;
-			m_TokenExpireTime = IcdEnvironment.GetUtcTime() + new TimeSpan(0, 0, response.ExpiresInSeconds);
-
-			return m_Token;
-		}
-
-		public IEnumerable<CalendarEvent> GetEvents()
-		{
-			if (m_Token == null || IcdEnvironment.GetUtcTime() >= m_TokenExpireTime)
-				RenewToken();
-
-			Dictionary<string, List<string>> headers = new Dictionary<string, List<string>>
-			{
-				{"Authorization", new List<string>{"Bearer " + m_Token}},
-				{"Prefer", new List<string>{"outlook.timezone=UTC"}}
-			};
-
-			string url = string.Format("https://graph.microsoft.com/v1.0/users/{0}/calendarview?startDateTime={1}&endDateTime={2}",
-			                           UserEmail,
-			                           IcdEnvironment.GetUtcTime().StartOfDay().ToString("o"),
-			                           IcdEnvironment.GetUtcTime().EndOfDay().ToString("o"));
-
-			
-			WebPortResponse getResponse = m_Port.Get(url, headers);
-
-			CalendarViewResponse response = null;
-			if (!string.IsNullOrEmpty(getResponse.DataAsString))
-				response = JsonConvert.DeserializeObject<CalendarViewResponse>(getResponse.DataAsString);
-
-			if (!getResponse.Success)
-			{
-				if (response != null && response.Error != null)
-					throw new InvalidOperationException(response.Error.Message);
-				throw new InvalidOperationException("Request failed");
-			}
-
-			return response == null
-				? Enumerable.Empty<CalendarEvent>()
-				: response.Value;
 		}
 
 		private IEnumerable<IConsoleCommand> GetBaseConsoleCommands()

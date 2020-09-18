@@ -10,6 +10,23 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBUTE_NAME = "name";
 		private const string ATTRIBUTE_ADDRESS = "address";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventEmailAddress value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.Name != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_NAME);
+				serializer.Serialize(writer, value.Name);
+			}
+
+			if (value.Address != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ADDRESS);
+				serializer.Serialize(writer, value.Address);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventEmailAddress instance, JsonSerializer serializer)
 		{
 			switch (property)

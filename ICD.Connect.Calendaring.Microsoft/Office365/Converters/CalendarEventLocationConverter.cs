@@ -33,6 +33,53 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBUTE_ADDRESS = "address";
 		private const string ATTRIBUTE_COORDINATES = "coordinates";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventLocation value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.DisplayName != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_DISPLAY_NAME);
+				serializer.Serialize(writer, value.DisplayName);
+			}
+
+			if (value.LocationUri != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LOCATION_URI);
+				serializer.Serialize(writer, value.LocationUri);
+			}
+
+			if (value.LocationType != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_LOCATION_TYPE);
+				serializer.Serialize(writer, value.LocationType);
+			}
+
+			if (value.UniqueId != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_UNIQUE_ID);
+				serializer.Serialize(writer, value.UniqueId);
+			}
+
+			if (value.UniqueIdType != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_UNIQUE_ID_TYPE);
+				serializer.Serialize(writer, value.UniqueIdType);
+			}
+
+			if (value.Address != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_ADDRESS);
+				serializer.Serialize(writer, value.Address);
+			}
+
+			if (value.Coordinates != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_COORDINATES);
+				serializer.Serialize(writer, value.Coordinates);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventLocation instance,JsonSerializer serializer)
 		{
 			switch (property)

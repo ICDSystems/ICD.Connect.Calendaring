@@ -8,6 +8,17 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 	{
 		private const string ATTRIBUTE_EMAIL_ADDRESS = "emailAddress";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventOrganizer value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.EmailAddress != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_EMAIL_ADDRESS);
+				serializer.Serialize(writer, value.EmailAddress);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventOrganizer instance, JsonSerializer serializer)
 		{
 			switch (property)

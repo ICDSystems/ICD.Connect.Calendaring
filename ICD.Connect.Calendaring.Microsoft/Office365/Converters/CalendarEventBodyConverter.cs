@@ -10,6 +10,22 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBUTE_CONTENT_TYPE = "contentType";
 		private const string ATTRIBUTE_CONTENT = "content";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventBody value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			if (value.ContentType != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_CONTENT_TYPE);
+				serializer.Serialize(writer, value.ContentType);
+			}
+
+			if (value.Content != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_CONTENT);
+				serializer.Serialize(writer, value.Content);
+			}
+		}
 
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventBody instance,JsonSerializer serializer)
 		{

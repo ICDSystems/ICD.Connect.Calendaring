@@ -11,6 +11,20 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 		private const string ATTRIBUTE_DATE_TIME = "dateTime";
 		private const string ATTRIBUTE_TIME_ZONE = "timeZone";
 
+		protected override void WriteProperties(JsonWriter writer, CalendarEventTime value, JsonSerializer serializer)
+		{
+			base.WriteProperties(writer, value, serializer);
+
+			writer.WritePropertyName(ATTRIBUTE_DATE_TIME);
+			serializer.Serialize(writer, value.DateTime);
+
+			if (value.TimeZone != null)
+			{
+				writer.WritePropertyName(ATTRIBUTE_TIME_ZONE);
+				serializer.Serialize(writer, value.TimeZone);
+			}
+		}
+
 		protected override void ReadProperty(string property, JsonReader reader, CalendarEventTime instance,JsonSerializer serializer)
 		{
 			switch (property)
