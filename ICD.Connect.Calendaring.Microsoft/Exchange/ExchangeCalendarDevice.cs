@@ -130,6 +130,39 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange
 			}
 		}
 
+		/// <summary>
+		/// Creates an appointment through the service.
+		/// </summary>
+		/// <param name="appt"></param>
+		public void CreateAppointment(Appointment appt)
+		{
+			try
+			{
+				Service.CreateItem(appt);
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(eSeverity.Error, "Failed to get response - {0}", ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Updates the specified appointment with the list of properties through the service.
+		/// </summary>
+		/// <param name="appt"></param>
+		/// <param name="updates"></param>
+		public void EditAppointment(Appointment appt, IList<Property> updates)
+		{
+			try
+			{
+				Service.UpdateItem(appt.ItemId, updates);
+			}
+			catch (Exception ex)
+			{
+				Logger.Log(eSeverity.Error, "Failed to get response - {0}", ex.Message);
+			}
+		}
+
 		#endregion
 
 		#region Private Methods

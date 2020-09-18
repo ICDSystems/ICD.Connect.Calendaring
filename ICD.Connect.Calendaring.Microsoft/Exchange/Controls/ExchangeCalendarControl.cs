@@ -44,7 +44,9 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
-			SupportedCalendarFeatures = eCalendarFeatures.ListBookings;
+			SupportedCalendarFeatures = eCalendarFeatures.ListBookings |
+			                            eCalendarFeatures.CreateBookings |
+			                            eCalendarFeatures.EditBookings;
 		}
 
 		/// <summary>
@@ -101,14 +103,44 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 			return m_BookingsSection.Execute(() => m_Bookings.Values.Cast<IBooking>().ToArray());
 		}
 
+		/// <summary>
+		/// Pushes the booking to the calendar service.
+		/// </summary>
+		/// <param name="booking"></param>
 		public override void PushBooking(IBooking booking)
 		{
-			throw new NotSupportedException();
+			Appointment appointment = new Appointment
+			{
+				Subject = booking.MeetingName,
+				StartTime = booking.StartTime,
+				EndTime = booking.EndTime
+			};
+
+			Parent.CreateAppointment(appointment);
 		}
 
+		/// <summary>
+		/// Edits the selected booking with the calendar service.
+		/// </summary>
+		/// <param name="oldBooking"></param>
+		/// <param name="newBooking"></param>
 		public override void EditBooking(IBooking oldBooking, IBooking newBooking)
 		{
-			throw new NotSupportedException();
+			if (!(oldBooking is ExchangeBooking))
+				throw new InvalidOperationException("The booking supplied is not an Exchange booking");
+
+			Appointment appointment = m_Bookings.GetKey(oldBooking as ExchangeBooking);
+			IList<Property> properties = new List<Property>();
+
+			Property start = new Property(AppointmentPropertyPath.StartTime, newBooking.StartTime);
+			Property end = new Property(AppointmentPropertyPath.EndTime, newBooking.EndTime);
+			Property subject = new Property(ItemPropertyPath.Subject, newBooking.MeetingName);
+
+			properties.Add(start);
+			properties.Add(end);
+			properties.Add(subject);
+
+			Parent.EditAppointment(appointment, properties);
 		}
 
 		/// <summary>
@@ -120,15 +152,16 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 			return false;
 		}
 
+		/// <summary>
+		/// Returns true if the booking argument can be checked out of.
+		/// </summary>
+		/// <param name="booking"></param>
+		/// <returns></returns>
 		public override bool CanCheckOut(IBooking booking)
 		{
 			return false;
 		}
 
-		/// <summary>
-		/// Checks in to the specified booking.
-		/// </summary>
-		/// <param name="booking"></param>
 		public override void CheckIn(IBooking booking)
 		{
 			throw new NotSupportedException();
