@@ -11,7 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  - Added CalendarManager which tracks a collection of ICalendarControls
  - Implemented booking creation and editing for Asure
  - Implemented booking creation and editing for Robin
- - Implemented method get the time to the next meeting. 
+ - Implemented method to get the timespan until the next meeting.
+ - Implemented booking creation and editing for Google
+ - Implemented booking creation and editing for Exchange
+ - Implemented booking creation and editing for Office365
 
 ### Changed
  - Fixed Asure implementation to use UTC conversions properly
