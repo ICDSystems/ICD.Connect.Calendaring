@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Conferencing.DialContexts;
 
 namespace ICD.Connect.Calendaring.Bookings
@@ -61,6 +62,14 @@ namespace ICD.Connect.Calendaring.Bookings
 			var now = IcdEnvironment.GetUtcTime();
 
 			return extends.StartTime <= now && extends.EndTime > now;
+		}
+
+		public static bool Duplicates([NotNull] this IBooking extends, [CanBeNull] IBooking other)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return BookingDeduplicationEqualityComparer.Instance.Equals(extends, other);
 		}
 	}
 }
