@@ -268,20 +268,8 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// </summary>
 		public void Clear()
 		{
-			m_CalendarSection.Enter();
-
-			try
-			{
-				foreach (ICalendarPoint point in m_CalendarPointsToControls.Keys)
-					DeregisterCalendarProvider(point);
-
-				m_Bookings.Clear();
-				m_CalendarPointsToControls.Clear();
-			}
-			finally
-			{
-				m_CalendarSection.Leave();
-			}
+			foreach (ICalendarPoint point in m_CalendarSection.Execute(() => m_CalendarPointsToControls.Keys.ToArray()))
+				DeregisterCalendarProvider(point);
 		}
 
 		#endregion
