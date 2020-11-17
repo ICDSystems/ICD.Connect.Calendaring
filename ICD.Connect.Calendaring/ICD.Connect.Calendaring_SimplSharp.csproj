@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Bookings\AbstractBooking.cs" />
     <Compile Include="Bookings\Booking.cs" />
+    <Compile Include="Bookings\BookingRange.cs" />
     <Compile Include="Comparers\BookingDeduplicationEqualityComparer.cs" />
     <Compile Include="Bookings\BookingGroup.cs" />
     <Compile Include="Bookings\eMeetingType.cs" />
