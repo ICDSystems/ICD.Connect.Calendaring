@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 using ICD.Connect.Conferencing.DialContexts;
+using ICD.Connect.Conferencing.EventArguments;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
@@ -23,6 +24,8 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 		public string SubstitutionReplacement { get; set; }
 
 		public eDialProtocol Protocol { get; set; }
+
+		public eCallType CallType { get; set; }
 
 		/// <summary>
 		/// Parses text into BookingProtocolInfo collection
@@ -55,10 +58,10 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 			return new DialContext
 			{
 				Protocol = Protocol,
+				CallType = CallType,
 				DialString = meetingNumber,
 				Password = meetingPassword
 			};
-			
 		}
 
 		public static RegexCalendarParser FromXml(string xml)
@@ -70,7 +73,8 @@ namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 				PasswordGroup = XmlUtils.TryReadChildElementContentAsString(xml, "PasswordGroup"),
 				SubstitutionPattern = XmlUtils.TryReadChildElementContentAsString(xml, "ReplacePattern"),
 				SubstitutionReplacement = XmlUtils.TryReadChildElementContentAsString(xml, "ReplaceReplacement"),
-				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.Unknown
+				Protocol = XmlUtils.TryReadChildElementContentAsEnum<eDialProtocol>(xml, "Protocol", true) ?? eDialProtocol.Unknown,
+				CallType = XmlUtils.TryReadChildElementContentAsEnum<eCallType>(xml, "CallType", true) ?? eCallType.Unknown
 			};
 		}
 	}
