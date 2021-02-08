@@ -37,7 +37,7 @@
     <None Remove="Properties\ControlSystem.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Independentsoft.Exchange" Version="3.0.530" />
+    <PackageReference Include="Independentsoft.Exchange" Version="3.0.680" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
