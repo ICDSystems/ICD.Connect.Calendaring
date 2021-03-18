@@ -1,5 +1,4 @@
 ﻿using ICD.Connect.Conferencing.DialContexts;
-using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring.CalendarParsers.Parsers
 {
