@@ -26,7 +26,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 
 		private readonly EventsComponent m_EventsComponent;
 		private readonly SafeTimer m_RefreshTimer;
-		private readonly IcdOrderedDictionary<Event, RobinBooking> m_EventToBooking;
+		private readonly IcdSortedDictionary<Event, RobinBooking> m_EventToBooking;
 		private readonly SafeCriticalSection m_BookingSection;
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 		public RobinServiceDeviceCalendarControl(RobinServiceDevice parent, int id)
 			: base(parent, id)
 		{
-			m_EventToBooking = new IcdOrderedDictionary<Event, RobinBooking>(s_EventComparer);
+			m_EventToBooking = new IcdSortedDictionary<Event, RobinBooking>(s_EventComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			m_EventsComponent = Parent.Components.GetComponent<EventsComponent>();

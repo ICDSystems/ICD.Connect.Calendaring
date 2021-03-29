@@ -21,7 +21,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
 		public override event EventHandler OnBookingsChanged;
-		private readonly IcdOrderedDictionary<iCalendarEvent, iCalendarBooking> m_Bookings;
+		private readonly IcdSortedDictionary<iCalendarEvent, iCalendarBooking> m_Bookings;
 		private readonly SafeTimer m_RefreshTimer;
 		private readonly SafeCriticalSection m_BookingSection;
 
@@ -43,7 +43,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public iCalendarServiceDeviceCalendarControl(iCalendarServiceDevice parent, int id)
 			: base(parent, id)
 		{
-			m_Bookings = new IcdOrderedDictionary<iCalendarEvent, iCalendarBooking>(s_CalendarEventComparer);
+			m_Bookings = new IcdSortedDictionary<iCalendarEvent, iCalendarBooking>(s_CalendarEventComparer);
 			m_BookingSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 

@@ -23,7 +23,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 		
-		private readonly IcdOrderedDictionary<CalendarEvent, Office365Booking>  m_Bookings;
+		private readonly IcdSortedDictionary<CalendarEvent, Office365Booking>  m_Bookings;
 		private readonly SafeCriticalSection m_BookingsSection;
 		private readonly SafeTimer m_RefreshTimer;
 
@@ -45,7 +45,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Controls
 		public Office365CalendarControl(Office365CalendarDevice parent, int id)
 			: base(parent, id)
 		{
-			m_Bookings = new IcdOrderedDictionary<CalendarEvent, Office365Booking>(s_CalendarEventComparer);
+			m_Bookings = new IcdSortedDictionary<CalendarEvent, Office365Booking>(s_CalendarEventComparer);
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 

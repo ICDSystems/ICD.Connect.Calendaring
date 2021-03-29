@@ -19,7 +19,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 
-		private readonly IcdOrderedDictionary<ReservationData, AsureBooking> m_ReservationToBooking;
+		private readonly IcdSortedDictionary<ReservationData, AsureBooking> m_ReservationToBooking;
 		private readonly SafeCriticalSection m_BookingSection;
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		public AsureCalendarControl(AsureDevice parent, int id)
 			: base(parent, id)
 		{
-			m_ReservationToBooking = new IcdOrderedDictionary<ReservationData, AsureBooking>(s_ReservationComparer);
+			m_ReservationToBooking = new IcdSortedDictionary<ReservationData, AsureBooking>(s_ReservationComparer);
 			m_BookingSection = new SafeCriticalSection();
 
 			SupportedCalendarFeatures = eCalendarFeatures.ListBookings |

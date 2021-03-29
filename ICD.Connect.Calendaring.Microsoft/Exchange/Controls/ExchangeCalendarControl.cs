@@ -22,7 +22,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 		/// </summary>
 		public override event EventHandler OnBookingsChanged;
 
-		private readonly IcdOrderedDictionary<Appointment, ExchangeBooking> m_Bookings;
+		private readonly IcdSortedDictionary<Appointment, ExchangeBooking> m_Bookings;
 		private readonly SafeCriticalSection m_BookingsSection;
 		private readonly SafeTimer m_RefreshTimer;
 
@@ -40,7 +40,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 		public ExchangeCalendarControl(ExchangeCalendarDevice parent, int id)
 			: base(parent, id)
 		{
-			m_Bookings = new IcdOrderedDictionary<Appointment, ExchangeBooking>(s_CalendarEventComparer);
+			m_Bookings = new IcdSortedDictionary<Appointment, ExchangeBooking>(s_CalendarEventComparer);
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 

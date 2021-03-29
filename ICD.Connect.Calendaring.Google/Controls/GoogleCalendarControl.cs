@@ -29,7 +29,7 @@ namespace ICD.Connect.Calendaring.Google.Controls
 
 		private const int TIMER_REFRESH_INTERVAL = 10 * 60 * 1000;
 
-		private readonly IcdOrderedDictionary<GoogleCalendarEvent, GoogleBooking> m_Bookings;
+		private readonly IcdSortedDictionary<GoogleCalendarEvent, GoogleBooking> m_Bookings;
 		private readonly SafeCriticalSection m_BookingsSection;
 		private readonly SafeTimer m_RefreshTimer;
 
@@ -51,7 +51,7 @@ namespace ICD.Connect.Calendaring.Google.Controls
 		public GoogleCalendarControl(GoogleCalendarDevice parent, int id)
 			: base(parent, id)
 		{
-			m_Bookings = new IcdOrderedDictionary<GoogleCalendarEvent, GoogleBooking>(s_CalendarEventComparer);
+			m_Bookings = new IcdSortedDictionary<GoogleCalendarEvent, GoogleBooking>(s_CalendarEventComparer);
 			m_BookingsSection = new SafeCriticalSection();
 			m_RefreshTimer = new SafeTimer(Refresh, TIMER_REFRESH_INTERVAL, TIMER_REFRESH_INTERVAL);
 
