@@ -181,7 +181,7 @@ namespace ICD.Connect.Calendaring.Robin.Components.Converters
 	{
 		public DateInfoDateTimeConverter()
 		{
-			base.DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
+			DateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
 		}
 	}
 

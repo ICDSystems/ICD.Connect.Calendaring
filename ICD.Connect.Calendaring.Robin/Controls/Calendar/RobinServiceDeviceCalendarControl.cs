@@ -143,7 +143,7 @@ namespace ICD.Connect.Calendaring.Robin.Controls.Calendar
 					{
 						DisplayName = newBooking.OrganizerName,
 						Email = newBooking.OrganizerEmail
-					},
+					}
 				}
 			};
 
