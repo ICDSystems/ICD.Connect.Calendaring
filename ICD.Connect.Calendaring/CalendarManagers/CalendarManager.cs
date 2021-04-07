@@ -4,7 +4,9 @@ using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.Collections;
+using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
+using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
 using ICD.Connect.Calendaring.Comparers;
@@ -14,6 +16,9 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 {
 	public sealed class CalendarManager : ICalendarManager
 	{
+		// Add 5 seconds to calculated reset time to avoid race conditions.
+		private const int CURRENT_BOOKING_TIMER_RESET_BUFFER = 5 * 1000;
+
 		#region Events
 
 		/// <summary>
@@ -21,11 +26,19 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// </summary>
 		public event EventHandler OnBookingsChanged;
 
+		/// <summary>
+		/// Raised when the current (active) booking changes.
+		/// </summary>
+		public event EventHandler<GenericEventArgs<IBooking>> OnCurrentBookingChanged;
+
 		#endregion
 
+		private readonly SafeTimer m_CurrentBookingTimer;
 		private readonly SafeCriticalSection m_CalendarSection;
 		private readonly List<BookingGroup> m_Bookings;
 		private readonly BiDictionary<ICalendarPoint, ICalendarControl> m_CalendarPointsToControls;
+
+		private IBooking m_CachedCurrentBooking;
 
 		#region Constructor
 
@@ -38,11 +51,33 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 
 			m_Bookings = new List<BookingGroup>();
 			m_CalendarPointsToControls = new BiDictionary<ICalendarPoint, ICalendarControl>();
+
+			m_CurrentBookingTimer = SafeTimer.Stopped(CurrentBookingTimerCallback);
 		}
 
 		#endregion
 
 		#region Methods
+
+		/// <summary>
+		/// Gets the currently active booking if there is one.
+		/// </summary>
+		[CanBeNull]
+		public IBooking CurrentBooking
+		{
+			get { return m_CachedCurrentBooking; }
+			private set
+			{
+				if (value == m_CachedCurrentBooking)
+					return;
+
+				m_CachedCurrentBooking = value;
+
+				m_CurrentBookingTimer.Reset(GetCurrentBookingTimerResetInterval());
+
+				OnCurrentBookingChanged.Raise(this, m_CachedCurrentBooking);
+			}
+		}
 
 		/// <summary>
 		/// Gets the registered calendar providers.
@@ -313,7 +348,31 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 				m_CalendarSection.Leave();
 			}
 
+			UpdateCurrentBooking();
+
 			OnBookingsChanged.Raise(this);
+		}
+
+		/// <summary>
+		/// Raises the current booking changed event if the current booking has changed
+		/// </summary>
+		private void CurrentBookingTimerCallback()
+		{
+			UpdateCurrentBooking();
+		}
+
+		private void UpdateCurrentBooking()
+		{
+			CurrentBooking = GetBookings().FirstOrDefault(BookingExtensions.IsBookingCurrent);
+		}
+
+		private long GetCurrentBookingTimerResetInterval()
+		{
+			var nextStart = this.GetTimeToNextBookingStart();
+			var nextEnd = this.GetTimeToNextBookingEnd();
+
+			return (long)(Math.Min(nextStart.TotalMilliseconds, nextEnd.TotalMilliseconds) +
+			              CURRENT_BOOKING_TIMER_RESET_BUFFER);
 		}
 
 		#endregion

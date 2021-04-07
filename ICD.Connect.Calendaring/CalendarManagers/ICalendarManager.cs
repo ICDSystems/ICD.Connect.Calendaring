@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
+using ICD.Common.Utils.EventArguments;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
 using ICD.Connect.Calendaring.Controls;
@@ -15,6 +16,17 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Raised when bookings are added/removed.
 		/// </summary>
 		event EventHandler OnBookingsChanged;
+
+		/// <summary>
+		/// Raised when the current (active) booking changes.
+		/// </summary>
+		event EventHandler<GenericEventArgs<IBooking>> OnCurrentBookingChanged;
+
+		/// <summary>
+		/// Gets the currently active booking if there is one.
+		/// </summary>
+		[CanBeNull]
+		IBooking CurrentBooking { get; }
 
 		/// <summary>
 		/// Gets the registered calendar providers.
@@ -95,20 +107,6 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 	public static class CalendarManagerExtensions
 	{
 		/// <summary>
-		/// Gets the currently active booking if there is one.
-		/// </summary>
-		/// <param name="extends"></param>
-		/// <returns></returns>
-		[CanBeNull]
-		public static BookingGroup GetCurrentBooking([NotNull] this ICalendarManager extends)
-		{
-			if (extends == null)
-				throw new ArgumentNullException("extends");
-
-			return extends.GetBookings().FirstOrDefault(BookingExtensions.IsBookingCurrent);
-		}
-
-		/// <summary>
 		/// Gets the next scheduled booking (excluding the current booking) if there is one.
 		/// </summary>
 		/// <param name="extends"></param>
@@ -129,13 +127,26 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Gets the amount of time until the next booking starts.
 		/// </summary>
 		/// <returns></returns>
-		public static TimeSpan GetTimeToNextBooking([NotNull] this ICalendarManager extends)
+		public static TimeSpan GetTimeToNextBookingStart([NotNull] this ICalendarManager extends)
 		{
 			if (extends == null)
 				throw new ArgumentNullException("extends");
 
 			IBooking next = extends.GetNextBooking();
 			return next == null ? TimeSpan.MaxValue : next.StartTime - IcdEnvironment.GetUtcTime();
+		}
+
+		/// <summary>
+		/// Gets the amount of time until the next booking starts.
+		/// </summary>
+		/// <returns></returns>
+		public static TimeSpan GetTimeToNextBookingEnd([NotNull] this ICalendarManager extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			IBooking next = extends.CurrentBooking ?? extends.GetNextBooking();
+			return next == null ? TimeSpan.MaxValue : next.EndTime - IcdEnvironment.GetUtcTime();
 		}
 	}
 }
