@@ -9,6 +9,7 @@ using ICD.Common.Utils.Services.Logging;
 using ICD.Common.Utils.Timers;
 using ICD.Common.Utils.TimeZoneInfo;
 using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Calendaring.Asure.Controls.Calendar;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
@@ -599,6 +600,33 @@ namespace ICD.Connect.Calendaring.Asure
 		#endregion
 
 		#region Console
+
+		public override IEnumerable<IConsoleNodeBase> GetConsoleNodes()
+		{
+			foreach (IConsoleNodeBase node in GetBaseConsoleNodes())
+				yield return node;
+
+			yield return m_UriProperties;
+
+			if (m_Port != null)
+				yield return m_Port;
+		}
+
+		private IEnumerable<IConsoleNodeBase> GetBaseConsoleNodes()
+		{
+			return base.GetConsoleNodes();
+		}
+
+		/// <summary>
+		/// Calls the delegate for each console status item.
+		/// </summary>
+		/// <param name="addRow"></param>
+		public override void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+			base.BuildConsoleStatus(addRow);
+
+			addRow("Resource ID", ResourceId);
+		}
 
 		/// <summary>
 		/// Gets the child console commands.
