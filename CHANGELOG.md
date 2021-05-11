@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
  - Added event to CalendarManager for when the current booking changes.
  - Expose AsureDevice configured URI info as a new console node.
+ 
+### Changed
+ - ICalendarPoint implements IPoint<T>
 
 ## [9.3.0] - 2021-01-25
 ### Added
