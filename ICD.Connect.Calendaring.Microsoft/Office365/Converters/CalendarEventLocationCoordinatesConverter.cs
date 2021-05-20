@@ -1,12 +1,11 @@
-﻿
-using ICD.Common.Utils.Extensions;
+﻿using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Json;
 using ICD.Connect.Calendaring.Microsoft.Office365.Responses;
 using Newtonsoft.Json;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 {
-	public class CalendarEventLocationCoordinatesConverter : AbstractGenericJsonConverter<CalendarEventLocationCoordinates>
+	public sealed class CalendarEventLocationCoordinatesConverter : AbstractGenericJsonConverter<CalendarEventLocationCoordinates>
 	{
 		private const string ATTRIBUTE_LATITUDE = "latitude";
 		private const string ATTRIBUTE_LONGITUDE = "longitude";
@@ -43,10 +42,6 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365.Converters
 					base.ReadProperty(property, reader, instance, serializer);
 					break;
 			}
-
 		}
-
-
 	}
-
 }
