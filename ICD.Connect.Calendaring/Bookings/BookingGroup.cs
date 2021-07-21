@@ -18,17 +18,38 @@ namespace ICD.Connect.Calendaring.Bookings
 	    /// <summary>
 	    /// Returns the name of the meeting.
 	    /// </summary>
-	    public override string MeetingName { get { return Key == null ? null : Key.MeetingName; } }
+	    public override string MeetingName
+	    {
+		    get
+		    {
+			    return m_Bookings.Select(b => b.MeetingName)
+			                     .FirstOrDefault(n => !string.IsNullOrEmpty(n));
+		    }
+	    }
 
 	    /// <summary>
 	    /// Returns the organizer's name.
 	    /// </summary>
-	    public override string OrganizerName { get { return Key == null ? null : Key.OrganizerName; } }
+	    public override string OrganizerName
+	    {
+		    get
+		    {
+			    return m_Bookings.Select(b => b.OrganizerName)
+			                     .FirstOrDefault(n => !string.IsNullOrEmpty(n));
+		    }
+	    }
 
 	    /// <summary>
 	    /// Returns the organizer's email.
 	    /// </summary>
-	    public override string OrganizerEmail { get { return Key == null ? null : Key.OrganizerEmail; } }
+	    public override string OrganizerEmail
+	    {
+		    get
+		    {
+			    return m_Bookings.Select(b => b.OrganizerEmail)
+			                     .FirstOrDefault(n => !string.IsNullOrEmpty(n));
+		    }
+	    }
 
 	    /// <summary>
 	    /// Returns the meeting start time.
