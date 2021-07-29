@@ -4,13 +4,14 @@ using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Common.Utils.EventArguments;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
 using ICD.Connect.Calendaring.Controls;
 
 namespace ICD.Connect.Calendaring.CalendarManagers
 {
-	public interface ICalendarManager
+	public interface ICalendarManager : IConsoleNode
 	{
 		/// <summary>
 		/// Raised when bookings are added/removed.

@@ -7,6 +7,8 @@ using ICD.Common.Utils.Collections;
 using ICD.Common.Utils.EventArguments;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Timers;
+using ICD.Connect.API.Commands;
+using ICD.Connect.API.Nodes;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.CalendarPoints;
 using ICD.Connect.Calendaring.Comparers;
@@ -411,6 +413,76 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		private void ControlOnBookingsChanged(object sender, EventArgs e)
 		{
 			UpdateBookings();
+		}
+
+		#endregion
+
+		#region Console
+
+		public string ConsoleName { get { return "CalendarManager"; } }
+		public string ConsoleHelp { get { return ""; } }
+
+		public IEnumerable<IConsoleNodeBase> GetConsoleNodes()
+		{
+			yield break;
+		}
+
+		public void BuildConsoleStatus(AddStatusRowDelegate addRow)
+		{
+		}
+
+		public IEnumerable<IConsoleCommand> GetConsoleCommands()
+		{
+			yield return new ConsoleCommand("PrintBookingGroups", "Prints the booking groups", () => PrintBookingGroups());
+		}
+
+		private string PrintBookingGroups()
+		{
+			TableBuilder builder =
+				new TableBuilder("Meeting Name",
+				                 "Organizer Name",
+				                 "Organizer Email",
+				                 "Start Time",
+				                 "End Time",
+				                 "IsPrivate",
+				                 "Protocol",
+				                 "Call Type",
+				                 "Number");
+
+			foreach (BookingGroup bookingGroup in GetBookings())
+			{
+				foreach (IBooking booking in bookingGroup.GetUnderlyingBookings())
+				{
+					string protocol = string.Join(IcdEnvironment.NewLine,
+					                              booking.GetBookingNumbers()
+					                                     .Select(c => StringUtils.NiceName(c.Protocol))
+					                                     .ToArray());
+
+					string callType = string.Join(IcdEnvironment.NewLine,
+					                              booking.GetBookingNumbers()
+					                                     .Select(c => c.CallType.ToString())
+					                                     .ToArray());
+
+					string number = string.Join(IcdEnvironment.NewLine,
+					                            booking.GetBookingNumbers()
+					                                   .Select(c => c.DialString)
+					                                   .ToArray());
+
+					builder.AddRow(booking.MeetingName,
+					               booking.OrganizerName,
+					               booking.OrganizerEmail,
+					               booking.StartTime.ToLocalTime(),
+					               booking.EndTime.ToLocalTime(),
+					               booking.IsPrivate,
+					               protocol,
+					               callType,
+					               number);
+				}
+
+				builder.AddSeparator();
+			}
+
+			return builder.ToString();
 		}
 
 		#endregion

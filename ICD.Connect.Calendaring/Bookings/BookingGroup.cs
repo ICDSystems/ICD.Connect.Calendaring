@@ -102,6 +102,11 @@ namespace ICD.Connect.Calendaring.Bookings
 	                         .Distinct(DialContextEqualityComparer.Instance);
         }
 
+		public IEnumerable<IBooking> GetUnderlyingBookings()
+		{
+			return m_Bookings;
+		}
+
 	    #endregion
 
 	    #region Enumerators
