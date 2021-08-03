@@ -68,7 +68,6 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// <summary>
 		/// Gets the currently active booking if there is one.
 		/// </summary>
-		[CanBeNull]
 		public IBooking CurrentBooking
 		{
 			get { return m_CachedCurrentBooking; }
@@ -89,7 +88,6 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Gets the registered calendar providers.
 		/// </summary>
 		/// <returns></returns>
-		[NotNull]
 		public IEnumerable<ICalendarControl> GetProviders()
 		{
 			m_CalendarSection.Enter();
@@ -112,7 +110,6 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// instersect with the given features mask.
 		/// </summary>
 		/// <returns></returns>
-		[NotNull]
 		public IEnumerable<ICalendarControl> GetProviders(eCalendarFeatures features)
 		{
 			m_CalendarSection.Enter();
@@ -158,7 +155,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Pushes the specified booking to the providers.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void PushBooking([NotNull] IBooking booking)
+		public void PushBooking(IBooking booking)
 		{
 			if (booking == null)
 				throw new ArgumentNullException("booking");
@@ -171,7 +168,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Checks into the specified booking.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void CheckIn([NotNull] IBooking booking)
+		public void CheckIn(IBooking booking)
 		{
 			if (booking == null)
 				throw new ArgumentNullException("booking");
@@ -191,7 +188,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Checks out of the specified booking.
 		/// </summary>
 		/// <param name="booking"></param>
-		public void CheckOut([NotNull] IBooking booking)
+		public void CheckOut(IBooking booking)
 		{
 			if (booking == null)
 				throw new ArgumentNullException("booking");
@@ -211,7 +208,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Determines if the specified booking can be checked into.
 		/// </summary>
 		/// <param name="booking"></param>
-		public bool CanCheckIn([NotNull] IBooking booking)
+		public bool CanCheckIn(IBooking booking)
 		{
 			if (booking == null)
 				throw new ArgumentNullException("booking");
@@ -228,7 +225,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// </summary>
 		/// <param name="booking"></param>
 		/// <returns></returns>
-		public bool CanCheckOut([NotNull] IBooking booking)
+		public bool CanCheckOut(IBooking booking)
 		{
 			if (booking == null)
 				throw new ArgumentNullException("booking");
@@ -244,7 +241,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Registers the calendar provider at the given calendar point.
 		/// </summary>
 		/// <param name="calendarPoint"></param>
-		public void RegisterCalendarProvider([NotNull] ICalendarPoint calendarPoint)
+		public void RegisterCalendarProvider(ICalendarPoint calendarPoint)
 		{
 			if (calendarPoint == null)
 				throw new ArgumentNullException("calendarPoint");
@@ -277,7 +274,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		/// Deregisters the calendar provider at the given calendar point.
 		/// </summary>
 		/// <param name="calendarPoint"></param>
-		public void DeregisterCalendarProvider([NotNull] ICalendarPoint calendarPoint)
+		public void DeregisterCalendarProvider(ICalendarPoint calendarPoint)
 		{
 			if (calendarPoint == null)
 				throw new ArgumentNullException("calendarPoint");
