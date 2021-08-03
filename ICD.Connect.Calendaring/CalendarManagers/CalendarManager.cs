@@ -20,6 +20,8 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 	{
 		// Add 5 seconds to calculated reset time to avoid race conditions.
 		private const int CURRENT_BOOKING_TIMER_RESET_BUFFER = 5 * 1000;
+		// Max booking timer interval is 8 hours - prevents issues when no next booking is present
+		private const long CURRENT_BOOKING_TIMER_MAX_INTERVAL = 8 * 60 * 60 * 1000;
 
 		#region Events
 
@@ -41,6 +43,8 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 		private readonly BiDictionary<ICalendarPoint, ICalendarControl> m_CalendarPointsToControls;
 
 		private IBooking m_CachedCurrentBooking;
+		
+		
 
 		#region Constructor
 
@@ -373,8 +377,8 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 			var nextStart = this.GetTimeToNextBookingStart();
 			var nextEnd = this.GetTimeToNextBookingEnd();
 
-			return (long)(Math.Min(nextStart.TotalMilliseconds, nextEnd.TotalMilliseconds) +
-			              CURRENT_BOOKING_TIMER_RESET_BUFFER);
+			return (long)(Math.Min(Math.Min(nextStart.TotalMilliseconds, nextEnd.TotalMilliseconds) +
+			              CURRENT_BOOKING_TIMER_RESET_BUFFER, CURRENT_BOOKING_TIMER_MAX_INTERVAL));
 		}
 
 		#endregion

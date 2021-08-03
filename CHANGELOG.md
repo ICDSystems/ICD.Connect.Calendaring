@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  
 ### Changed
  - ICalendarPoint implements IPoint<T>
+ - CalendarManager - set max time before refreshing current booking to prevent timer max overflow
 
 ## [9.3.0] - 2021-01-25
 ### Added
