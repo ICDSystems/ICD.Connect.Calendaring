@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+ - Fixed issue with Calendar Manager not firing update when conference time didn't change
+ - CalendarManager - set max time before refreshing current booking to prevent timer max overflow
 
 ## [9.4.0] - 2021-05-14
 ### Added
@@ -13,7 +16,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  
 ### Changed
  - ICalendarPoint implements IPoint<T>
- - CalendarManager - set max time before refreshing current booking to prevent timer max overflow
 
 ## [9.3.0] - 2021-01-25
 ### Added
