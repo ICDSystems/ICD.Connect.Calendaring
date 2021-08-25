@@ -1,9 +1,15 @@
-﻿using ICD.Common.Utils.Extensions;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+using RealNewtonsoft.Newtonsoft.Json.Converters;
+#else
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+#endif
+using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.Json;
 using ICD.Connect.Calendaring.Robin.Components.Events;
-using Newtonsoft.Json;
 using System.Linq;
-using Newtonsoft.Json.Converters;
 
 namespace ICD.Connect.Calendaring.Robin.Components.Converters
 {

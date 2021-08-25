@@ -1,11 +1,16 @@
-﻿using System;
+﻿#if !SIMPLSHARP
+extern alias RealIndependentsoft;
+using RealIndependentsoft.Independentsoft.Exchange;
+#else
+using Independentsoft.Exchange;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils.Email;
 using ICD.Common.Utils.Extensions;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Conferencing.DialContexts;
-using Independentsoft.Exchange;
 
 namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 {

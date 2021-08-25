@@ -1,4 +1,10 @@
-﻿using System;
+﻿#if !SIMPLSHARP
+extern alias RealIndependentsoft;
+using RealIndependentsoft.Independentsoft.Exchange;
+#else
+using Independentsoft.Exchange;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ICD.Common.Utils;
@@ -10,7 +16,6 @@ using ICD.Common.Utils.Timers;
 using ICD.Connect.Calendaring.Bookings;
 using ICD.Connect.Calendaring.Controls;
 using ICD.Connect.Conferencing.DialContexts;
-using Independentsoft.Exchange;
 
 namespace ICD.Connect.Calendaring.Microsoft.Exchange.Controls
 {

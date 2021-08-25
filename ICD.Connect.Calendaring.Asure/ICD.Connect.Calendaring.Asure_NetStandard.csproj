@@ -3,7 +3,7 @@
   <Import Condition=" '$(EAZFUSCATOR_NET_HOME)' != '' and Exists('$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets') " Project="$(EAZFUSCATOR_NET_HOME)\Integration\MSBuild\Eazfuscator.NET.targets" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <RootNamespace>ICD.Connect.Calendaring.Asure</RootNamespace>
     <AssemblyName>ICD.Connect.Calendaring.Asure</AssemblyName>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -28,13 +28,14 @@
     <None Remove="SIMPLSharpLogs\**" />
   </ItemGroup>
   <ItemGroup>
-  </ItemGroup>
-  <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="ICD.Connect.Calendaring.Asure_SimplSharp.suo" />
     <None Remove="ICD.Connect.Calendaring.projectinfo" />
     <None Remove="ICD.SimplSharp.projectinfo" />
     <None Remove="Properties\ControlSystem.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Condition="'$(TargetFramework)' == 'net472'" Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ICD.Connect.Devices\ICD.Connect.Devices\ICD.Connect.Devices_NetStandard.csproj" />
@@ -44,10 +45,7 @@
 
   <Target Name="ArchivePlugin" AfterTargets="AfterBuild" Condition="'$(Configuration)|$(OS)' == 'Release|Windows_NT'">
     <Delete Files="$(TargetDir)$(AssemblyName).kpz" />
-    <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz"
-                  SourceDirectory="$(TargetDir)"
-                  Overwrite="true"/>
-    <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz"
-          DestinationFolder="$(TargetDir)"/>
+    <ZipDirectory DestinationFile="$(TargetDir)..\$(AssemblyName).kpz" SourceDirectory="$(TargetDir)" Overwrite="true" />
+    <Move SourceFiles="$(TargetDir)..\$(AssemblyName).kpz" DestinationFolder="$(TargetDir)" />
   </Target>
 </Project>

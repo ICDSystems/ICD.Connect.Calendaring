@@ -1,4 +1,12 @@
-﻿using System;
+﻿#if !SIMPLSHARP
+extern alias RealIndependentsoft;
+using RealIndependentsoft.Independentsoft.Exchange;
+using RealIndependentsoft.Independentsoft.Exchange.Autodiscover;
+#else
+using Independentsoft.Exchange;
+using Independentsoft.Exchange.Autodiscover;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 #if STANDARD
@@ -13,8 +21,6 @@ using ICD.Connect.Devices;
 using ICD.Connect.Devices.Controls;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Settings;
-using Independentsoft.Exchange;
-using Independentsoft.Exchange.Autodiscover;
 
 namespace ICD.Connect.Calendaring.Microsoft.Exchange
 {

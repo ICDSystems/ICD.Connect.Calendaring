@@ -1,5 +1,10 @@
-﻿using ICD.Connect.Calendaring.Microsoft.Office365.Converters;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Connect.Calendaring.Microsoft.Office365.Converters;
 
 namespace ICD.Connect.Calendaring.Microsoft.Office365.Responses
 {
