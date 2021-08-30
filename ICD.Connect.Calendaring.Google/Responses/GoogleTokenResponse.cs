@@ -1,5 +1,10 @@
-﻿using ICD.Connect.Calendaring.Google.Converters;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using ICD.Connect.Calendaring.Google.Converters;
 
 namespace ICD.Connect.Calendaring.Google.Responses
 {

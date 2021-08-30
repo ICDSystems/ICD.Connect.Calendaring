@@ -1,6 +1,11 @@
-﻿using System;
-using ICD.Connect.Calendaring.Robin.Components.Converters;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+#else
 using Newtonsoft.Json;
+#endif
+using System;
+using ICD.Connect.Calendaring.Robin.Components.Converters;
 
 namespace ICD.Connect.Calendaring.Robin.Components.Events
 {

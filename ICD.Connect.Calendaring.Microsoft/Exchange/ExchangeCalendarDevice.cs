@@ -2,6 +2,7 @@
 extern alias RealIndependentsoft;
 using RealIndependentsoft.Independentsoft.Exchange;
 using RealIndependentsoft.Independentsoft.Exchange.Autodiscover;
+using System.Net;
 #else
 using Independentsoft.Exchange;
 using Independentsoft.Exchange.Autodiscover;
@@ -9,9 +10,6 @@ using Independentsoft.Exchange.Autodiscover;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#if STANDARD
-using System.Net;
-#endif
 using ICD.Common.Properties;
 using ICD.Common.Utils.Services.Logging;
 using ICD.Connect.API.Commands;

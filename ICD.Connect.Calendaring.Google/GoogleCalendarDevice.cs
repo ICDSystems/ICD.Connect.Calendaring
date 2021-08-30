@@ -1,4 +1,12 @@
-﻿using System;
+﻿#if NETFRAMEWORK
+extern alias RealNewtonsoft;
+using RealNewtonsoft.Newtonsoft.Json;
+using Formatting = RealNewtonsoft.Newtonsoft.Json.Formatting;
+#else
+using Newtonsoft.Json;
+using Formatting = Newtonsoft.Json.Formatting;
+#endif
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,8 +32,6 @@ using ICD.Connect.Protocol.Network.Ports.Web;
 using ICD.Connect.Protocol.Network.Settings;
 using ICD.Connect.Protocol.Network.Utils;
 using ICD.Connect.Settings;
-using Newtonsoft.Json;
-using Formatting = Newtonsoft.Json.Formatting;
 
 namespace ICD.Connect.Calendaring.Google
 {
