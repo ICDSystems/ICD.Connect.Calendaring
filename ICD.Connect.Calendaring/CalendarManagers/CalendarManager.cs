@@ -302,7 +302,7 @@ namespace ICD.Connect.Calendaring.CalendarManagers
 					.OrderBy(b => b.StartTime);
 
 				BookingGroup[] deduplicatedBookings = DeduplicateBookings(newBookings).ToArray();
-				if (deduplicatedBookings.SequenceEqual(m_Bookings, BookingDeduplicationEqualityComparer.Instance.Equals))
+				if (deduplicatedBookings.SequenceEqual(m_Bookings, BookingEqualityComparer.Instance.Equals))
 					return;
 
 				m_Bookings.Clear();
