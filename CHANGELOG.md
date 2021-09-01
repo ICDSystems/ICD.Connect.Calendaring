@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [9.4.1] - 2021-08-17
 ### Changed
- - Fixed issue with Calendar Manager not firing update when conference time didn't change
  - CalendarManager - set max time before refreshing current booking to prevent timer max overflow
 
 ## [9.4.0] - 2021-05-14
@@ -18,6 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
  
 ### Changed
  - ICalendarPoint implements IPoint<T>
+
+## [9.3.1] - 2021-09-01
+### Changed
+ - Fixed issue with Calendar Manager not firing update when conference time didn't change
 
 ## [9.3.0] - 2021-01-25
 ### Added
