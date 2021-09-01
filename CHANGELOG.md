@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [9.3.1] - 2021-09-01
 ### Changed
  - Fixed issue with Calendar Manager not firing update when conference time didn't change
 
