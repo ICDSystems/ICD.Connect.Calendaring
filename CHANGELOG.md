@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+ - Added AbstractBasicBooking and associated JSON converter for use by Booking and HistoricalBooking
+  
 ### Changed
  - Fixed booking equality comparers to correctly compare dial contexts
 

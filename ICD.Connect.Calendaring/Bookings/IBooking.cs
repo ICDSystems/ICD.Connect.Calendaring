@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ICD.Common.Properties;
+﻿using ICD.Common.Properties;
 using ICD.Common.Utils;
 using ICD.Connect.Calendaring.Comparers;
 using ICD.Connect.Conferencing.DialContexts;
+using System;
+using System.Collections.Generic;
 
 namespace ICD.Connect.Calendaring.Bookings
 {
@@ -70,6 +70,22 @@ namespace ICD.Connect.Calendaring.Bookings
 				throw new ArgumentNullException("extends");
 
 			return BookingDeduplicationEqualityComparer.Instance.Equals(extends, other);
+		}
+		
+		public static bool IsBookingStarted([NotNull] this IBooking extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.StartTime <= DateTime.UtcNow;
+		}
+
+		public static bool IsBookingEnded([NotNull] this IBooking extends)
+		{
+			if (extends == null)
+				throw new ArgumentNullException("extends");
+
+			return extends.EndTime <= DateTime.UtcNow;
 		}
 	}
 }
