@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+ - Fixed booking equality comparers to correctly compare dial contexts
+
 ## [9.4.1] - 2021-08-17
 ### Changed
  - CalendarManager - set max time before refreshing current booking to prevent timer max overflow
