@@ -178,7 +178,7 @@ namespace ICD.Connect.Calendaring.Robin
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!output.Success)
+			if (!output.IsSuccessCode || !output.GotResponse)
 			{
 				string message = string.Format("Request did not succeed");
 				throw new InvalidOperationException(message);
@@ -211,7 +211,7 @@ namespace ICD.Connect.Calendaring.Robin
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!output.Success)
+			if (!output.IsSuccessCode || !output.GotResponse)
 			{
 				string message = string.Format("Request did not succeed");
 				throw new InvalidOperationException(message);
@@ -236,7 +236,7 @@ namespace ICD.Connect.Calendaring.Robin
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!output.Success)
+			if (!output.IsSuccessCode || !output.GotResponse)
 			{
 				string message = string.Format("Request did not succeed");
 				throw new InvalidOperationException(message);

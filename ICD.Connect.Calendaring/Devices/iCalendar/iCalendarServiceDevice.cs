@@ -79,7 +79,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		public iCalendarCalendar GetCalendar()
 		{
 			WebPortResponse respose = m_Port.Get(null);
-			if (respose.Success)
+			if (respose.IsSuccessCode)
 				return iCalendarCalendar.Deserialize(respose.DataAsString);
 
 			Logger.Log(eSeverity.Error, "Failed to get calendar - {0}", respose.DataAsString);

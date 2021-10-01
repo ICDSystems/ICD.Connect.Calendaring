@@ -84,7 +84,7 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Requests
 				throw new InvalidOperationException(message, e);
 			}
 
-			if (!output.Success)
+			if (!output.GotResponse)
 			{
 				string message = string.Format("{0} failed to dispatch", GetType().Name);
 				throw new InvalidOperationException(message);

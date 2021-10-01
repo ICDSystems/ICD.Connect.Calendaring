@@ -94,12 +94,14 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			                           IcdEnvironment.GetUtcTime().EndOfDay().ToString("o"));
 
 			WebPortResponse getResponse = m_Port.Get(url, headers);
+			if (!getResponse.GotResponse)
+				throw new InvalidOperationException("Request failed");
 
 			CalendarViewResponse response = null;
 			if (!string.IsNullOrEmpty(getResponse.DataAsString))
 				response = JsonConvert.DeserializeObject<CalendarViewResponse>(getResponse.DataAsString);
 
-			if (!getResponse.Success)
+			if (!getResponse.IsSuccessCode)
 			{
 				if (response != null && response.Error != null)
 					throw new InvalidOperationException(response.Error.Message);
@@ -129,7 +131,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			WebPortResponse postResponse = m_Port.Post(url, headers, Encoding.UTF8.GetBytes(data));
 
-			if (!postResponse.Success)
+			if (!postResponse.IsSuccessCode || !postResponse.GotResponse)
 				throw new InvalidOperationException("Request failed");
 		}
 
@@ -152,7 +154,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			WebPortResponse patchResponse = m_Port.Patch(url, headers, Encoding.UTF8.GetBytes(data));
 
-			if (!patchResponse.Success)
+			if (!patchResponse.IsSuccessCode || !patchResponse.GotResponse)
 				throw new InvalidOperationException("Request failed");
 		}
 
@@ -211,7 +213,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 
 			// Dispatch!
 			WebPortResponse output = m_Port.Post(url, headers, bodyData);
-			if (!output.Success)
+			if (!output.IsSuccessCode || !output.GotResponse)
 			{
 				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
 				m_Token = null;

@@ -128,11 +128,14 @@ namespace ICD.Connect.Calendaring.Google
 			                           CalendarId, m_Token, Rfc3339EndOfDayTimeStamp(), Rfc3339StartOfDayTimeStamp(), responseTimeZone);
 
 			WebPortResponse getResponse = m_Port.Get(url);
+			if (!getResponse.GotResponse)
+				throw new InvalidOperationException("Request failed");
 
 			GoogleCalendarViewResponse response = null;
 			if (!string.IsNullOrEmpty(getResponse.DataAsString))
 				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(getResponse.DataAsString);
-			if (!getResponse.Success)
+
+			if (!getResponse.IsSuccessCode)
 			{
 				if (response != null && response.Error != null)
 					throw new InvalidOperationException(response.Error.Message);
@@ -157,11 +160,13 @@ namespace ICD.Connect.Calendaring.Google
 
 			WebPortResponse postResponse =
 				m_Port.Post(url, Encoding.UTF8.GetBytes(eventData));
+			if (!postResponse.GotResponse)
+				throw new InvalidOperationException("Request failed");
 
 			GoogleCalendarViewResponse response = null;
 			if (!string.IsNullOrEmpty(postResponse.DataAsString))
 				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(postResponse.DataAsString);
-			if (!postResponse.Success)
+			if (!postResponse.IsSuccessCode)
 			{
 				if (response != null && response.Error != null)
 					throw new InvalidOperationException(response.Error.Message);
@@ -181,11 +186,13 @@ namespace ICD.Connect.Calendaring.Google
 			string eventData = JsonConvert.SerializeObject(oldEvent, Formatting.None);
 
 			WebPortResponse putResponse = m_Port.Put(url, Encoding.UTF8.GetBytes(eventData));
+			if (!putResponse.GotResponse)
+				throw new InvalidOperationException("Request failed");
 
 			GoogleCalendarViewResponse response = null;
 			if (!string.IsNullOrEmpty(putResponse.DataAsString))
 				response = JsonConvert.DeserializeObject<GoogleCalendarViewResponse>(putResponse.DataAsString);
-			if (!putResponse.Success)
+			if (!putResponse.IsSuccessCode)
 			{
 				if (response != null && response.Error != null)
 					throw new InvalidOperationException(response.Error.Message);
@@ -290,7 +297,7 @@ namespace ICD.Connect.Calendaring.Google
 			//Dispatch!
 			WebPortResponse output = m_Port.Post(url, headers, bodyData);
 
-			if (!output.Success)
+			if (!output.IsSuccessCode || !output.GotResponse)
 			{
 				Logger.Log(eSeverity.Error, "Failed to get token - {0}", output.DataAsString);
 				m_Token = null;
