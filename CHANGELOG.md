@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [9.5.0] - 2021-10-04
 ### Added
  - Added AbstractBasicBooking and associated JSON converter for use by Booking and HistoricalBooking
   
