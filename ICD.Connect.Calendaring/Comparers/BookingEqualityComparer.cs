@@ -30,7 +30,7 @@ namespace ICD.Connect.Calendaring.Comparers
 			       x.IsPrivate == y.IsPrivate &&
 			       x.CheckedIn == y.CheckedIn &&
 			       x.CheckedOut == y.CheckedOut &&
-			       x.GetBookingNumbers().SequenceEqual(y.GetBookingNumbers());
+			       x.GetBookingNumbers().SequenceEqual(y.GetBookingNumbers(), DialContextEqualityComparer.Instance);
 		}
 
 		public override int GetHashCode(IBooking obj)
