@@ -127,7 +127,7 @@ namespace ICD.Connect.Calendaring.Google
 			string url = string.Format("https://www.googleapis.com/calendar/v3/calendars/{0}/events?access_token={1}&singleEvents=true&timeMax={2}&timeMin={3}&timeZone={4}",
 			                           CalendarId, m_Token, Rfc3339EndOfDayTimeStamp(), Rfc3339StartOfDayTimeStamp(), responseTimeZone);
 
-			WebPortResponse getResponse = m_Port.Get(url);
+			WebPortResponse getResponse = m_Port.Get(url, null);
 			if (!getResponse.GotResponse)
 				throw new InvalidOperationException("Request failed");
 

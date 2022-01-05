@@ -169,7 +169,7 @@ namespace ICD.Connect.Calendaring.Robin
 
 			try
 			{
-				output = m_Port.Get(path, m_GetHeaders);
+				output = m_Port.Get(path, m_GetHeaders, null);
 			}
 			// Catch HTTP or HTTPS exception, without dependency on Crestron
 			catch (Exception e)

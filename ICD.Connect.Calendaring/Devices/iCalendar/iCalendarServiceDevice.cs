@@ -78,7 +78,7 @@ namespace ICD.Connect.Calendaring.Devices.iCalendar
 		[CanBeNull]
 		public iCalendarCalendar GetCalendar()
 		{
-			WebPortResponse respose = m_Port.Get(null);
+			WebPortResponse respose = m_Port.Get(null, null);
 			if (respose.IsSuccessCode)
 				return iCalendarCalendar.Deserialize(respose.DataAsString);
 

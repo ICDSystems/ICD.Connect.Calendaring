@@ -93,7 +93,7 @@ namespace ICD.Connect.Calendaring.Microsoft.Office365
 			                           IcdEnvironment.GetUtcTime().StartOfDay().ToString("o"),
 			                           IcdEnvironment.GetUtcTime().EndOfDay().ToString("o"));
 
-			WebPortResponse getResponse = m_Port.Get(url, headers);
+			WebPortResponse getResponse = m_Port.Get(url, headers, null);
 			if (!getResponse.GotResponse)
 				throw new InvalidOperationException("Request failed");
 
