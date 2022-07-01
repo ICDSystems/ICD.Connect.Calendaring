@@ -4,4 +4,4 @@ using System.Reflection;
 [assembly: AssemblyCompany("ICD Systems")]
 [assembly: AssemblyProduct("ICD.Connect.Calendaring.Asure")]
 [assembly: AssemblyCopyright("Copyright © ICD Systems 2022")]
-[assembly: AssemblyVersion("9.5.0.0")]
+[assembly: AssemblyVersion("9.5.1.0")]
