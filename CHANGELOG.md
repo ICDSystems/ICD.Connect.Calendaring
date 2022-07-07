@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+ - Asure now checks booked by ID and booked for ID to get meeting organizer
 
 ## [9.5.1] - 2022-07-01
 ### Changed
