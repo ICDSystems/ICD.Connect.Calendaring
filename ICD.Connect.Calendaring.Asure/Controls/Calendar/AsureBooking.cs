@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ICD.Common.Properties;
 using ICD.Common.Utils.Extensions;
 using ICD.Common.Utils.TimeZoneInfo;
 using ICD.Connect.Calendaring.Asure.ResourceScheduler.Model;
@@ -28,10 +29,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		{
 			get
 			{
-				return m_Reservation.ReservationBaseData
-				                    .ReservationAttendees
-				                    .Select(a => a.FullName)
-				                    .FirstOrDefault();
+				return GetOrganizer() == null ? null : GetOrganizer().FullName;
 			}
 		}
 
@@ -42,10 +40,7 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		{
 			get
 			{
-				return m_Reservation.ReservationBaseData
-				                    .ReservationAttendees
-				                    .Select(a => a.EmailAddress)
-				                    .FirstOrDefault();
+				return GetOrganizer() == null ? null : GetOrganizer().EmailAddress;
 			}
 		}
 
@@ -89,14 +84,30 @@ namespace ICD.Connect.Calendaring.Asure.Controls.Calendar
 		/// </summary>
 		public override bool CheckedOut { get { return m_Reservation.CheckedOut; } }
 
-		public override IEnumerable<IDialContext> GetBookingNumbers()
-		{
-			return m_DialContexts.ToArray(m_DialContexts.Count);
-		}
+	    #endregion
 
-		#endregion
+	    #region Methods
 
-		/// <summary>
+	    public override IEnumerable<IDialContext> GetBookingNumbers()
+	    {
+	        return m_DialContexts.ToArray(m_DialContexts.Count);
+	    }
+
+	    /// <summary>
+	    /// Attempts to get the organizer of the meeting
+	    /// This is the CreatedForUser, or the CreatedByUser
+	    /// If neither of those are set, we simply return the first attendee
+	    /// </summary>
+	    /// <returns></returns>
+	    [CanBeNull]
+	    private ReservationAttendeeData GetOrganizer()
+	    {
+	        return m_Reservation.ReservationBaseData.CreatedForAttendee ?? m_Reservation.ReservationBaseData.CreatedByAttendee ?? m_Reservation.ReservationBaseData.ReservationAttendees.FirstOrDefault();
+	    }
+		
+	    #endregion
+
+	    /// <summary>
 		/// Constructor.
 		/// </summary>
 		/// <param name="reservation"></param>

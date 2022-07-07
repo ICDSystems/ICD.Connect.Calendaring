@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using ICD.Common.Properties;
 using ICD.Common.Utils.Xml;
 
@@ -25,6 +26,20 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Model
 		[PublicAPI]
 		public ReservationResourceData[] ReservationResources { get; private set; }
 
+		[PublicAPI]
+		public int? CreatedByUserId { get; private set; }
+
+		[PublicAPI]
+		public int? CreatedForUserId { get; private set; }
+
+		[PublicAPI]
+		[CanBeNull]
+		public ReservationAttendeeData CreatedByAttendee { get; private set; }
+
+		[PublicAPI]
+		[CanBeNull]
+		public ReservationAttendeeData CreatedForAttendee { get; private set; }
+
 		#endregion
 
 		#region Constructors
@@ -44,14 +59,37 @@ namespace ICD.Connect.Calendaring.Asure.ResourceScheduler.Model
 			};
 
 			string attendeesXml = XmlUtils.GetChildElementAsString(xml, "Attendees");
-			output.ReservationAttendees = XmlUtils.GetChildElementsAsString(attendeesXml, ReservationAttendeeData.ELEMENT)
-			                                      .Select(x => ReservationAttendeeData.FromXml(x))
-			                                      .ToArray();
+
+			output.ReservationAttendees = XmlUtils
+			                              .GetChildElementsAsString(attendeesXml, ReservationAttendeeData.ELEMENT)
+			                              .Select(x => ReservationAttendeeData.FromXml(x))
+			                              .ToArray();
+
+			var attendees = output.ReservationAttendees.Where(a => a.Id != 0).ToDictionary(a => a.Id);
 
 			string resourcesXml = XmlUtils.GetChildElementAsString(xml, "Resources");
-			output.ReservationResources = XmlUtils.GetChildElementsAsString(resourcesXml, ReservationResourceData.ELEMENT)
-			                                      .Select(x => ReservationResourceData.FromXml(x))
-			                                      .ToArray();
+			output.ReservationResources = XmlUtils
+			                              .GetChildElementsAsString(resourcesXml, ReservationResourceData.ELEMENT)
+			                              .Select(x => ReservationResourceData.FromXml(x))
+			                              .ToArray();
+
+			int? createdByUserId = XmlUtils.TryReadChildElementContentAsInt(xml, "CreatedByUserId");
+			if (createdByUserId.HasValue && createdByUserId.Value != 0)
+			{
+				output.CreatedByUserId = createdByUserId;
+				ReservationAttendeeData createdByAttendee;
+				if (attendees.TryGetValue(createdByUserId.Value, out createdByAttendee))
+					output.CreatedByAttendee = createdByAttendee;
+			}
+
+			int? createdForUserId = XmlUtils.TryReadChildElementContentAsInt(xml, "CreatedForUserId");
+			if (createdForUserId.HasValue && createdForUserId.Value != 0)
+			{
+				output.CreatedForUserId = createdForUserId;
+				ReservationAttendeeData createdForAttendee;
+				if (attendees.TryGetValue(createdForUserId.Value, out createdForAttendee))
+					output.CreatedForAttendee = createdForAttendee;
+			}
 
 			return output;
 		}
